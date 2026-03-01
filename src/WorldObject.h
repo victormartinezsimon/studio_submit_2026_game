@@ -29,9 +29,22 @@ public:
 		_height = height;
 	}
 
+public:
+public:
+	bool GetTeam() const
+	{
+		return _playerTeam;
+	}
+	void SetTeam(bool playerTeam)
+	{
+		_playerTeam = playerTeam;
+	}
+
 protected:
 	unsigned int _X = 0;
 	unsigned int _Y = 0;
 	unsigned int _width = 0;
 	unsigned int _height = 0;
+
+	bool _playerTeam;
 };

@@ -4,16 +4,18 @@
 #include "GameConfig.h"
 #include "Pool.h"
 #include "Bullet.h"
+#include "Plane.h"
 
 int main()
 {
-	Pool<Bullet, BULLETS_POOL_SIZE> bulletPools;
+	Pool<Bullet, BULLETS_POOL_SIZE> bulletPool;
+	Pool<Plane, PLANES_POOL_SIZE> enemiesPool;
 
 	std::vector<Bullet*> currentBullets;
 
 	for (int i = 0; i < BULLETS_POOL_SIZE/2; ++i)
 	{
-		auto bullet = bulletPools.Get();
+		auto bullet = bulletPool.Get();
 		bullet->SetPosition(SCREEN_WITH / 2, SCREEN_HEIGHT / 2);
 		bullet->SetTeam(i % 2);
 		if (i % 2 == 0)
@@ -51,7 +53,7 @@ int main()
 			if (it != currentBullets.end())
 			{
 				currentBullets.erase(it);
-				bulletPools.Release(bullet);
+				bulletPool.Release(bullet);
 				std::cout << "returning bullet\n";
 			}
 			else
@@ -60,6 +62,9 @@ int main()
 			}
 		}
 	}
+
+
+
 
 	return 0;
 }

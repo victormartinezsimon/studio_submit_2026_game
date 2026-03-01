@@ -1,18 +1,8 @@
 #include "Bullet.h"
 #include <cmath>
 
-Bullet::Bullet():_velocityY(0), _playerTeam(true)
+Bullet::Bullet():_velocityY(0)
 {}
-
-
-bool Bullet::GetTeam() const
-{
-	return _playerTeam;
-}
-void Bullet::SetTeam(bool playerTeam)
-{
-	_playerTeam = playerTeam;
-}
 
 void Bullet::SetVelocity(float vel)
 {
