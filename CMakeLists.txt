@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Añade los archivos fuente y de cabecera
 set(SOURCES
     src/Main.cpp
-    src/Pool.cpp
     src/Plane.cpp
     src/Bullet.cpp
     src/TextPainter.cpp

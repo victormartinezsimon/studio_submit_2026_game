@@ -1,0 +1,35 @@
+#include "Bullet.h"
+#include <cmath>
+
+Bullet::Bullet(): _X(0), _Y(0),_velocityY(0), _playerTeam(true)
+{}
+
+std::pair<unsigned int, unsigned int> Bullet::GetPosition() const
+{
+	return { _X, _Y };
+}
+void Bullet::SetPosition(unsigned int x, unsigned int Y)
+{
+	_X = x;
+	_Y = Y;
+}
+
+bool Bullet::GetTeam() const
+{
+	return _playerTeam;
+}
+void Bullet::SetTeam(bool playerTeam)
+{
+	_playerTeam = playerTeam;
+}
+
+void Bullet::SetVelocity(float vel)
+{
+	_velocityY = vel;
+}
+
+void Bullet::Update(const float deltaTime)
+{
+	float newY = std::floor(deltaTime * _velocityY);
+	_Y += newY;
+}
