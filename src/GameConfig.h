@@ -6,7 +6,7 @@ constexpr int SCREEN_HEIGHT = 480;
 constexpr unsigned int EXPECTED_FPS = 60;
 
 constexpr unsigned int PLANES_POOL_SIZE = 20;
-constexpr unsigned int BULLETS_POOL_SIZE = 60;
+constexpr unsigned int BULLETS_POOL_SIZE = 200;
 
 constexpr std::string_view BACKGROUND_IMAGE = "images/background.png";
 

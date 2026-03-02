@@ -49,7 +49,12 @@ public:
 		free_.push_back(obj);
 	}
 
-	
+	template <typename Func>
+	void for_each_active(Func&& func) {
+		for (T* obj : used_) {
+			func(*obj);
+		}
+	}	
 
 private:
 	std::list<T*> free_;
