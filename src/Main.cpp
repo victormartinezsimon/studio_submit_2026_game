@@ -40,7 +40,7 @@ int main()
 	Pool<Plane, PLANES_POOL_SIZE> enemiesPool;
 
 	std::vector<Plane*> enemies;
-	int totalEnemies = 5;
+	int totalEnemies = 4;
 	for (int i = 0; i < totalEnemies; ++i)
 	{
 		auto enemy = enemiesPool.Get();
@@ -99,7 +99,6 @@ int main()
 		{
 			p.PaintBullet(&bullet);
 		});
-
 		
 		p.EndPaint();
 	}
