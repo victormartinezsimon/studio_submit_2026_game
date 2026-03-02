@@ -12,18 +12,18 @@ set(SOURCES
     src/Main.cpp
     src/Plane.cpp
     src/Bullet.cpp
-    src/TextPainter.cpp
     src/InputManager.cpp
+    src/RaylibPainter.cpp
 )
 
 set (HEADERS
     src/Pool.h
     src/Plane.h
     src/Bullet.h
-    src/TextPainter.h
     src/InputManager.h
     src/GameConfig.h
     src/WorldObject.h
+    src/RaylibPainter.h
     )
 
 set(CMAKE_CXX_STANDARD 20)

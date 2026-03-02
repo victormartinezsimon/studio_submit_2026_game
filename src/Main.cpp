@@ -7,9 +7,10 @@
 #include "Pool.h"
 #include "Bullet.h"
 #include "Plane.h"
-#include "TextPainter.h"
+#include "RaylibPainter.h"
 
-#include "raylib-cpp.hpp"
+#include "raylib-cpp.hpp" 
+
 
 std::vector<Bullet*> InitTestBullets(Pool<Bullet, BULLETS_POOL_SIZE>& bulletPool)
 {
@@ -89,6 +90,7 @@ int main()
 	return 0;
 	*/
 
+	/*
 	int screenWidth = 800;
 	int screenHeight = 450;
 
@@ -115,7 +117,15 @@ int main()
 
 	// UnloadTexture() and CloseWindow() are called automatically.
 
-	return 0;
+	//return 0;
+	*/
 
+	RaylibPainter p;
 
+	while (!p.HasEnded())
+	{
+		p.BeginPaint();
+		p.Paint();
+		p.EndPaint();
+	}
 }
