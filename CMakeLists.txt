@@ -67,17 +67,6 @@ if (raylib_FOUND)
     endif()
     # --------------------------------------------------------------------------
 
-    # only need headers
-    find_path(RAYLIB_CPP_INCLUDE_DIR
-        NAMES raylib-cpp.hpp
-    )
-
-    if(NOT RAYLIB_CPP_INCLUDE_DIR)
-        message(FATAL_ERROR "raylib-cpp no found. Install with vcpkg.")
-    endif()
-
-    target_include_directories(StudioSummitGame PRIVATE ${RAYLIB_CPP_INCLUDE_DIR})
-
 else()
 
     message(STATUS "Not raylib found, trying with apt")
@@ -86,17 +75,6 @@ else()
     find_library(RAYLIB_LIB raylib REQUIRED)
 
     target_link_libraries(StudioSummitGame PRIVATE ${RAYLIB_LIB})
-
-    find_path(RAYLIB_CPP_INCLUDE_DIR
-        NAMES raylib-cpp.hpp
-        PATHS /usr/include /usr/local/include
-    )
-
-    if(NOT RAYLIB_CPP_INCLUDE_DIR)
-        message(FATAL_ERROR "raylib-cpp no found.")
-    endif()
-
-    target_include_directories(StudioSummitGame PRIVATE ${RAYLIB_CPP_INCLUDE_DIR})
 
 endif()
 
