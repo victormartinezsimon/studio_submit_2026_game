@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include <algorithm>
 
 #include "GameConfig.h"
 
