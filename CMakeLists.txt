@@ -79,26 +79,6 @@ else()
 endif()
 
 # ==============================
-# UNIX Configuration
-# ==============================
-
-if (UNIX AND NOT APPLE)
-
-    # OpenGL and system libs needed on Linux/Pi
-    find_package(OpenGL REQUIRED)
-    target_link_libraries(StudioSummitGame PRIVATE OpenGL::GL dl m pthread)
-
-    # Raspberry Pi / ARM need atomic
-    if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm" OR
-        CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-
-        message(STATUS "compiling for arm. add atomic")
-        target_link_libraries(StudioSummitGame PRIVATE atomic)
-    endif()
-
-endif()
-
-# ==============================
 # Images copy
 # ==============================
 
