@@ -16,6 +16,7 @@ set(SOURCES
     src/Bullet.cpp
     src/InputManager.cpp
     src/RaylibPainter.cpp
+    src/LinuxPainter.cpp
 )
 
 set(HEADERS
@@ -26,6 +27,8 @@ set(HEADERS
     src/GameConfig.h
     src/WorldObject.h
     src/RaylibPainter.h
+    src/Painter.h
+    src/LinuxPainter.h
 )
 
 # ==============================

@@ -1,18 +1,17 @@
 #pragma once
 #include <array>
 #include "GameConfig.h"
-#include "raylib.h"
 #include "Painter.h"
 
 
 class Bullet;
 class Plane;
 
-class RaylibPainter : public Painter
+class LinuxPainter : public Painter
 {
 public:
-	RaylibPainter();
-	~RaylibPainter();
+	LinuxPainter();
+	~LinuxPainter();
 
 public:
 	void BeginPaint() override;
@@ -26,14 +25,7 @@ public:
 	void PaintBullet(Bullet* bullet) override;
 
 private:
-	void PaintPlane(Plane* player, Texture2D& texture);
 
 public:
 	bool HasEnded() override;
-
-private:
-	Texture2D _player;
-	Texture2D _enemy;
-	Texture2D _background;
-	Texture2D _bullet;
 };

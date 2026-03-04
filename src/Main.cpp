@@ -7,11 +7,20 @@
 #include "Pool.h"
 #include "Bullet.h"
 #include "Plane.h"
+#ifdef _WIN32
 #include "RaylibPainter.h"
+#else
+#include "LinuxPainter.h"
+#endif
 
 int main()
 {
-	RaylibPainter p;
+	Painter* p = nullptr;
+#ifdef _WIN32
+	p = new RaylibPainter();
+#else
+	p = new LinuxPainter();
+#endif
 
 	Pool<Bullet, BULLETS_POOL_SIZE> bulletsPool;
 
@@ -58,9 +67,9 @@ int main()
 	player->SetCallbackFire(spawnPlayerBullet);
 
 
-	while (!p.HasEnded())
+	while (!p->HasEnded())
 	{
-		float deltaTime = p.GetDeltaTime();
+		float deltaTime = p->GetDeltaTime();
 
 		std::vector<Bullet*> bulletsToDelete;
 		bulletsPool.for_each_active([deltaTime,&bulletsToDelete](Bullet& obj)
@@ -83,23 +92,23 @@ int main()
 			obj.Update(deltaTime);
 		});
 
-		player->Update(p.GetDeltaTime());
+		player->Update(p->GetDeltaTime());
 
 
-		p.BeginPaint();
-		p.PaintBackground();
-		p.PaintPlayer(player);
+		p->BeginPaint();
+		p->PaintBackground();
+		p->PaintPlayer(player);
 
 		for (auto&& enemy : enemies)
 		{
-			p.PaintEnemy(enemy);
+			p->PaintEnemy(enemy);
 		}
 
 		bulletsPool.for_each_active([&p](Bullet& bullet)
 		{
-			p.PaintBullet(&bullet);
+			p->PaintBullet(&bullet);
 		});
 		
-		p.EndPaint();
+		p->EndPaint();
 	}
 }

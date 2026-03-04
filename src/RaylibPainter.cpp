@@ -2,7 +2,7 @@
 #include "Plane.h"
 #include "Bullet.h"
 
-RaylibPainter::RaylibPainter() //:  _player = LoadTexture(std::string(PLANE_IMAGE)), _background(std::string(BACKGROUND_IMAGE)), _enemy(std::string(ENEMY_IMAGE)), _bullet(std::string(BULLET_IMAGE))
+RaylibPainter::RaylibPainter() 
 {
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "SUMMIT_2026");
 
