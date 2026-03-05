@@ -69,8 +69,8 @@ bool LinuxPainter::HasEnded()
 
 void LinuxPainter::PaintPlayer(Plane *player)
 {
-	int x = player->GetX();
-	int y = player->GetY();
+	int x = player->GetX() - player->GetWidth()/2;
+	int y = player->GetY() - player->GetHeight()/2;
 	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite_duck, SPRITE_W, SPRITE_H, x, y, TRANSPARENT_KEY);
 }
 void LinuxPainter::PaintEnemy(Plane *enemy)
@@ -98,7 +98,7 @@ void LinuxPainter::init_palette(struct EVideoContext *vctx)
 	VPUSetPal(vctx, 4, 20, 20, 20);	   // Black (cow spots, outlines)
 	VPUSetPal(vctx, 5, 220, 100, 40);  // Orange-red (fox body)
 	VPUSetPal(vctx, 6, 255, 200, 180); // Light peach (fox chest)
-	VPUSetPal(vctx, 7, 180, 180, 180); // Gray (rabbit body)
+	VPUSetPal(vctx, 7, 255, 0, 0); // Gray (rabbit body)
 	VPUSetPal(vctx, 8, 255, 150, 180); // Pink (rabbit ears/nose)
 	for (int i = 0; i < 8; ++i)
 	{

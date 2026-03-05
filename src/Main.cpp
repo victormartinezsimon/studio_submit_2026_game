@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 		{
 			auto bullet = bulletsPool.Get();
 			bullet->SetPosition(p->GetX(), p->GetY());
-			bullet->SetVelocity(-100);
+			bullet->SetVelocity(-10);
 			bullet->SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
 		};
 
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 	Plane* player = new Plane();
 	player->SetSize(PLANE_WIDTH, PLANE_HEIGHT);
 	player->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.9);
-	player->SetBulletsToFire(1);
+	player->SetBulletsToFire(0);
 	player->SetFireRate(1);
 
 
@@ -91,16 +91,17 @@ int main(int argc, char** argv)
 		p->PaintBackground();
 		p->PaintPlayer(player);
 
+		/*
 		for (auto&& enemy : enemies)
 		{
 			p->PaintEnemy(enemy);
 		}
-
 		
 		bulletsPool.for_each_active([&p](Bullet& bullet)
 		{
 			p->PaintBullet(&bullet);
 		});
+		*/
 		
 		p->EndPaint();
 	}
