@@ -1,0 +1,57 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "DEBUG=1"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "deploy",
+            "type": "shell",
+            "command": "scp",
+            "args": [
+                "-P", "2222",
+                "the_rogue_battle",
+                "${config:the_rogue_battle.user}@${config:the_rogue_battle.remoteHost}:${config:the_rogue_battle.remoteDir}/the_rogue_battle"
+            ],
+            "dependsOn": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "start remote gdbserver",
+            "type": "shell",
+            "command": "ssh",
+            "args": [
+                "-p", "2222",
+                "${config:the_rogue_battle.user}@${config:the_rogue_battle.remoteHost}",
+                "killall -9 gdbserver > /dev/null 2>&1; chmod +x ${config:the_rogue_battle.remoteDir}/the_rogue_battle; gdbserver --once :${config:the_rogue_battle.port} ${config:the_rogue_battle.remoteDir}/the_rogue_battle"
+            ],
+            "dependsOn": "deploy",
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^Listening on port \\d+$",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^Listening on port",
+                    "endsPattern": "^Listening on port"
+                }
+            }
+        }
+    ]
+}

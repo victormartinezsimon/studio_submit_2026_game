@@ -10,12 +10,12 @@ else
 	endif
 endif
 
-TARGET = spriteblit
+TARGET = the_rogue_battle
 
 default: $(TARGET)
 
 # Directories
-src_dir = ./scr
+src_dir = ./src
 bin_dir = bin
 sdk_dir = ./SDK
 
@@ -34,8 +34,14 @@ ARM_GCC ?= arm-amd-linux-gnueabi-g++
 ARM_CC  ?= arm-amd-linux-gnueabi-gcc
 endif
 
-ARM_GCC_OPTS += -std=c++20 -Ofast -flto -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard
-ARM_CC_OPTS  += -Ofast -flto -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard
+ifdef DEBUG
+	OPT_FLAGS := -O0 -g
+else
+	OPT_FLAGS := -Ofast -flto
+endif
+
+ARM_GCC_OPTS += -std=c++20 $(OPT_FLAGS) -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard
+ARM_CC_OPTS  += $(OPT_FLAGS) -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard
 ARM_GCC_LIBS += -lgcc -lc -lm
 
 incs += -I$(src_dir) -I$(sdk_dir)/include

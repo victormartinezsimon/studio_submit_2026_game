@@ -19,8 +19,6 @@
 
 	#define VIDEO_MODE      EVM_320_240
 	#define VIDEO_COLOR     ECM_8bit_Indexed
-	#define VIDEO_WIDTH     320
-	#define VIDEO_HEIGHT    240
 
 	#define SPRITE_W        32
 	#define SPRITE_H        32

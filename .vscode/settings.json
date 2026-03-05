@@ -1,0 +1,13 @@
+{
+    "the_rogue_battle.remoteHost": "localhost",
+    "the_rogue_battle.user": "peta",
+    "the_rogue_battle.remoteDir": "/home/peta",
+    "the_rogue_battle.port": "2000",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": ".\\the_rogue_battle",
+            "binaryPath": ".\\the_rogue_battle",
+            "binaryArgs": []
+        }
+    ]
+}

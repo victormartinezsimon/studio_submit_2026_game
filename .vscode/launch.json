@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Remote Debug (gdbserver)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/the_rogue_battle",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "arm-none-linux-gnueabihf-gdb",
+            "miDebuggerServerAddress": "${config:the_rogue_battle.remoteHost}:${config:the_rogue_battle.port}",
+            "externalConsole": false,
+            "preLaunchTask": "start remote gdbserver",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}

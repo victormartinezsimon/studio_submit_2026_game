@@ -7,20 +7,13 @@
 #include "Pool.h"
 #include "Bullet.h"
 #include "Plane.h"
-#ifdef _WIN32
-#include "RaylibPainter.h"
-#else
 #include "LinuxPainter.h"
-#endif
 
-int main()
+int main(int argc, char** argv)
 {
-	Painter* p = nullptr;
-#ifdef _WIN32
-	p = new RaylibPainter();
-#else
-	p = new LinuxPainter();
-#endif
+	(void)argc; (void)argv;
+
+	Painter* p = new LinuxPainter();
 
 	Pool<Bullet, BULLETS_POOL_SIZE> bulletsPool;
 
@@ -44,7 +37,8 @@ int main()
 	player->SetSize(PLANE_WIDTH, PLANE_HEIGHT);
 	player->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.9);
 	player->SetBulletsToFire(1);
-	player->SetFireRate(2);
+	player->SetFireRate(1);
+
 
 	Pool<Plane, PLANES_POOL_SIZE> enemiesPool;
 
@@ -58,14 +52,12 @@ int main()
 		enemy->SetPosition(posX, posY);
 		enemy->SetSize(ENEMY_WIDTH, ENEMY_HEIGHT);
 		enemy->SetBulletsToFire(1);
-		enemy->SetFireRate(1);
+		enemy->SetFireRate(2);
 		enemy->SetCallbackFire(spawnEnemyBullet);
 		enemies.push_back( enemy );
 	}
 
-
 	player->SetCallbackFire(spawnPlayerBullet);
-
 
 	while (!p->HasEnded())
 	{
@@ -104,6 +96,7 @@ int main()
 			p->PaintEnemy(enemy);
 		}
 
+		
 		bulletsPool.for_each_active([&p](Bullet& bullet)
 		{
 			p->PaintBullet(&bullet);
