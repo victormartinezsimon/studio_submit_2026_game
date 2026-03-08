@@ -63,13 +63,13 @@ void InputManager::UpdateFakeController()
                 {
                     if (ev.code == KEY_LEFT)
                     {
-                        _fakeControllerValue-= 10;
+                        _fakeControllerValue-= fakeIncrease;
                     }
                     else
                     {
                         if(ev.code == KEY_RIGHT)
                         {
-                            _fakeControllerValue += 10;
+                            _fakeControllerValue += fakeIncrease;
                         }
                     }
                 }

@@ -13,6 +13,7 @@
 
 int main(int argc, char** argv)
 {
+	/*
 	InputManager mngr;
 
 	while(true)
@@ -21,8 +22,8 @@ int main(int argc, char** argv)
 		printf("value: %d\n", value);
 	}
 
-
-	/*
+	*/
+	
 	(void)argc; (void)argv;
 
 	Painter* p = new LinuxPainter();
@@ -103,7 +104,7 @@ int main(int argc, char** argv)
 		p->PaintBackground();
 		p->PaintPlayer(player);
 
-		
+		/*
 		for (auto&& enemy : enemies)
 		{
 			p->PaintEnemy(enemy);
@@ -113,11 +114,11 @@ int main(int argc, char** argv)
 		{
 			p->PaintBullet(&bullet);
 		});
-		/
+		*/
 		
 		p->EndPaint();
 	}
-	*/
+	
 
 	
 }

@@ -69,21 +69,22 @@ bool LinuxPainter::HasEnded()
 
 void LinuxPainter::PaintPlayer(Plane *player)
 {
-	int x = player->GetX() - player->GetWidth()/2;
-	int y = player->GetY() - player->GetHeight()/2;
+	float x, y;
+	player->GetPaintPosition(x, y);
+
 	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite_player, player->GetWidth(), player->GetHeight(), x, y, 3);
 }
 void LinuxPainter::PaintEnemy(Plane *enemy)
 {
-	int x = enemy->GetX();
-	int y = enemy->GetY();
+	float x, y;
+	enemy->GetPaintPosition(x, y);
 	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite_cow, SPRITE_W, SPRITE_H, x, y, TRANSPARENT_KEY);
 }
 
 void LinuxPainter::PaintBullet(Bullet *bullet)
 {
-	int x = bullet->GetX() - bullet->GetWidth() / 2;
-	int y = bullet->GetY() - bullet->GetHeight() / 2;
+	float x, y;
+	bullet->GetPaintPosition(x, y);
 
 	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite_rabbit, SPRITE_W, SPRITE_H, x, y, TRANSPARENT_KEY);
 }
