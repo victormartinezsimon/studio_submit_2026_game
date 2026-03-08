@@ -25,20 +25,20 @@ int main(int argc, char **argv)
 	Plane *player = new Plane();
 	GameManager *gm = new GameManager(inputManager, player, &enemiesPool, &bulletsPool, painterManager);
 
+	float deltaTime = 0;
+
 	while (true)
 	{
-		float deltaTime = 0.16f;
+		const auto start_frame{std::chrono::steady_clock::now()};
 
 		gm->Update(deltaTime);
 		gm->Paint();
 		painterManager->Paint();
 
-		/*
-		painter->BeginPaint();
-		painter->PaintBackground();
-		painter->PaintPlayer(player);
-		painter->EndPaint();
-		*/
+		const auto end_frame{std::chrono::steady_clock::now()};
+		const std::chrono::duration<float> elapsed_seconds{end_frame - start_frame};
+		deltaTime = elapsed_seconds.count();
+		//printf("Total Frames: %f\n", 1.0f/deltaTime);
 	}
 
 	delete inputManager;
