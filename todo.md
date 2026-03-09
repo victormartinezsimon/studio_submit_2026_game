@@ -5,4 +5,4 @@
 - Generate ui for main menu
 - move enemies a little, its too boring right now
 - sound
-- test with different screen sizes
+- ~~test with different screen sizes~~

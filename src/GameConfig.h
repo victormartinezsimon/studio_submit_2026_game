@@ -2,9 +2,8 @@
 #include <string_view>
 #include <array>
 
-constexpr int SCREEN_WIDTH = 320;
-constexpr int SCREEN_HEIGHT = 240;
-constexpr unsigned int EXPECTED_FPS = 60;
+constexpr int SCREEN_WIDTH = 640;
+constexpr int SCREEN_HEIGHT = 480;
 
 constexpr unsigned int PLANES_POOL_SIZE = 11;
 constexpr unsigned int BULLETS_POOL_SIZE = 50;
