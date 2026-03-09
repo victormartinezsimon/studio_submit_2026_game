@@ -10,24 +10,49 @@ GameManager::GameManager(InputManager *input, Plane *player, Pool<Plane, PLANES_
 	: _inputManager(input), _player(player), _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
 	  _painterManager(painterManager), _currentState(STATES::MENU), _currentLevel(0)
 {
+	InitializeConstantValues();
+	InitializeImprovementsFunctions();
+}
 
+void GameManager::InitializeConstantValues()
+{
 	playerData.velocityBulletX = DEFAULT_BULLET_VEL_X;
 	playerData.velocityBulletY = -DEFAULT_BULLET_VEL_Y;
 	playerData.fireRate = DEFAULT_FIRE_RATE;
-	playerData.bulletsOrigin = DEFAULT_BULLETS_ORIGIN;
+	playerData.bulletsSource = DEFAULT_BULLETS_ORIGIN;
 	playerData.bulletHasPenetration = DEFAULT_BULLET_HAS_PENETRATION;
 	playerData.bulletHasExplosion = DEFAULT_BULLET_HAS_EXPLOSION;
 	playerData.hasShield = DEFAULT_HAS_SHIELD;
+	playerData.bulletsPerShot = DEFAULT_BULLETS_PER_SHOT;
 
 	enemyData.velocityBulletX = DEFAULT_BULLET_VEL_X;
 	enemyData.velocityBulletY = DEFAULT_BULLET_VEL_Y;
 	enemyData.fireRate = DEFAULT_FIRE_RATE;
-	enemyData.bulletsOrigin = DEFAULT_BULLETS_ORIGIN;
+	enemyData.bulletsSource = DEFAULT_BULLETS_ORIGIN;
 	enemyData.bulletHasPenetration = DEFAULT_BULLET_HAS_PENETRATION;
 	enemyData.bulletHasExplosion = DEFAULT_BULLET_HAS_EXPLOSION;
 	enemyData.hasShield = DEFAULT_HAS_SHIELD;
+	enemyData.bulletsPerShot = DEFAULT_BULLETS_PER_SHOT;
+}
 
-	ConfigurePlayer();
+void GameManager::InitializeImprovementsFunctions()
+{
+	_improvementFunctions[std::string(IMPROVEMENT_3_SHOTS)] = [](modifiable_data &data)
+	{ data.bulletsPerShot = 3; };
+	_improvementFunctions[std::string(IMPROVEMENT_INCREASE_ORIGIN)] = [](modifiable_data &data)
+	{ data.bulletsSource = 3; };
+	_improvementFunctions[std::string(IMPROVEMENT_INCREASE_FIRE_RATE)] = [](modifiable_data &data)
+	{ data.fireRate *INCREASE_FIRE_RATE; };
+	_improvementFunctions[std::string(IMPROVEMENT_GIVE_PENETRATION)] = [](modifiable_data &data)
+	{ data.bulletHasPenetration = true; };
+	_improvementFunctions[std::string(IMPROVEMENT_GIVE_EXPLOSION)] = [](modifiable_data &data)
+	{ data.bulletHasExplosion = true; };
+	_improvementFunctions[std::string(IMPROVEMENT_GIVE_SHIELD)] = [](modifiable_data &data)
+	{ data.hasShield = true; };
+	_improvementFunctions[std::string(IMPROVEMENT_FAST_SHOTS)] = [](modifiable_data &data)
+	{ data.velocityBulletX *= FAST_SHOT_MULTIPLICATION, data.velocityBulletY *= FAST_SHOT_MULTIPLICATION; };
+	_improvementFunctions[std::string(IMPROVEMENT_SLOW_SHOTS)] = [](modifiable_data &data)
+	{ data.velocityBulletX *= SLOW_SHOT_MULTIPLICATION, data.velocityBulletY *= SLOW_SHOT_MULTIPLICATION; };
 }
 
 void GameManager::Update(const float deltaTime)
@@ -86,12 +111,10 @@ void GameManager::UpdateBattle(const float deltaTime)
 	// update enemies
 	UpdateEnemies(deltaTime);
 
-	
-	if(_enemiesPool->GetCurrentUsed().size() == 0)
+	if (_enemiesPool->GetCurrentUsed().size() == 0)
 	{
 		EndLevel();
 	}
-	
 }
 void GameManager::UpdateImprovement(const float deltaTime)
 {
@@ -127,19 +150,32 @@ void GameManager::MovePlayer()
 void GameManager::ConfigurePlayer()
 {
 	_player->SetSize(PLANE_WIDTH, PLANE_HEIGHT);
-	_player->SetBulletsOrigin(playerData.bulletsOrigin);
+	_player->SetBulletsTotalSources(playerData.bulletsSource);
 	_player->SetFireRate(playerData.fireRate);
-	_player->SetCallbackFire([this](int index, Plane *p)
-							 { this->SpawnPlayerBullet(index, p); });
+	_player->SetCallbackFire([this](int sourceIndex, Plane *p)
+							 { this->SpawnBullet(sourceIndex, p, true, playerData); });
 }
 
-void GameManager::SpawnPlayerBullet(int index, Plane *p)
+void GameManager::SpawnBullet(int sourceIndex, Plane *p, bool forPlayer, const modifiable_data &data)
 {
 	auto bullet = _bulletsPool->Get();
-	bullet->SetPosition(p->GetX(), p->GetY());
-	bullet->SetVelocity(playerData.velocityBulletX, playerData.velocityBulletY);
+	float positionX = p->GetX();
+
+	if (sourceIndex == 1)
+	{
+		positionX = p->GetX() - p->GetWidth() / 2;
+	}
+
+	if (sourceIndex == 2)
+	{
+		positionX = p->GetX() + p->GetWidth() / 2;
+	}
+
+	bullet->SetPosition(positionX, p->GetY());
 	bullet->SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
-	bullet->SetPlayerTeam(true);
+	bullet->SetVelocity(data.velocityBulletX, data.velocityBulletY);
+	bullet->SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
+	bullet->SetPlayerTeam(forPlayer);
 }
 
 void GameManager::PaintMenu() const
@@ -182,6 +218,7 @@ void GameManager::PaintInitialMovement() const
 
 void GameManager::StartLevel()
 {
+	ConfigurePlayer();
 	SpawnEnemies();
 }
 
@@ -199,7 +236,7 @@ void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) 
 
 void GameManager::SpawnEnemies()
 {
-	int levelConfigID = std::min(_currentLevel, TOTAL_LEVELS_CONFIG -1);
+	int levelConfigID = std::min(_currentLevel, TOTAL_LEVELS_CONFIG - 1);
 	int enemiesToSpawn = LEVELS_CONFIGS[levelConfigID];
 
 	float currentY = SCREEN_HEIGHT * 0.1f;
@@ -236,19 +273,10 @@ void GameManager::ConfigureEnemy(Plane *enemy)
 {
 	enemy->SetSize(ENEMY_WIDTH, ENEMY_HEIGHT);
 	enemy->SetFireRate(enemyData.fireRate);
-	enemy->SetBulletsOrigin(enemyData.bulletsOrigin);
+	enemy->SetBulletsTotalSources(enemyData.bulletsSource);
 	enemy->SetFireRate(enemyData.fireRate);
-	enemy->SetCallbackFire([this](int index, Plane *p)
-						   { this->SpawnEnemyBullet(index, p); });
-}
-
-void GameManager::SpawnEnemyBullet(int index, Plane *p)
-{
-	auto bullet = _bulletsPool->Get();
-	bullet->SetPosition(p->GetX(), p->GetY());
-	bullet->SetVelocity(enemyData.velocityBulletX, enemyData.velocityBulletY);
-	bullet->SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
-	bullet->SetPlayerTeam(false);
+	enemy->SetCallbackFire([this](int sourceIndex, Plane *p)
+						   { this->SpawnBullet(sourceIndex, p, false, enemyData); });
 }
 
 void GameManager::UpdateBullets(float deltaTime)
@@ -278,7 +306,7 @@ void GameManager::UpdateBullets(float deltaTime)
 				{
 					bulletsToDelete.push_back(bullet);
 				}
-				break;//only 1 collistion per bullet per frame
+				break; // only 1 collistion per bullet per frame
 			}
 		}
 

@@ -12,14 +12,11 @@ void Plane::IncreaseFireRate(float increase)
 {
 	_fireRate += increase;
 }
-void Plane::SetBulletsOrigin(int bullets)
+void Plane::SetBulletsTotalSources(int bullets)
 {
-	_bulletsOrigin = bullets;
+	_bulletsTotalSources = bullets;
 }
-void Plane::IncreaseBulletsOrigin(int bullets)
-{
-	_bulletsOrigin += bullets;
-}
+
 void Plane::IncreaseLives()
 {
 	_lives++;
@@ -39,7 +36,7 @@ void Plane::Update(const float deltaTime)
 
 	if (_currentAcumTime > _fireRate)
 	{
-		for (int i = 0; i < _bulletsOrigin; ++i)
+		for (int i = 0; i < _bulletsTotalSources; ++i)
 		{
 			_callbackFire(i, this);
 		}
