@@ -14,6 +14,12 @@ constexpr std::string_view BACKGROUND_IMAGE = "images/background.png";
 constexpr int PLAYER_DEFAULT_BULLET_VEL_X = 0;
 constexpr int PLAYER_DEFAULT_BULLET_VEL_Y = -50;
 constexpr float PLAYER_DEFAULT_FIRE_RATE = 2;
+constexpr int PLAYER_DEFAULT_BULLETS_ORIGIN = 1;
+
+constexpr int ENEMY_DEFAULT_BULLET_VEL_X = 0;
+constexpr int ENEMY_DEFAULT_BULLET_VEL_Y = 50;
+constexpr float ENEMY_DEFAULT_FIRE_RATE = 2;
+constexpr int ENEMY_DEFAULT_BULLETS_ORIGIN = 1;
 
 constexpr int TOTAL_LEVELS_CONFIG = 5;
 constexpr int MAX_ENEMIES_PER_ROW = 5;

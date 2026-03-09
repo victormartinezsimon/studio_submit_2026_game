@@ -13,6 +13,12 @@ GameManager::GameManager(InputManager *input, Plane *player, Pool<Plane, PLANES_
 	currentPlayerVelocitiyBulletX = PLAYER_DEFAULT_BULLET_VEL_X;
 	currentPlayerVelocitiyBulletY = PLAYER_DEFAULT_BULLET_VEL_Y;
 	currentPlayerFireRate = PLAYER_DEFAULT_FIRE_RATE;
+	currentPlayerBulletsOrigin = PLAYER_DEFAULT_BULLETS_ORIGIN;
+
+	currentEnemyVelocitiyBulletX = ENEMY_DEFAULT_BULLET_VEL_X;
+	currentEnemyVelocitiyBulletY = ENEMY_DEFAULT_BULLET_VEL_Y;
+	currentEnemyFireRate = ENEMY_DEFAULT_FIRE_RATE;
+	currentEnemyBulletsOrigin = ENEMY_DEFAULT_BULLETS_ORIGIN;
 
 	ConfigurePlayer();
 }
@@ -71,10 +77,18 @@ void GameManager::UpdateBattle(const float deltaTime)
 	UpdateBullets(deltaTime);
 
 	// update enemies
+	UpdateEnemies(deltaTime);
+
+	
+	if(_enemiesPool->GetCurrentUsed().size() == 0)
+	{
+		EndLevel();
+	}
+	
 }
 void GameManager::UpdateImprovement(const float deltaTime)
 {
-	_currentState = STATES::BATTLE;
+	_currentState = STATES::INITIAL_MOVEMENT;
 }
 void GameManager::UpdateInitialMovement(const float deltaTime)
 {
@@ -106,13 +120,13 @@ void GameManager::MovePlayer()
 void GameManager::ConfigurePlayer()
 {
 	_player->SetSize(PLANE_WIDTH, PLANE_HEIGHT);
-	_player->SetBulletsOrigin(1);
+	_player->SetBulletsOrigin(currentPlayerBulletsOrigin);
 	_player->SetFireRate(currentPlayerFireRate);
 	_player->SetCallbackFire([this](int index, Plane *p)
-							 { this->SpanwPlayerBullet(index, p); });
+							 { this->SpawnPlayerBullet(index, p); });
 }
 
-void GameManager::SpanwPlayerBullet(int index, Plane *p)
+void GameManager::SpawnPlayerBullet(int index, Plane *p)
 {
 	auto bullet = _bulletsPool->Get();
 	bullet->SetPosition(p->GetX(), p->GetY());
@@ -164,6 +178,12 @@ void GameManager::StartLevel()
 	SpawnEnemies();
 }
 
+void GameManager::EndLevel()
+{
+	_currentState = STATES::IMPROVEMENT_SELECTOR;
+	++_currentLevel;
+}
+
 void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const
 {
 	minX = 0 + ENEMY_WIDTH / 2;
@@ -201,15 +221,33 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 
 		auto enemy = _enemiesPool->Get();
 		enemy->SetPosition(posX, posY);
-		enemy->SetSize(ENEMY_WIDTH, ENEMY_HEIGHT);
-		enemy->SetFireRate(0);
+		ConfigureEnemy(enemy);
 	}
+}
+
+void GameManager::ConfigureEnemy(Plane *enemy)
+{
+	enemy->SetSize(ENEMY_WIDTH, ENEMY_HEIGHT);
+	enemy->SetFireRate(currentEnemyFireRate);
+	enemy->SetBulletsOrigin(currentEnemyBulletsOrigin);
+	enemy->SetFireRate(currentEnemyFireRate);
+	enemy->SetCallbackFire([this](int index, Plane *p)
+						   { this->SpawnEnemyBullet(index, p); });
+}
+
+void GameManager::SpawnEnemyBullet(int index, Plane *p)
+{
+	auto bullet = _bulletsPool->Get();
+	bullet->SetPosition(p->GetX(), p->GetY());
+	bullet->SetVelocity(currentEnemyVelocitiyBulletX, currentEnemyVelocitiyBulletY);
+	bullet->SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
+	bullet->SetPlayerTeam(false);
 }
 
 void GameManager::UpdateBullets(float deltaTime)
 {
-	std::vector<Bullet*> bulletsToDelete;
-	std::vector<Plane*> enemiesToDelete;
+	std::vector<Bullet *> bulletsToDelete;
+	std::vector<Plane *> enemiesToDelete;
 
 	auto currentBullets = _bulletsPool->GetCurrentUsed();
 	auto currentEnemies = _enemiesPool->GetCurrentUsed();
@@ -229,8 +267,11 @@ void GameManager::UpdateBullets(float deltaTime)
 			if (HasCollision(bullet, enemy))
 			{
 				enemiesToDelete.push_back(enemy);
-				//do something with penetration
-				bulletsToDelete.push_back(bullet);
+
+				// if(!bullet->HasPenetration())
+				{
+					bulletsToDelete.push_back(bullet);
+				}
 			}
 		}
 
@@ -240,28 +281,40 @@ void GameManager::UpdateBullets(float deltaTime)
 		}
 	}
 
-	for(auto &bullet: bulletsToDelete)
+	for (auto &bullet : bulletsToDelete)
 	{
 		_bulletsPool->Release(bullet);
-		//do somthing with explosion
+		// do somthing with explosion
 	}
 
-	for(auto &enemy: enemiesToDelete)
+	for (auto &enemy : enemiesToDelete)
 	{
 		_enemiesPool->Release(enemy);
 	}
 }
 
-bool GameManager::HasCollision(const Bullet *bullet, const Plane *plane)const
+void GameManager::UpdateEnemies(float deltaTime)
 {
-	if(bullet->GetPlayerTeam() == plane->GetPlayerTeam()){return false;}
+	auto currentEnemies = _enemiesPool->GetCurrentUsed();
+	for (auto &enemy : currentEnemies)
+	{
+		enemy->Update(deltaTime);
+	}
+}
+
+bool GameManager::HasCollision(const Bullet *bullet, const Plane *plane) const
+{
+	if (bullet->GetPlayerTeam() == plane->GetPlayerTeam())
+	{
+		return false;
+	}
 
 	return CollsisionDetection(bullet->GetX(), bullet->GetY(), bullet->GetWidth(), bullet->GetHeight(),
 							   plane->GetX(), plane->GetY(), plane->GetWidth(), plane->GetHeight());
 }
 
 bool GameManager::CollsisionDetection(float ax, float ay, float aw, float ah,
-									  float bx, float by, float bw, float bh)const
+									  float bx, float by, float bw, float bh) const
 {
 	return (std::abs(ax - bx) < (aw + bw) / 2.0f &&
 			std::abs(ay - by) < (ah + bh) / 2.0f);

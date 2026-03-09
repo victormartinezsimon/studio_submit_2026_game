@@ -38,14 +38,19 @@ private:
 
 private:
 	void ConfigurePlayer();
-	void SpanwPlayerBullet(int index, Plane *p);
+	void SpawnPlayerBullet(int index, Plane *p);
 	void UpdateBullets(float deltaTime);
 	bool HasCollision(const Bullet* bullet, const Plane* plane)const;
 	bool CollsisionDetection(float ax, float ay, float aw, float ah,
                   float bx, float by, float bw, float bh)const;
+private:
+	void UpdateEnemies(float deltaTime);
+	void ConfigureEnemy(Plane* enemy);
+	void SpawnEnemyBullet(int index, Plane *p);
 
 private:
 	void StartLevel();
+	void EndLevel();
 	void SpawnEnemies();
 	void SpawnRowEnemies(int totalEnemies, float posY);
 	void GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const;
@@ -60,9 +65,19 @@ private:
 	};
 
 	private:
+	//TODO: move this to a struct
 	float currentPlayerVelocitiyBulletX; 
 	float currentPlayerVelocitiyBulletY; 
 	float currentPlayerFireRate;
+	int currentPlayerBulletsOrigin;
+	bool currentPlayerHasPenetration;//for the future
+	bool currentPlayerHasExplosion;//for the future
+	bool currentPlayerHasShield;//for the future
+	
+	float currentEnemyVelocitiyBulletX; 
+	float currentEnemyVelocitiyBulletY; 
+	float currentEnemyFireRate;
+	int currentEnemyBulletsOrigin;
 
 
 private:
