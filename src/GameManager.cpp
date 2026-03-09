@@ -8,7 +8,7 @@
 GameManager::GameManager(InputManager *input, Plane *player, Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
 						 Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, PainterManager *painterManager)
 	: _inputManager(input), _player(player), _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
-	  _painterManager(painterManager), _currentState(STATES::MENU), _currentLevel(3)
+	  _painterManager(painterManager), _currentState(STATES::MENU), _currentLevel(0)
 {
 	currentPlayerVelocitiyBulletX = PLAYER_DEFAULT_BULLET_VEL_X;
 	currentPlayerVelocitiyBulletY = PLAYER_DEFAULT_BULLET_VEL_Y;
@@ -68,28 +68,9 @@ void GameManager::UpdateBattle(const float deltaTime)
 	// update player
 	_player->Update(deltaTime);
 
+	UpdateBullets(deltaTime);
 
-	// update bullets
-	_bulletsPool->for_each_active([deltaTime](Bullet &obj)
-								  { obj.Update(deltaTime); });
-
-
-	// clear bulets
-	std::vector<Bullet *> bulletsToDelete;
-	_bulletsPool->for_each_active([&bulletsToDelete](Bullet &obj)
-								  {
-									  if (obj.GetY() < 0 || obj.GetY() > SCREEN_HEIGHT)
-									  {
-										  bulletsToDelete.push_back(&obj);
-									  }
-									  // search for collision
-								  });
-
-
-	for (auto &bullet : bulletsToDelete)
-	{
-		_bulletsPool->Release(bullet);
-	}
+	// update enemies
 }
 void GameManager::UpdateImprovement(const float deltaTime)
 {
@@ -137,6 +118,7 @@ void GameManager::SpanwPlayerBullet(int index, Plane *p)
 	bullet->SetPosition(p->GetX(), p->GetY());
 	bullet->SetVelocity(currentPlayerVelocitiyBulletX, currentPlayerVelocitiyBulletY);
 	bullet->SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
+	bullet->SetPlayerTeam(true);
 }
 
 void GameManager::PaintMenu() const
@@ -193,7 +175,7 @@ void GameManager::SpawnEnemies()
 	int levelConfigID = std::min(_currentLevel, TOTAL_LEVELS_CONFIG);
 	int enemiesToSpawn = LEVELS_CONFIGS[levelConfigID];
 
-	float currentY = SCREEN_HEIGHT* 0.1f;
+	float currentY = SCREEN_HEIGHT * 0.1f;
 
 	while (enemiesToSpawn > 0)
 	{
@@ -209,10 +191,10 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 	GetMinMaxXPosiblePositionForEnemies(minX, maxX);
 
 	float screenWidth = maxX - minX;
-	float holeDistance = (screenWidth - (enemiesToSpawn * ENEMY_WIDTH)) /enemiesToSpawn;
+	float holeDistance = (screenWidth - (enemiesToSpawn * ENEMY_WIDTH)) / enemiesToSpawn;
 
-	float currentPositionX = minX + holeDistance / 2 + ENEMY_WIDTH/2;
-	for(int enemyID = 0; enemyID < enemiesToSpawn; ++enemyID)
+	float currentPositionX = minX + holeDistance / 2 + ENEMY_WIDTH / 2;
+	for (int enemyID = 0; enemyID < enemiesToSpawn; ++enemyID)
 	{
 		float posX = currentPositionX;
 		currentPositionX += ENEMY_WIDTH + holeDistance;
@@ -222,4 +204,65 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 		enemy->SetSize(ENEMY_WIDTH, ENEMY_HEIGHT);
 		enemy->SetFireRate(0);
 	}
+}
+
+void GameManager::UpdateBullets(float deltaTime)
+{
+	std::vector<Bullet*> bulletsToDelete;
+	std::vector<Plane*> enemiesToDelete;
+
+	auto currentBullets = _bulletsPool->GetCurrentUsed();
+	auto currentEnemies = _enemiesPool->GetCurrentUsed();
+
+	for (auto &bullet : currentBullets)
+	{
+		bullet->Update(deltaTime);
+
+		// check out of bound
+		if (bullet->GetY() < 0 || bullet->GetY() > SCREEN_HEIGHT)
+		{
+			bulletsToDelete.push_back(bullet);
+		}
+
+		for (auto &&enemy : currentEnemies)
+		{
+			if (HasCollision(bullet, enemy))
+			{
+				enemiesToDelete.push_back(enemy);
+				//do something with penetration
+				bulletsToDelete.push_back(bullet);
+			}
+		}
+
+		if (HasCollision(bullet, _player))
+		{
+			// do something
+		}
+	}
+
+	for(auto &bullet: bulletsToDelete)
+	{
+		_bulletsPool->Release(bullet);
+		//do somthing with explosion
+	}
+
+	for(auto &enemy: enemiesToDelete)
+	{
+		_enemiesPool->Release(enemy);
+	}
+}
+
+bool GameManager::HasCollision(const Bullet *bullet, const Plane *plane)const
+{
+	if(bullet->GetPlayerTeam() == plane->GetPlayerTeam()){return false;}
+
+	return CollsisionDetection(bullet->GetX(), bullet->GetY(), bullet->GetWidth(), bullet->GetHeight(),
+							   plane->GetX(), plane->GetY(), plane->GetWidth(), plane->GetHeight());
+}
+
+bool GameManager::CollsisionDetection(float ax, float ay, float aw, float ah,
+									  float bx, float by, float bw, float bh)const
+{
+	return (std::abs(ax - bx) < (aw + bw) / 2.0f &&
+			std::abs(ay - by) < (ah + bh) / 2.0f);
 }

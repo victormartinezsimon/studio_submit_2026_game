@@ -39,6 +39,10 @@ private:
 private:
 	void ConfigurePlayer();
 	void SpanwPlayerBullet(int index, Plane *p);
+	void UpdateBullets(float deltaTime);
+	bool HasCollision(const Bullet* bullet, const Plane* plane)const;
+	bool CollsisionDetection(float ax, float ay, float aw, float ah,
+                  float bx, float by, float bw, float bh)const;
 
 private:
 	void StartLevel();
