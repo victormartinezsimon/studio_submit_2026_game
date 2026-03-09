@@ -192,7 +192,7 @@ void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) 
 
 void GameManager::SpawnEnemies()
 {
-	int levelConfigID = std::min(_currentLevel, TOTAL_LEVELS_CONFIG);
+	int levelConfigID = std::min(_currentLevel, TOTAL_LEVELS_CONFIG -1);
 	int enemiesToSpawn = LEVELS_CONFIGS[levelConfigID];
 
 	float currentY = SCREEN_HEIGHT * 0.1f;
