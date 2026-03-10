@@ -1,7 +1,8 @@
 #pragma once
-#include <list>
+#include <array>
 #include <algorithm>
 #include <stdexcept>
+#include <functional>
 
 #include "GameConfig.h"
 
@@ -11,61 +12,64 @@ class Pool
 public:
 	Pool()
 	{
-		for (std::size_t i = 0; i < N; ++i) {
-			T* obj = new T();
-			free_.push_back(obj);
-			all_.push_back(obj);
+		for(std::size_t i = 0; i< N; ++i)
+		{
+			_poolElements[i].SetID(i);
+			_used[i] = false;
 		}
+
 	}
 	Pool(const Pool&) = delete;
 	Pool& operator=(const Pool&) = delete;
 	Pool(Pool&&) = delete;
 	Pool& operator=(Pool&&) = delete;
-
-	~Pool() {
-		for (T* obj : all_) {
-			delete obj;
-		}
-	}
-
 public:
-	T* Get()
-	{
-		if (free_.empty()) {
-			throw std::runtime_error("ObjectPool agotado");
-		}
 
-		T* obj = free_.front();
-		free_.pop_front();
-		used_.push_back(obj);
-		return obj;
-	}
-	void Release(T* obj)
+	int Get()
 	{
-		auto it = std::find(used_.begin(), used_.end(), obj);
-		if (it == used_.end()) {
-			throw std::runtime_error("El objeto no pertenece al pool");
+		for(std::size_t i = 0; i< N; ++i)
+		{
+			if(!_used[i])
+			{
+				_used[i] = true;
+				return i;
+			}
 		}
-
-		used_.erase(it);
-		free_.push_back(obj);
+		throw std::runtime_error("ObjectPool ended");
+		return -1;
 	}
 
-	template <typename Func>
-	void for_each_active(Func&& func) {
-		for (T* obj : used_) {
-			func(*obj);
+	void Release(const T& elem)
+	{
+		int index = elem.GetID();
+		_used[index] = false;
+	}
+
+	void for_each_active(std::function<void(T&)> func) 
+	{
+		for(int i = 0; i < N; ++i)
+		{
+			if(!_used[i]){continue;}
+			func(_poolElements[i]);
 		}
 	}	
 
-	const std::list<T*> GetCurrentUsed()
+	void call_for_element(int id, std::function<void(T&)> func) 
 	{
-		return used_;
+		func(_poolElements[id]);
+	}	
+
+	int TotalInUse() const
+	{
+		int count = 0;
+		for(auto v: _used)
+		{
+			count += v? 1: 0;
+		}
+		return count;
 	}
 
-
 private:
-	std::list<T*> free_;
-	std::list<T*> used_;
-	std::list<T*> all_; 
+	std::array<T,N> _poolElements; 
+	std::array<bool,N> _used; 
 };

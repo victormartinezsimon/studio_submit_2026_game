@@ -4,10 +4,10 @@
 #include "GameConfig.h"
 #include <map>
 #include <functional>
+#include "Plane.h"
+#include "Bullet.h"
 
 class InputManager;
-class Plane;
-class Bullet;
 class PainterManager;
 
 class GameManager
@@ -56,16 +56,17 @@ private:
 private:
 	void ConfigurePlayer();
 	void UpdateBullets(float deltaTime);
-	bool HasCollision(const Bullet *bullet, Plane *plane) const;
+	bool HasCollision(const Bullet& bullet, Plane* plane) const;
+	bool HasCollision(const Bullet& bullet, Plane& plane) const;
 	bool CollsisionDetection(float ax, float ay, float aw, float ah,
 							 float bx, float by, float bw, float bh) const;
 
+	void DamagePlayer(); 
 private:
 	void UpdateEnemies(float deltaTime);
-	void ConfigureEnemy(Plane *enemy);
 
 private:
-	void SpawnBullet(int sourceIndex, Plane *p, bool forPlayer, const modifiable_data &data);
+	void SpawnBullet(int sourceIndex, const Plane& p, bool forPlayer, const modifiable_data &data);
 
 private:
 	void StartLevel();
@@ -75,7 +76,7 @@ private:
 	void GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const;
 
 private:
-	void DoExplosion(Bullet* bullet, std::vector<Plane *>& enemiesToDelete);
+	void DoExplosion(Bullet& bullet);
 
 private:
 	enum class STATES
@@ -94,7 +95,7 @@ private:
 	InputManager *_inputManager;
 	STATES _currentState = STATES::MENU;
 	int _currentLevel = 0;
-	Plane *_player;
+	Plane* _player;
 	Pool<Plane, PLANES_POOL_SIZE> *_enemiesPool;
 	Pool<Bullet, BULLETS_POOL_SIZE> *_bulletsPool;
 	PainterManager *_painterManager;

@@ -20,17 +20,17 @@ public:
 		_Y = y;
 	}
 
-	void SetPositionX( float x)
+	void SetPositionX(float x)
 	{
 		_X = x;
 	}
 
-	void GetPaintPosition(float& finalX, float& finalY) const
+	void GetPaintPosition(float &finalX, float &finalY) const
 	{
 		finalX = GetX() - GetWidth() / 2;
 		finalY = GetY() - GetHeight() / 2;
 	}
-	
+
 public:
 	unsigned int GetWidth() const
 	{
@@ -57,6 +57,16 @@ public:
 		_playerTeam = playerTeam;
 	}
 
+public:
+	void SetID(int id)
+	{
+		_id = id;
+	}
+	int GetID() const
+	{
+		return _id;
+	}
+
 protected:
 	float _X = 0;
 	float _Y = 0;
@@ -64,4 +74,5 @@ protected:
 	unsigned int _height = 0;
 
 	bool _playerTeam;
+	int _id = -1;
 };

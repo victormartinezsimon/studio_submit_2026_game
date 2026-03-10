@@ -8,7 +8,7 @@ public:
 	void Update(const float deltaTime);
 
 public:
-	void SetCallbackFire(std::function<void(int, Plane*)> fun);
+	void SetCallbackFire(std::function<void(int, const Plane&)> fun);
 
 public:
 	void SetFireRate(float fireRate);
@@ -22,7 +22,7 @@ public:
 	bool GetHasShield() const;
 
 private:
-	std::function<void(int, Plane*)> _callbackFire;
+	std::function<void(int, const Plane&)> _callbackFire = nullptr;
 	float _fireRate = 0;
 	float _bulletsTotalSources = 1;
 	float _currentAcumTime = 0;
