@@ -9,6 +9,8 @@ constexpr unsigned int PLANES_POOL_SIZE = 11;
 constexpr unsigned int BULLETS_POOL_SIZE = 50;
 constexpr unsigned int MAX_EASING_VALUES = PLANES_POOL_SIZE + 1;
 
+constexpr float INTIAL_ANIMATION_DURATION = 3;
+
 constexpr std::string_view BACKGROUND_IMAGE = "images/background.png";
 
 constexpr float DEFAULT_BULLET_VEL_X = 0;

@@ -96,6 +96,7 @@ void GameManager::Paint() const
 
 void GameManager::UpdateMenu(const float deltaTime)
 {
+	_playingStartAnimation = false;
 	_currentState = STATES::INITIAL_MOVEMENT;
 }
 void GameManager::UpdateBattle(const float deltaTime)
@@ -118,13 +119,19 @@ void GameManager::UpdateBattle(const float deltaTime)
 }
 void GameManager::UpdateImprovement(const float deltaTime)
 {
+	_playingStartAnimation = false;
 	_currentState = STATES::INITIAL_MOVEMENT;
 }
 void GameManager::UpdateInitialMovement(const float deltaTime)
 {
-	_player->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.9);
-	StartLevel();
-	_currentState = STATES::BATTLE;
+	if(!_playingStartAnimation)
+	{
+		StartLevel();
+	}
+	else
+	{
+		_easingManager.Update(deltaTime);
+	}
 }
 
 void GameManager::GetMinMaxXPosiblePosition(float &minX, float &maxX) const
@@ -150,6 +157,7 @@ void GameManager::MovePlayer()
 void GameManager::ConfigurePlayer()
 {
 	_player->SetSize(PLANE_WIDTH, PLANE_HEIGHT);
+	_player->SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.9);
 	_player->SetBulletsTotalSources(playerData.bulletsSource);
 	_player->SetFireRate(playerData.fireRate);
 	_player->SetHasShield(playerData.hasShield);
@@ -219,12 +227,20 @@ void GameManager::PaintImprovements() const
 }
 void GameManager::PaintInitialMovement() const
 {
+	{
+		float playerX, playerY;
+		_player->GetPaintPosition(playerX, playerY);
+		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player->GetWidth(), _player->GetHeight(), playerX, playerY);
+	}
 }
 
 void GameManager::StartLevel()
 {
 	ConfigurePlayer();
 	SpawnEnemies();
+	//_currentState = STATES::BATTLE;
+	PlayInitialAnimation();
+	_playingStartAnimation = true;
 }
 
 void GameManager::EndLevel()
@@ -395,4 +411,17 @@ void GameManager::DoExplosion(Bullet &bullet)
 
 void GameManager::DamagePlayer()
 {
+}
+
+void GameManager::PlayInitialAnimation()
+{
+	_easingManager.AddEase(INTIAL_ANIMATION_DURATION, SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
+	_player->GetX(), _player->GetY(), EasingManager::EASE_TYPES::INOUTCUBE,
+	[this](){
+		_currentState = STATES::BATTLE;
+	},
+	[this](float x, float y) {
+		_player->SetPosition(x,y);
+	}
+	);
 }

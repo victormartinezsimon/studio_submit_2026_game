@@ -6,6 +6,7 @@
 #include <functional>
 #include "Plane.h"
 #include "Bullet.h"
+#include "EasingManager.h"
 
 class InputManager;
 class PainterManager;
@@ -79,6 +80,9 @@ private:
 	void DoExplosion(Bullet& bullet);
 
 private:
+	void PlayInitialAnimation();
+
+private:
 	enum class STATES
 	{
 		MENU,
@@ -99,6 +103,8 @@ private:
 	Pool<Plane, PLANES_POOL_SIZE> *_enemiesPool;
 	Pool<Bullet, BULLETS_POOL_SIZE> *_bulletsPool;
 	PainterManager *_painterManager;
+	EasingManager _easingManager;
+	bool _playingStartAnimation =false;
 
 private:
 	std::map<std::string, std::function<void(modifiable_data &)>> _improvementFunctions;

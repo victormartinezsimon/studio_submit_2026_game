@@ -23,6 +23,10 @@ void EasingManager::Update(const float deltaTime)
                 _eases[i].endCallback();
                 _inUse[i] = false;
             }
+            else
+            {
+                _eases[i].tickCallback(x, y);
+            }
         }
     }
 }
