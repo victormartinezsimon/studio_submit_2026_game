@@ -54,13 +54,19 @@ private:
 	void MovePlayer();
 
 private:
-	void ConfigurePlayer();
+	void ConfigurePlane(Plane& p, const float posX, const float posY, const modifiable_data& data, bool isPlayer);
 	void UpdateBullets(float deltaTime);
+	void ManageBulletCollisions(Bullet& bullet);
+	bool ManageCollisionBetweenBulletAndEnemy(Bullet& bullet, Plane& enemy);
 	bool HasCollision(const Bullet& bullet, Plane& plane) const;
 	bool CollsisionDetection(float ax, float ay, float aw, float ah,
 							 float bx, float by, float bw, float bh) const;
-
 	void DamagePlayer(); 
+private:
+	void SpawnEnemies();
+	void SpawnRowEnemies(int totalEnemies, float posY);
+	void GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const;
+
 private:
 	void UpdateEnemies(float deltaTime);
 
@@ -70,9 +76,7 @@ private:
 private:
 	void StartLevel();
 	void EndLevel();
-	void SpawnEnemies();
-	void SpawnRowEnemies(int totalEnemies, float posY);
-	void GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const;
+
 
 private:
 	void DoExplosion(Bullet& bullet);

@@ -153,32 +153,40 @@ void GameManager::MovePlayer()
 	_player.SetPositionX(realPosition);
 }
 
-void GameManager::ConfigurePlayer()
+void GameManager::ConfigurePlane(Plane &p, const float posX, const float posY,
+								 const modifiable_data &data, bool isPlayer)
 {
-	_player.SetSize(PLANE_WIDTH, PLANE_HEIGHT);
-	_player.SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.9);
-	_player.SetBulletsTotalSources(playerData.bulletsSource);
-	_player.SetBulletsPerShot(playerData.bulletsPerShot);
-	_player.SetFireRate(playerData.fireRate);
-	_player.SetHasShield(playerData.hasShield);
-	_player.SetPlayerTeam(true);
-	_player.SetCallbackFire([this](int sourceIndex, const Plane &p)
-							{ this->SpawnBullet(sourceIndex, p, true, playerData); });
+	p.SetSize(PLANE_WIDTH, PLANE_HEIGHT);
+	p.SetPosition(posX, posY);
+	p.SetBulletsTotalSources(data.bulletsSource);
+	p.SetBulletsPerShot(data.bulletsPerShot);
+	p.SetFireRate(data.fireRate);
+	p.SetHasShield(data.hasShield);
+	p.SetPlayerTeam(isPlayer);
+	p.Reset();
+	p.SetCallbackFire([this, isPlayer, data](int sourceIndex, const Plane &p)
+					  { this->SpawnBullet(sourceIndex, p, isPlayer, data); });
 }
 
 void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, const modifiable_data &data)
 {
 	int totalBulletsPerShot = p.GetBulletsPerShot();
 
-	for(int bulletPerShot = 0; bulletPerShot < totalBulletsPerShot; ++bulletPerShot)
+	for (int bulletPerShot = 0; bulletPerShot < totalBulletsPerShot; ++bulletPerShot)
 	{
 		auto id = _bulletsPool.Get();
 		float velocityBulletX = 0;
-		if(bulletPerShot == 1){velocityBulletX = data.velocityBulletY * 0.5;}
-		if(bulletPerShot == 2){velocityBulletX = -data.velocityBulletY * 0.5;}
+		if (bulletPerShot == 1)
+		{
+			velocityBulletX = data.velocityBulletY * 0.5;
+		}
+		if (bulletPerShot == 2)
+		{
+			velocityBulletX = -data.velocityBulletY * 0.5;
+		}
 
 		_bulletsPool.call_for_element(id, [this, sourceIndex, p, forPlayer, data, velocityBulletX](Bullet &bullet)
-		{
+									  {
 			bullet.SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
 
 			float positionX = p.GetX();
@@ -197,11 +205,8 @@ void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, c
 			bullet.SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
 			bullet.SetPlayerTeam(forPlayer);
 			bullet.SetHasPenetration(data.bulletHasPenetration);
-			bullet.SetHasExplostion(data.bulletHasExplosion); 
-	});
+			bullet.SetHasExplostion(data.bulletHasExplosion); });
 	}
-
-	
 }
 
 void GameManager::PaintMenu()
@@ -256,9 +261,8 @@ void GameManager::PaintInitialMovement()
 
 void GameManager::StartLevel()
 {
-	ConfigurePlayer();
+	ConfigurePlane(_player, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.9, playerData, true);
 	SpawnEnemies();
-	//_currentState = STATES::BATTLE;
 	PlayInitialAnimation();
 	_playingStartAnimation = true;
 }
@@ -308,18 +312,8 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 		currentPositionX += ENEMY_WIDTH + holeDistance;
 
 		auto id = _enemiesPool.Get();
-
-		_enemiesPool.call_for_element(id, [this, posX, posY](Plane &enemy)
-									  {
-			enemy.SetPosition(posX, posY);
-			enemy.SetSize(ENEMY_WIDTH, ENEMY_HEIGHT);
-			enemy.SetBulletsTotalSources(enemyData.bulletsSource);
-			enemy.SetBulletsPerShot(enemyData.bulletsPerShot);
-			enemy.SetFireRate(enemyData.fireRate);
-			enemy.SetHasShield(enemyData.hasShield);
-			enemy.SetPlayerTeam(false);
-			enemy.SetCallbackFire([this](int sourceIndex, const Plane &p)
-						  { this->SpawnBullet(sourceIndex, p, false, enemyData); }); });
+		_enemiesPool.call_for_element(id, [posX, posY, this](Plane &enemy)
+									  { ConfigurePlane(enemy, posX, posY, enemyData, false); });
 	}
 }
 
@@ -329,43 +323,60 @@ void GameManager::UpdateBullets(float deltaTime)
 								 { bullet.Update(deltaTime); });
 
 	// check if it should be deleted any bullet
-	_bulletsPool.for_each_active([this](Bullet &bullet)
-								 {
-									  bool isDestroyed = false;
-									  // check out of screen
-									  if (bullet.GetY() < 0 || bullet.GetY() > SCREEN_HEIGHT)
-									  {
-										  _bulletsPool.Release(bullet);
-										  isDestroyed = true;
-									  }
-									  // check collision against enemies
-									  _enemiesPool.for_each_active([&](Plane &enemy)
-																	{
-										if (HasCollision(bullet, enemy))
-										{
-											bool v = HasCollision(bullet, enemy);
-											if (!bullet.GetHasPenetration())
-											{
-												_bulletsPool.Release(bullet);
-												isDestroyed = true;
-											}
-											_enemiesPool.Release(enemy);
-										} });
+	_bulletsPool.for_each_active([this, deltaTime](Bullet &bullet) {
 
-									  if (HasCollision(bullet, _player))
-									  {
-										  DamagePlayer();
-										  isDestroyed = true;
-									  }
-
-									  if (isDestroyed)
-									  {
-										  if (bullet.GetHasExplostion())
-										  {
-											  DoExplosion(bullet);
-										  }
-									  } });
+		ManageBulletCollisions( bullet );
+	});
 }
+
+void GameManager::ManageBulletCollisions( Bullet &bullet)
+{
+	bool isDestroyed = false;
+	// check out of screen
+	if (bullet.GetY() < 0 || bullet.GetY() > SCREEN_HEIGHT)
+	{
+		_bulletsPool.Release(bullet);
+		isDestroyed = true;
+	}
+
+	// check collision against enemies
+	_enemiesPool.for_each_active([&](Plane &enemy)
+								{
+									bool solution = ManageCollisionBetweenBulletAndEnemy(bullet, enemy);
+									isDestroyed |= solution;
+								});
+
+	if (HasCollision(bullet, _player))
+	{
+		DamagePlayer();
+		_bulletsPool.Release(bullet);
+		isDestroyed = true;
+	}
+
+	if (isDestroyed)
+	{
+		if (bullet.GetHasExplostion())
+		{
+			DoExplosion(bullet);
+		}
+	}
+}
+
+bool GameManager::ManageCollisionBetweenBulletAndEnemy(Bullet& bullet, Plane& enemy)
+{
+	bool isBulletDestroyed = false;
+	if (HasCollision(bullet, enemy))
+	{
+		if (!bullet.GetHasPenetration())
+		{
+			_bulletsPool.Release(bullet);
+			isBulletDestroyed = true;
+		}
+		_enemiesPool.Release(enemy);
+	} 
+	return isBulletDestroyed;
+}
+
 
 void GameManager::UpdateEnemies(float deltaTime)
 {
@@ -420,25 +431,16 @@ void GameManager::DamagePlayer()
 
 void GameManager::PlayInitialAnimation()
 {
-	_easingManager.AddEase(INTIAL_ANIMATION_DURATION, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 
-		_player.GetX(), _player.GetY(), EasingManager::EASE_TYPES::INOUTCUBE, 
-		[this]()
-		{
+	_easingManager.AddEase(INTIAL_ANIMATION_DURATION, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, _player.GetX(), _player.GetY(), EasingManager::EASE_TYPES::INOUTCUBE, [this]()
+						   {
 			_currentState = STATES::BATTLE;
-			_easingManager.FinishAll(); 
-		}, 
-		[this](float x, float y)
-		{ 
-			_player.SetPosition(x, y); 
-		}
-	);
+			_easingManager.FinishAll(); }, [this](float x, float y)
+						   { _player.SetPosition(x, y); });
 
 	_enemiesPool.for_each_active(
 		[this](Plane &p)
 		{
-			_easingManager.AddEase(INTIAL_ANIMATION_DURATION, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 
-				p.GetX(), p.GetY(), EasingManager::EASE_TYPES::INOUTCUBE, [] {}, 
-				[&p](float x, float y)
-				{ p.SetPosition(x, y); });
+			_easingManager.AddEase(INTIAL_ANIMATION_DURATION, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, p.GetX(), p.GetY(), EasingManager::EASE_TYPES::INOUTCUBE, [] {}, [&p](float x, float y)
+								   { p.SetPosition(x, y); });
 		});
 }

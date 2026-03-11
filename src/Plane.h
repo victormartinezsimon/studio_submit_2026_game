@@ -6,6 +6,7 @@ class Plane : public WorldObject
 {
 public:
 	void Update(const float deltaTime);
+	void Reset();
 
 public:
 	void SetCallbackFire(std::function<void(int, const Plane&)> fun);

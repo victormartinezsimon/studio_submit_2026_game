@@ -34,6 +34,11 @@ int Plane::GetBulletsPerShot() const
 {
 	return _bulletsPerShot;
 }
+void Plane::Reset()
+{
+	_currentAcumTime = 0;
+}
+
 
 void Plane::Update(const float deltaTime)
 {
