@@ -158,6 +158,7 @@ void GameManager::ConfigurePlayer()
 	_player.SetSize(PLANE_WIDTH, PLANE_HEIGHT);
 	_player.SetPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.9);
 	_player.SetBulletsTotalSources(playerData.bulletsSource);
+	_player.SetBulletsPerShot(playerData.bulletsPerShot);
 	_player.SetFireRate(playerData.fireRate);
 	_player.SetHasShield(playerData.hasShield);
 	_player.SetPlayerTeam(true);
@@ -167,29 +168,40 @@ void GameManager::ConfigurePlayer()
 
 void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, const modifiable_data &data)
 {
-	auto id = _bulletsPool.Get();
+	int totalBulletsPerShot = p.GetBulletsPerShot();
 
-	_bulletsPool.call_for_element(id, [this, sourceIndex, p, forPlayer, data](Bullet &bullet)
-								  {
-		bullet.SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
+	for(int bulletPerShot = 0; bulletPerShot < totalBulletsPerShot; ++bulletPerShot)
+	{
+		auto id = _bulletsPool.Get();
+		float velocityBulletX = 0;
+		if(bulletPerShot == 1){velocityBulletX = data.velocityBulletY * 0.5;}
+		if(bulletPerShot == 2){velocityBulletX = -data.velocityBulletY * 0.5;}
 
-		float positionX = p.GetX();
-		if (sourceIndex == 1)
+		_bulletsPool.call_for_element(id, [this, sourceIndex, p, forPlayer, data, velocityBulletX](Bullet &bullet)
 		{
-			positionX = p.GetX() - p.GetWidth() / 2;
-		}
+			bullet.SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
 
-		if (sourceIndex == 2)
-		{
-			positionX = p.GetX() + p.GetWidth() / 2;
-		}
+			float positionX = p.GetX();
+			if (sourceIndex == 1)
+			{
+				positionX = p.GetX() - p.GetWidth() / 2;
+			}
 
-		bullet.SetPosition(positionX, p.GetY());
-		bullet.SetVelocity(data.velocityBulletX, data.velocityBulletY);
-		bullet.SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
-		bullet.SetPlayerTeam(forPlayer);
-		bullet.SetHasPenetration(data.bulletHasPenetration);
-		bullet.SetHasExplostion(data.bulletHasExplosion); });
+			if (sourceIndex == 2)
+			{
+				positionX = p.GetX() + p.GetWidth() / 2;
+			}
+
+			bullet.SetPosition(positionX, p.GetY());
+			bullet.SetVelocity(velocityBulletX, data.velocityBulletY);
+			bullet.SetSize(BULLETS_WIDTH, BULLETS_HEIGHT);
+			bullet.SetPlayerTeam(forPlayer);
+			bullet.SetHasPenetration(data.bulletHasPenetration);
+			bullet.SetHasExplostion(data.bulletHasExplosion); 
+	});
+	}
+
+	
 }
 
 void GameManager::PaintMenu()
@@ -255,7 +267,7 @@ void GameManager::EndLevel()
 {
 	_enemiesPool.ReturnAll();
 	_bulletsPool.ReturnAll();
-	
+
 	_currentState = STATES::IMPROVEMENT_SELECTOR;
 	++_currentLevel;
 }
@@ -302,6 +314,7 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 			enemy.SetPosition(posX, posY);
 			enemy.SetSize(ENEMY_WIDTH, ENEMY_HEIGHT);
 			enemy.SetBulletsTotalSources(enemyData.bulletsSource);
+			enemy.SetBulletsPerShot(enemyData.bulletsPerShot);
 			enemy.SetFireRate(enemyData.fireRate);
 			enemy.SetHasShield(enemyData.hasShield);
 			enemy.SetPlayerTeam(false);

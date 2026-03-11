@@ -26,6 +26,15 @@ bool Plane::GetHasShield() const
 	return _hasShield;
 }
 
+void Plane::SetBulletsPerShot(int bullets)
+{
+	_bulletsPerShot = bullets;
+}
+int Plane::GetBulletsPerShot() const
+{
+	return _bulletsPerShot;
+}
+
 void Plane::Update(const float deltaTime)
 {
 	_currentAcumTime += deltaTime;

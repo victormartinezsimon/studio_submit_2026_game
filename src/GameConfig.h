@@ -30,7 +30,7 @@ constexpr std::array<int, TOTAL_LEVELS_CONFIG> LEVELS_CONFIGS = {1,3,5,8,PLANES_
 constexpr unsigned int ENEMY_WIDTH = 64;
 constexpr unsigned int ENEMY_HEIGHT = 64;
 
-constexpr std::string_view IMPROVEMENT_3_SHOTS = "3SHOTS";//TODO: review how to do this
+constexpr std::string_view IMPROVEMENT_3_SHOTS = "3SHOTS";
 constexpr std::string_view IMPROVEMENT_INCREASE_ORIGIN = "MORE_ORIGIN";
 constexpr std::string_view IMPROVEMENT_INCREASE_FIRE_RATE = "MORE_FIRE_RATE";
 constexpr std::string_view IMPROVEMENT_GIVE_PENETRATION = "PENETRATION";

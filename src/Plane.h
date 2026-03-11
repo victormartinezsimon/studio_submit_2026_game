@@ -18,13 +18,18 @@ public:
 	void SetBulletsTotalSources(int bullets);
 
 public:
+	void SetBulletsPerShot(int bullets);
+	int GetBulletsPerShot() const;
+
+public:
 	void SetHasShield(bool value);
 	bool GetHasShield() const;
 
 private:
 	std::function<void(int, const Plane&)> _callbackFire = nullptr;
 	float _fireRate = 0;
-	float _bulletsTotalSources = 1;
+	int _bulletsTotalSources = 1;
 	float _currentAcumTime = 0;
 	bool _hasShield = false;
+	int _bulletsPerShot = 1;
 };
