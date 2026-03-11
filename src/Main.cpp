@@ -18,11 +18,7 @@ int main(int argc, char **argv)
 
 	InputManager *inputManager = new InputManager();
 	PainterManager* painterManager = new PainterManager();
-	Pool<Bullet, BULLETS_POOL_SIZE> bulletsPool;
-	Pool<Plane, PLANES_POOL_SIZE> enemiesPool;
-
-	Plane *player = new Plane();
-	GameManager *gm = new GameManager(inputManager, player, &enemiesPool, &bulletsPool, painterManager);
+	GameManager *gm = new GameManager(inputManager, painterManager);
 
 	float deltaTime = 0;
 
@@ -42,5 +38,4 @@ int main(int argc, char **argv)
 
 	delete inputManager;
 	delete painterManager;
-	delete player;
 }

@@ -27,12 +27,11 @@ private:
 	};
 
 public:
-	GameManager(InputManager *input, Plane *player, Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
-				Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, PainterManager *painterManager);
+	GameManager(InputManager *input, PainterManager *painterManager);
 
 public:
 	void Update(const float deltaTime);
-	void Paint() const;
+	void Paint();
 
 private:
 	void UpdateMenu(const float deltaTime);
@@ -41,10 +40,10 @@ private:
 	void UpdateInitialMovement(const float deltaTime);
 
 private:
-	void PaintMenu() const;
-	void PaintBattle() const;
-	void PaintImprovements() const;
-	void PaintInitialMovement() const;
+	void PaintMenu();
+	void PaintBattle();
+	void PaintImprovements();
+	void PaintInitialMovement();
 
 private:
 	void InitializeConstantValues();
@@ -57,7 +56,6 @@ private:
 private:
 	void ConfigurePlayer();
 	void UpdateBullets(float deltaTime);
-	bool HasCollision(const Bullet& bullet, Plane* plane) const;
 	bool HasCollision(const Bullet& bullet, Plane& plane) const;
 	bool CollsisionDetection(float ax, float ay, float aw, float ah,
 							 float bx, float by, float bw, float bh) const;
@@ -99,9 +97,9 @@ private:
 	InputManager *_inputManager;
 	STATES _currentState = STATES::MENU;
 	int _currentLevel = 0;
-	Plane* _player;
-	Pool<Plane, PLANES_POOL_SIZE> *_enemiesPool;
-	Pool<Bullet, BULLETS_POOL_SIZE> *_bulletsPool;
+	Plane _player;
+	Pool<Plane, PLANES_POOL_SIZE> _enemiesPool;
+	Pool<Bullet, BULLETS_POOL_SIZE> _bulletsPool;
 	PainterManager *_painterManager;
 	EasingManager _easingManager;
 	bool _playingStartAnimation =false;
