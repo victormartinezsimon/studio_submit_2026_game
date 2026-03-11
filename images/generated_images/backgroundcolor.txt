@@ -1,0 +1,17 @@
+#080F2A
+
+
+//stars
+Far:  speed = 0.2 px/frame
+Mid:  speed = 0.5 px/frame
+Near: speed = 1.2 px/frame
+
+#FFFFFF (near)
+#BFD7FF (mid)
+#6B7FAE (far)
+
+Instead of vertical movement, drift everything diagonally or horizontally.
+Examples:
+
+(x -= speed, y += speed * 0.5) → flying through space
+(x += speed) → side‑scrolling universe

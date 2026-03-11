@@ -1,0 +1,17 @@
+Minimalistic videogame UI icon, 512x512 pixels, transparent background.
+
+Flat, symbolic art style with clean geometric shapes.
+Top-down sci‑fi theme.
+No text, no letters, no numbers, no symbols like plus or arrows.
+No borders or frames.
+
+Main subject: a futuristic white spaceship seen from the side, firing projectiles to the right.
+Projectiles should look fast and energetic, with elongated shapes and subtle motion streaks.
+Use only a limited color palette: white with soft blue highlights.
+Glows are subtle and controlled, readable at small sizes.
+
+Composition is simple and centered horizontally.
+Strong silhouette, instantly readable as a power-up icon.
+
+Power-up concept to represent visually:
+[POWER‑UP DESCRIPTION]
