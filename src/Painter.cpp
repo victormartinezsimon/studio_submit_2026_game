@@ -47,7 +47,6 @@ void Painter::EndPaint()
 {
 	VPUSyncSwap(s_platform->vx, 0);
 	VPUNoop(s_platform->vx);
-	std::this_thread::sleep_for(std::chrono::milliseconds(16));
 }
 
 void Painter::PaintBackground()
