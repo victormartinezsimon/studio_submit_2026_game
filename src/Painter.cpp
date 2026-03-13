@@ -49,13 +49,14 @@ void Painter::EndPaint()
 {
 	VPUSyncSwap(s_platform->vx, 0);
 	VPUNoop(s_platform->vx);
+	std::this_thread::sleep_for(std::chrono::milliseconds(16));
 }
 
 void Painter::PaintBackground()
 {
 	dst = (uint8_t *)s_platform->sc->writepage;
-	//fill_background(dst, stride, 0);
-	VPUClear(s_platform->vx,0xFF080F2A);//(8,15,42));
+	fill_background(dst, stride, 0);
+	//VPUClear(s_platform->vx,0xFF080F2A);//(8,15,42));
 }
 
 void Painter::fill_background(uint8_t *dst, uint32_t stride, uint32_t frame)

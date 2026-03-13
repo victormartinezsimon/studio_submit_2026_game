@@ -8,7 +8,7 @@ class Painter;
 class PainterManager
 {
 public:
-	enum class SPRITE_ID{PLAYER, ENEMY, BULLET};
+	enum class SPRITE_ID{PLAYER, ENEMY, BULLET, TITLE};
 
 private:
 	struct data

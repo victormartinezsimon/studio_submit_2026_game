@@ -299,6 +299,10 @@ void GameManager::PaintMenu()
 		_player.GetPaintPosition(playerX, playerY);
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player.GetWidth(), _player.GetHeight(), playerX, playerY);
 	}
+
+	{
+		_painterManager->AddToPaint(PainterManager::SPRITE_ID::TITLE, TITLE_WIDTH, TITLE_HEIGHT, SCREEN_WIDTH/2 - TITLE_WIDTH/2, SCREEN_HEIGHT/2 - TITLE_HEIGHT/2);
+	}
 }
 void GameManager::PaintBattle()
 {

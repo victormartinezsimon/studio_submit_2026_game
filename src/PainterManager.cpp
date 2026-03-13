@@ -8,6 +8,7 @@ PainterManager::PainterManager()
 	_sprites[SPRITE_ID::PLAYER] = sprite_player;
 	_sprites[SPRITE_ID::ENEMY] = sprite_enemy;
 	_sprites[SPRITE_ID::BULLET] = sprite_bullet;
+	_sprites[SPRITE_ID::TITLE] = sprite_title;
 	_painter = new Painter();
 }
 
