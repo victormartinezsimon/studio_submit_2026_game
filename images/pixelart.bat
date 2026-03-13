@@ -53,6 +53,7 @@ for /r "%INPUT_DIR%" %%F in (*.png) do (
 
 REM Crear paleta global a partir de TODAS las imagenes
 magick !IMG_LIST! ^
+  -alpha remove -alpha off ^
   -filter point -resize %PIXEL_W%x%PIXEL_H%! ^
   -append +dither -colors %NUMBER_COLORS% -unique-colors ^
   "%PALETE_FILE%"
@@ -105,6 +106,7 @@ for /d %%D in ("%INPUT_DIR%\*") do (
         echo Processing %%~nxF
 
         magick "%%F" ^
+            -alpha remove -alpha off ^
             -filter point -resize !WIDTH!x!HEIGHT!! ^
             -filter point -resize %PIXEL_W%x%PIXEL_H%! ^
             -dither none -remap "%PALETE_FILE%" ^
@@ -112,6 +114,7 @@ for /d %%D in ("%INPUT_DIR%\*") do (
 
         REM --- Reduce image and remap ---
         magick "%%F" ^
+            -alpha remove -alpha off ^
             -filter point -resize !WIDTH!x!HEIGHT!! ^
             -dither none -remap "%PALETE_FILE%" ^
             "%OUTPUT_DIR%\%%~nF_indexed.png"
