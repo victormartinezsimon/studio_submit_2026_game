@@ -4,8 +4,9 @@ pixel_w = int(sys.argv[1])
 pixel_h = int(sys.argv[2])
 img_name = sys.argv[3]
 csv_name = sys.argv[4]
+palete_file = sys.argv[5]
 
-result = subprocess.run(['magick', 'palette.png', 'txt:-'], capture_output=True, text=True)
+result = subprocess.run(['magick', palete_file, 'txt:-'], capture_output=True, text=True)
 palette_colors = []
 for line in result.stdout.splitlines():
     m = re.search(r'#([0-9A-Fa-f]{6})', line)

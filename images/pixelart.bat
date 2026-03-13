@@ -118,7 +118,7 @@ for /d %%D in ("%INPUT_DIR%\*") do (
 
         REM --- Generar CSV via script Python ---
         echo Generando CSV para %%~nF...
-        python _csv_gen.py !WIDTH! !HEIGHT! "%OUTPUT_DIR%\%%~nF_indexed.png" "!FOLDER_OUT!\%%~nF.csv"
+        python _csv_gen.py !WIDTH! !HEIGHT! "%OUTPUT_DIR%\%%~nF_indexed.png" "!FOLDER_OUT!\%%~nF.csv" "%PALETE_FILE%"
 
         REM --- Limpiar imagen temporal ---
         del "%OUTPUT_DIR%\%%~nF_indexed.png" 2>nul
