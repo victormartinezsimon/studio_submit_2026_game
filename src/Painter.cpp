@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <thread>
 
+constexpr int ALPHA_INDEX = 8;
+
 Painter::Painter()
 {
 	s_platform = SPInitPlatform();
@@ -52,48 +54,8 @@ void Painter::EndPaint()
 void Painter::PaintBackground()
 {
 	dst = (uint8_t *)s_platform->sc->writepage;
-	fill_background(dst, stride, 0);
-}
-void Painter::PaintItem(const uint8_t* sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y)
-{
-	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, 3);
-}
-
-void Painter::init_palette(struct EVideoContext *vctx)
-{
-	VPUSetDefaultPalette(vctx);
-	/*
-	// Animal colors
-	VPUSetPal(vctx, 1, 255, 220, 50);  // Yellow (duck body)
-	VPUSetPal(vctx, 2, 255, 140, 0);   // Orange (duck beak/feet)
-	VPUSetPal(vctx, 3, 255, 255, 255); // White (cow/rabbit)
-	VPUSetPal(vctx, 4, 20, 20, 20);	   // Black (cow spots, outlines)
-	VPUSetPal(vctx, 5, 220, 100, 40);  // Orange-red (fox body)
-	VPUSetPal(vctx, 6, 255, 200, 180); // Light peach (fox chest)
-	VPUSetPal(vctx, 7, 255, 0, 0); // Gray (rabbit body)
-	VPUSetPal(vctx, 8, 255, 150, 180); // Pink (rabbit ears/nose)
-	for (int i = 0; i < 8; ++i)
-	{
-		uint8_t c = (uint8_t)(20 + i * 10);
-		VPUSetPal(vctx, (uint8_t)(16 + i), c, c, (uint8_t)(40 + i * 8));
-	}
-	*/
-
-	VPUSetPal(vctx, 0, 93,67,48);
-	VPUSetPal(vctx, 1, 114,99,70);
-	VPUSetPal(vctx, 2, 77,45,27);
-	VPUSetPal(vctx, 3, 32,44,8);
-	VPUSetPal(vctx, 4, 73,69,24);
-	VPUSetPal(vctx, 5, 85,96,9);
-	VPUSetPal(vctx, 6, 183,60,21);
-	VPUSetPal(vctx, 7, 193,170,28);
-
-	for (int i = 0; i < 8; ++i)
-	{
-		uint8_t c = (uint8_t)(20 + i * 10);
-		VPUSetPal(vctx, (uint8_t)(16 + i), c, c, (uint8_t)(40 + i * 8));
-	}
-
+	//fill_background(dst, stride, 0);
+	VPUClear(s_platform->vx,0xFF080F2A);//(8,15,42));
 }
 
 void Painter::fill_background(uint8_t *dst, uint32_t stride, uint32_t frame)
@@ -107,6 +69,33 @@ void Painter::fill_background(uint8_t *dst, uint32_t stride, uint32_t frame)
 			row[x] = v;
 		}
 	}
+}
+
+void Painter::PaintItem(const uint8_t* sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y)
+{
+	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, ALPHA_INDEX);
+}
+
+void Painter::init_palette(struct EVideoContext *vctx)
+{
+	VPUSetDefaultPalette(vctx);
+
+	VPUSetPal(vctx, 0, 8,9,12);
+	VPUSetPal(vctx, 1, 29,30,42);
+	VPUSetPal(vctx, 2, 56,57,82);
+	VPUSetPal(vctx, 3, 236,27,17);
+	VPUSetPal(vctx, 4, 210,53,25);
+	VPUSetPal(vctx, 5, 254,204,24);
+	VPUSetPal(vctx, 6, 19,87,166);
+	VPUSetPal(vctx, 7, 20,85,180);
+	VPUSetPal(vctx, 8, 255,0,255);
+	VPUSetPal(vctx, 9, 252,24,252);
+	VPUSetPal(vctx, 10, 243,34,233);
+	VPUSetPal(vctx, 11, 219,78,221);
+	VPUSetPal(vctx, 12, 71,174,231);
+	VPUSetPal(vctx, 13, 178,193,219);
+	VPUSetPal(vctx, 14, 211,224,232);
+	VPUSetPal(vctx, 15, 245,247,249);
 }
 
 void Painter::masked_blit_8(
