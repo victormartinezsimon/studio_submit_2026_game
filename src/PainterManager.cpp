@@ -8,7 +8,7 @@ PainterManager::PainterManager()
 	_sprites[SPRITE_ID::PLAYER] = sprite_player;
 	_sprites[SPRITE_ID::ENEMY] = sprite_enemy;
 	_sprites[SPRITE_ID::BULLET] = sprite_bullet;
-	_sprites[SPRITE_ID::TITLE] = sprite_title;
+	_sprites[SPRITE_ID::TITLE] = sprite_void;
 	_painter = new Painter();
 }
 
@@ -25,7 +25,14 @@ void PainterManager::Paint() const
 
 	for (auto &&d : _toPaint)
 	{
-		_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y);
+		if(d.id == SPRITE_ID::TITLE)
+		{
+			_painter->PaintItem(sprite_title, d.width, d.height, d.x, d.y);
+		}
+		else
+		{
+			_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y);
+		}
 	}
 
 	_painter->EndPaint();
@@ -46,4 +53,9 @@ void PainterManager::AddToPaint(SPRITE_ID id, unsigned int width, unsigned int h
 	d.y = y;
 
 	_toPaint.push_back(d);
+}
+
+void PainterManager::AddUIToPaint(SPRITE_ID id, unsigned int width, unsigned int height, unsigned int x, unsigned int y)
+{
+	AddToPaint(id, width, height, x - width/2, y - height /2);
 }

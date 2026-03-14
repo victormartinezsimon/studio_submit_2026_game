@@ -28,6 +28,8 @@ public:
 public:
 	void ClearListPaint();
 	void AddToPaint(SPRITE_ID id, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
+	void AddUIToPaint(SPRITE_ID id, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
+
 
 private:
 	Painter* _painter;

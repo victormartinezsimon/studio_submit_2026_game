@@ -301,7 +301,7 @@ void GameManager::PaintMenu()
 	}
 
 	{
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::TITLE, TITLE_WIDTH, TITLE_HEIGHT, SCREEN_WIDTH/2 - TITLE_WIDTH/2, SCREEN_HEIGHT/2 - TITLE_HEIGHT/2);
+		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE, TITLE_WIDTH, TITLE_HEIGHT, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 	}
 }
 void GameManager::PaintBattle()

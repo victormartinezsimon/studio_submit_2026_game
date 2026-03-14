@@ -3,6 +3,8 @@
 #include "GameConfig.h"
 #include <stdint.h>
 
+static const uint8_t sprite_void[ 1] ={0};
+
 constexpr unsigned int PLANE_WIDTH = 64;
 constexpr unsigned int PLANE_HEIGHT = 64;
 static const uint8_t sprite_player[PLANE_WIDTH * PLANE_HEIGHT] ={
