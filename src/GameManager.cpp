@@ -301,7 +301,7 @@ void GameManager::PaintMenu()
 	}
 
 	{
-		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE, TITLE_WIDTH, TITLE_HEIGHT, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE, TITLE_WIDTH, TITLE_HEIGHT, SCREEN_WIDTH*0.5f, SCREEN_HEIGHT * 0.3f);
 	}
 }
 void GameManager::PaintBattle()
@@ -332,6 +332,12 @@ void GameManager::PaintBattle()
 }
 void GameManager::PaintImprovements()
 {
+	{
+		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::IMPROVEMENT_SELECTOR_PLAYER,SELECTOR_PLAYER_WIDTH, SELECTOR_PLAYER_WIDTH, SCREEN_WIDTH*0.2f, SCREEN_HEIGHT * 0.4f);
+		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::IMPROVEMENT_SELECTOR_ENEMY, SELECTOR_ENEMY_WIDTH, SELECTOR_ENEMY_HEIGHT, SCREEN_WIDTH*0.8f, SCREEN_HEIGHT * 0.4f);
+	}
+
+
 	{
 		float playerX, playerY;
 		_player.GetPaintPosition(playerX, playerY);

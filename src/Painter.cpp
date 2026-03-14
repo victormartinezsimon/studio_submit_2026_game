@@ -55,8 +55,8 @@ void Painter::EndPaint()
 void Painter::PaintBackground()
 {
 	dst = (uint8_t *)s_platform->sc->writepage;
-	fill_background(dst, stride, 0);
-	//VPUClear(s_platform->vx,0xFF080F2A);//(8,15,42));
+	//fill_background(dst, stride, 0);
+	VPUClear(s_platform->vx,0x10101010);//0xFF080F2A);//(8,15,42));
 }
 
 void Painter::fill_background(uint8_t *dst, uint32_t stride, uint32_t frame)
@@ -97,6 +97,7 @@ void Painter::init_palette(struct EVideoContext *vctx)
 	VPUSetPal(vctx, 13, 178,193,218);
 	VPUSetPal(vctx, 14, 211,224,232);
 	VPUSetPal(vctx, 15, 245,247,249);
+	VPUSetPal(vctx, 16, 8,15,42);//background
 }
 
 void Painter::masked_blit_8(

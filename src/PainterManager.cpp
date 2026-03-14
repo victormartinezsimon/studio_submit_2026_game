@@ -9,6 +9,8 @@ PainterManager::PainterManager()
 	_sprites[SPRITE_ID::ENEMY] = sprite_enemy;
 	_sprites[SPRITE_ID::BULLET] = sprite_bullet;
 	_sprites[SPRITE_ID::TITLE] = sprite_void;
+	_sprites[SPRITE_ID::IMPROVEMENT_SELECTOR_PLAYER] = sprite_selector_player;
+	_sprites[SPRITE_ID::IMPROVEMENT_SELECTOR_ENEMY] = sprite_selector_enemy;
 	_painter = new Painter();
 }
 
