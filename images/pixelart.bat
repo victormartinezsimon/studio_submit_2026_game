@@ -24,14 +24,16 @@ echo ==========================================
 echo.
 echo   1. Generate Palete
 echo   2. Generate Image
-echo   3. Exit
+echo   3. Generate CSV
+echo   4. Exit
 echo.
 echo ==========================================
-set /p CHOICE="  Select an option (1-3): "
+set /p CHOICE="  Select an option (1-4): "
 
 if "%CHOICE%"=="1" goto FUNCTION_ONE
 if "%CHOICE%"=="2" goto FUNCTION_TWO
-if "%CHOICE%"=="3" goto EXIT
+if "%CHOICE%"=="3" goto FUNCTION_THREE
+if "%CHOICE%"=="4" goto EXIT
 
 echo.
 echo   [!] Invalid option. Please try again.
@@ -111,26 +113,44 @@ for /d %%D in ("%INPUT_DIR%\*") do (
             -filter point -resize %PIXEL_W%x%PIXEL_H%! ^
             -dither none -remap "%PALETE_FILE%" ^
             "!FOLDER_OUT!\%%~nxF"
-
-        REM --- Reduce image and remap ---
-        magick "%%F" ^
-            -alpha remove -alpha off ^
-            -filter point -resize !WIDTH!x!HEIGHT!! ^
-            -dither none -remap "%PALETE_FILE%" ^
-            "%OUTPUT_DIR%\%%~nF_indexed.png"
-
-        REM --- Generar CSV via script Python ---
-        echo Generando CSV para %%~nF...
-        python _csv_gen.py !WIDTH! !HEIGHT! "%OUTPUT_DIR%\%%~nF_indexed.png" "!FOLDER_OUT!\%%~nF.csv" "%PALETE_FILE%"
-
-        REM --- Limpiar imagen temporal ---
-        del "%OUTPUT_DIR%\%%~nF_indexed.png" 2>nul
     )
 )
 
 pause
 goto MAIN_MENU
        
+:FUNCTION_THREE
+cls
+echo ==========================================
+echo              Generate csv
+echo ==========================================
+
+for /d %%D in ("%INPUT_DIR%\*") do (
+    set "FOLDER_NAME=%%~nxD"
+    
+    :: Split "WxH" into WIDTH and HEIGHT
+    for /f "tokens=1,2 delims=x" %%A in ("!FOLDER_NAME!") do (
+        set "WIDTH=%%A"
+        set "HEIGHT=%%B"
+    )
+    
+    echo Processing: !FOLDER_NAME! ^(WIDTH=!WIDTH! HEIGHT=!HEIGHT!^)
+    set "FOLDER_IN=%INPUT_DIR%\!FOLDER_NAME!"
+    set "FOLDER_OUT=%OUTPUT_DIR%\!FOLDER_NAME!"
+    echo Input !FOLDER_IN!
+    echo Output !FOLDER_OUT!
+
+    for %%F in (!FOLDER_IN!\*.png) do (
+        echo Processing %%~nxF
+
+        echo Generando CSV para %%~nF...
+        python _csv_gen.py !WIDTH! !HEIGHT!  "!FOLDER_OUT!\%%~nxF" "!FOLDER_OUT!\%%~nF.csv" "%PALETE_FILE%"
+
+    )
+)
+
+pause
+goto MAIN_MENU
 
 :EXIT
 cls
