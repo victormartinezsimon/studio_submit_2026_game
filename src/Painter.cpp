@@ -85,16 +85,16 @@ void Painter::init_palette(struct EVideoContext *vctx)
 	VPUSetPal(vctx, 1, 29,30,42);
 	VPUSetPal(vctx, 2, 56,57,82);
 	VPUSetPal(vctx, 3, 236,27,17);
-	VPUSetPal(vctx, 4, 210,53,25);
-	VPUSetPal(vctx, 5, 254,204,24);
-	VPUSetPal(vctx, 6, 19,87,166);
-	VPUSetPal(vctx, 7, 20,85,180);
+	VPUSetPal(vctx, 4, 212,53,25);
+	VPUSetPal(vctx, 5, 254,205,23);
+	VPUSetPal(vctx, 6, 20,88,165);
+	VPUSetPal(vctx, 7, 26,81,179);
 	VPUSetPal(vctx, 8, 255,0,255);
-	VPUSetPal(vctx, 9, 252,24,252);
+	VPUSetPal(vctx, 9, 251,24,252);
 	VPUSetPal(vctx, 10, 243,34,233);
-	VPUSetPal(vctx, 11, 219,78,221);
-	VPUSetPal(vctx, 12, 71,174,231);
-	VPUSetPal(vctx, 13, 178,193,219);
+	VPUSetPal(vctx, 11, 229,77,224);
+	VPUSetPal(vctx, 12, 72,173,231);
+	VPUSetPal(vctx, 13, 178,193,218);
 	VPUSetPal(vctx, 14, 211,224,232);
 	VPUSetPal(vctx, 15, 245,247,249);
 }
