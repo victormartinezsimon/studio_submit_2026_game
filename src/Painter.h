@@ -16,7 +16,7 @@
 #include <arm_neon.h>
 #endif
 
-#define VIDEO_MODE EVM_640_480
+#define VIDEO_MODE EVM_320_240
 #define VIDEO_COLOR ECM_8bit_Indexed
 
 #define SPRITE_W 32
