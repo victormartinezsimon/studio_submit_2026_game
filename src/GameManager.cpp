@@ -13,7 +13,7 @@
 GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	: _inputManager(input),
 	  _painterManager(painterManager), _currentLevel(0), 
-	  _currentStateLogic(State::STATES::MENU)
+	  _currentStateLogic(State::STATES::MENU),_currentScore(0)
 {
 	InitializeConstantValues();
 	InitializeImprovementsFunctions();
@@ -24,7 +24,8 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	_statesLogic[State::STATES::INITIAL_MOVEMENT] = new InitialMovementState(&_player, painterManager, &_easingManager, &_enemiesPool);
 	_statesLogic[State::STATES::IMPROVEMENT_SELECTOR] = new ImprovementSelectionState(&_player, painterManager, &_buttonAManager,
 	[this](const std::string& player, const std::string& enemy){ApplyImprovements(player, enemy);});
-	_statesLogic[State::STATES::BATTLE] = new BattleState(&_player, painterManager, &_enemiesPool, &_bulletsPool,[this](){DamagePlayer();});
+	_statesLogic[State::STATES::BATTLE] = new BattleState(&_player, painterManager, &_enemiesPool, &_bulletsPool,
+		[this](){DamagePlayer();}, [this](){DamageEnemy();});
 	_statesLogic[_currentStateLogic]->OnEnter();
 }
 
@@ -105,8 +106,18 @@ void GameManager::Update(const float deltaTime)
 	_currentFrameInputValue = _inputManager->GetInputValue();
 	_currentFrameInputValueNormalized = _inputManager->NormalizeValue(_currentFrameInputValue);
 
+	if(_currentStateLogic == State::STATES::BATTLE)
+	{
+		_currentTimePlaying += deltaTime;
+	}
+
 	MovePlayer();
 	auto nextState = _statesLogic[_currentStateLogic]->Update(deltaTime, _currentFrameInputValueNormalized, _currentFrameInputValue);
+
+	if(_currentTimePlaying >= MAX_SECS_PLAYING)
+	{
+		nextState = State::STATES::HIGH_SCORE;//TODO: add it
+	}
 
 	_oldStateLogic = _currentStateLogic;
 	if(nextState != _currentStateLogic)
@@ -123,9 +134,15 @@ void GameManager::Update(const float deltaTime)
 			}
 		}
 
-		if(_oldStateLogic == State::STATES::BATTLE)
+		if(_oldStateLogic == State::STATES::BATTLE && nextState != State::STATES::HIGH_SCORE)
 		{
 			EndLevel();
+		}
+
+		if(_oldStateLogic == State::STATES::MENU)
+		{
+			_currentScore = 0;
+			_currentTimePlaying = 0;
 		}
 
 		_statesBeginFunction[nextState]();
@@ -232,6 +249,7 @@ void GameManager::StartLevel()
 void GameManager::EndLevel()
 {
 	++_currentLevel;
+	_currentScore += SCORE_PER_FINISH_LEVEL;
 }
 
 void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const
@@ -277,5 +295,12 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 
 void GameManager::DamagePlayer()
 {
+	_currentScore -= SCORE_PER_PLAYER_HIT;
+	_currentScore = std::max(0, _currentScore);
 }
 
+
+void GameManager::DamageEnemy()
+{
+	_currentScore += SCORE_PER_KILL;
+}

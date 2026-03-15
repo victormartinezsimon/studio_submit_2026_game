@@ -2,6 +2,8 @@
 #include <string_view>
 #include <array>
 
+constexpr int MAX_SECS_PLAYING = 120;
+
 constexpr int SCREEN_WIDTH = 320;
 constexpr int SCREEN_HEIGHT = 240;
 
@@ -49,3 +51,7 @@ constexpr int NEW_EXTRA_SOURCES = 3;
 constexpr int TOTAL_IMPROVEMENTS_TO_SELECT = 4;
 constexpr float TIME_TO_SELECT_IMPROVEMENT = 5;
 constexpr int TOTAL_DEFINED_IMPROVEMENTS = 8;
+
+constexpr int SCORE_PER_KILL = 50;
+constexpr int SCORE_PER_PLAYER_HIT = 10;
+constexpr int SCORE_PER_FINISH_LEVEL = 100;

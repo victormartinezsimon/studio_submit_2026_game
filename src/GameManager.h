@@ -49,6 +49,7 @@ private:
 private:
 	void ConfigurePlane(Plane &p, const float posX, const float posY, const modifiable_data &data, bool isPlayer);
 	void DamagePlayer();
+	void DamageEnemy();
 
 private:
 	void SpawnEnemies();
@@ -71,7 +72,6 @@ private:
 
 private:
 	InputManager *_inputManager;
-	int _currentLevel = 0;
 	Plane _player;
 	Pool<Plane, PLANES_POOL_SIZE> _enemiesPool;
 	Pool<Bullet, BULLETS_POOL_SIZE> _bulletsPool;
@@ -80,6 +80,11 @@ private:
 	ButtonA _buttonAManager;
 	float _currentFrameInputValueNormalized;
 	int _currentFrameInputValue;
+
+private:
+	int _currentLevel = 0;
+	float _currentTimePlaying = 0;
+	long long _currentScore = 0;
 
 private:
 	std::map<std::string, std::function<void(modifiable_data &)>> _improvementFunctions;

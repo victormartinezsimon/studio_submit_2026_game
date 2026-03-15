@@ -6,8 +6,10 @@
 #include "Bullet.h"
 
 BattleState::BattleState(Plane *player, PainterManager *painter, Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
-                         Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, std::function<void()> damagePlayerCallback) : State(player, painter), _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
-                                                                                                                     _damagePlayerCallback(damagePlayerCallback)
+                         Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, 
+                         std::function<void()> damagePlayerCallback, std::function<void()> damageEnemy) 
+                         : State(player, painter), _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
+                         _damagePlayerCallback(damagePlayerCallback), _damageEnemy(damageEnemy)
 {
 }
 
@@ -123,6 +125,7 @@ bool BattleState::ManageCollisionBetweenBulletAndEnemy(Bullet &bullet, Plane &en
             isBulletDestroyed = true;
         }
         _enemiesPool->Release(enemy);
+        _damageEnemy();
     }
     return isBulletDestroyed;
 }
@@ -142,7 +145,7 @@ bool BattleState::HasCollision(const Bullet &bullet, Plane *plane) const
         plane->SetHasShield(false);
         return false;
     }
-    return hasCollsion 
+    return hasCollsion; 
 }
 
 bool BattleState::CollsisionDetection(float ax, float ay, float aw, float ah,
@@ -166,6 +169,7 @@ void BattleState::DoExplosion(Bullet &bullet)
 									  if (HasCollision(bullet, &enemy))
 									  {
 										  _enemiesPool->Release(enemy);
+                                          _damageEnemy();
 									  } });
 
     if (HasCollision(bullet, _player))

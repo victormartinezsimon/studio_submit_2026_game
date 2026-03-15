@@ -13,7 +13,8 @@ class BattleState: public State
     public:
         
         BattleState(Plane *player, PainterManager *painter, Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
-                         Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, std::function<void()> damagePlayerCallback);
+                         Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, 
+                         std::function<void()> damagePlayerCallback, std::function<void()> damageEnemy);
         
     public:    
         STATES Update(const float deltaTime, float currentFrameInputValueNormalized,
@@ -37,4 +38,5 @@ class BattleState: public State
         Pool<Plane, PLANES_POOL_SIZE>* _enemiesPool;
         Pool<Bullet, BULLETS_POOL_SIZE>* _bulletsPool;
         std::function<void()> _damagePlayerCallback;
+        std::function<void()> _damageEnemy;
 };
