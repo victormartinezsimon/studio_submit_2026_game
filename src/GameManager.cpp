@@ -192,6 +192,8 @@ void GameManager::UpdateEnterImprovement(const float deltaTime)
 		return;
 	}
 
+	_leftImprovement = _randomImprovements[levelToCheck * 2];
+	_rightImprovement = _randomImprovements[levelToCheck * 2 + 1];
 
 	_buttonAManager.SelectAfterTime(TIME_TO_SELECT_IMPROVEMENT, 
 		[this](int selection)
@@ -204,8 +206,14 @@ void GameManager::UpdateEnterImprovement(const float deltaTime)
 				return;
 			}
 
-			auto optionForPlayer = _randomImprovements[levelToCheck * 2 + selection];
-			auto optionForEnemy = _randomImprovements[levelToCheck * 2 + (selection +1) %2];
+			auto optionForPlayer = _leftImprovement;
+			auto optionForEnemy = _rightImprovement;
+
+			if(selection == 1)
+			{
+				optionForPlayer = _rightImprovement;
+				optionForEnemy = _leftImprovement;
+			}
 
 			_improvementFunctions[optionForPlayer](playerData);
 			_improvementFunctions[optionForEnemy](enemyData);
@@ -347,6 +355,11 @@ void GameManager::PaintImprovements()
 	{
 		float percentLeft = 0.3;
 		float percentRight = 1- percentLeft;
+
+		_painterManager->AddUIToPaint(_improvementsUI[_leftImprovement], SCREEN_WIDTH*percentLeft, SCREEN_HEIGHT * 0.4f);
+		_painterManager->AddUIToPaint(_improvementsUI[_rightImprovement], SCREEN_WIDTH*percentRight, SCREEN_HEIGHT * 0.4f);
+	
+
 		if(_currentFrameInputValueNormalized < 0.5f)
 		{
 			_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::IMPROVEMENT_SELECTOR_PLAYER, SCREEN_WIDTH*percentLeft, SCREEN_HEIGHT * 0.4f);
@@ -358,6 +371,9 @@ void GameManager::PaintImprovements()
 			_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::IMPROVEMENT_SELECTOR_ENEMY,  SCREEN_WIDTH*percentLeft, SCREEN_HEIGHT * 0.4f);
 			_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::IMPROVEMENT_SELECTOR_PLAYER, SCREEN_WIDTH*percentRight, SCREEN_HEIGHT * 0.4f);
 		}
+
+		
+
 		/*
 		for(auto kvp: _improvementsUI)
 		{

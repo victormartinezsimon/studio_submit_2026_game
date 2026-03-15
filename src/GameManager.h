@@ -123,6 +123,8 @@ private:
 	ButtonA _buttonAManager;
 	float _currentFrameInputValueNormalized;
 	int _currentFrameInputValue;
+	std::string _leftImprovement;
+	std::string _rightImprovement;
 
 private:
 	std::map<std::string, std::function<void(modifiable_data &)>> _improvementFunctions;
