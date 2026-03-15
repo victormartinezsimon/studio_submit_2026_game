@@ -60,6 +60,7 @@ bool EasingManager::AddEase(float duration, float startX, float startY,
             return true;
         }
     }
+    endCallback();//just in case
     return false;
 }
 

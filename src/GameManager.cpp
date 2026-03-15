@@ -7,6 +7,7 @@
 #include <random>
 #include "MainMenuState.h"
 #include "ImprovementSelectionState.h"
+#include "InitialMovementState.h"
 
 GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	: _inputManager(input),
@@ -16,8 +17,10 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	InitializeConstantValues();
 	InitializeImprovementsFunctions();
 	InitializeRandomImprovements();
+	InitializeStatesBegin();
 
 	_statesLogic[State::STATES::MENU] = new MainMenuState(&_player, painterManager, &_buttonAManager);
+	_statesLogic[State::STATES::INITIAL_MOVEMENT] = new InitialMovementState(&_player, painterManager, &_easingManager, &_enemiesPool);
 	_statesLogic[State::STATES::IMPROVEMENT_SELECTOR] = new ImprovementSelectionState(&_player, painterManager, &_buttonAManager,
 	[this](const std::string& player, const std::string& enemy){ApplyImprovements(player, enemy);});
 
@@ -65,7 +68,6 @@ void GameManager::InitializeImprovementsFunctions()
 	{ data.velocityBulletX *= SLOW_SHOT_MULTIPLICATION, data.velocityBulletY *= SLOW_SHOT_MULTIPLICATION; };
 }
 
-
 void GameManager::InitializeRandomImprovements()
 {
 	int index = 0;
@@ -80,6 +82,26 @@ void GameManager::InitializeRandomImprovements()
     std::shuffle(_randomImprovements.begin(), _randomImprovements.end(), rng);
 }
 
+void GameManager::InitializeStatesBegin()
+{
+	_statesBeginFunction[State::STATES::MENU] = []{};
+	_statesBeginFunction[State::STATES::INITIAL_MOVEMENT] = [this]()
+	{
+		int levelToCheck = _currentLevel -1;
+
+		if(levelToCheck * 2 < TOTAL_IMPROVEMENTS_TO_SELECT)
+		{
+			auto leftImprovement = _randomImprovements[levelToCheck * 2];
+			auto rightImprovement = _randomImprovements[levelToCheck * 2 + 1];
+			static_cast<ImprovementSelectionState*>(_statesLogic[State::STATES::IMPROVEMENT_SELECTOR])->Configure(leftImprovement, rightImprovement);
+		}
+	};
+	_statesBeginFunction[State::STATES::INITIAL_MOVEMENT] = [this]()
+	{
+		StartLevel();
+	};
+
+}
 
 void GameManager::Update(const float deltaTime)
 {
@@ -127,14 +149,9 @@ void GameManager::Update(const float deltaTime)
 			{
 				_currentStateLogic = State::STATES::INITIAL_MOVEMENT;
 			}
-			else
-			{
-				auto leftImprovement = _randomImprovements[levelToCheck * 2];
-				auto rightImprovement = _randomImprovements[levelToCheck * 2 + 1];
-				static_cast<ImprovementSelectionState*>(_statesLogic[State::STATES::IMPROVEMENT_SELECTOR])->Configure(leftImprovement, rightImprovement);
-			}
 		}
-	
+
+		_statesBeginFunction[nextState]();
 		_statesLogic[nextState]->OnEnter();
 		_currentStateLogic = nextState;
 	}
@@ -191,17 +208,6 @@ void GameManager::ApplyImprovements(const std::string& playerSelection, const st
 	_improvementFunctions[enemySelection](enemyData);
 }
 
-
-void GameManager::UpdateInitialMovement(const float deltaTime)
-{
-	_easingManager.Update(deltaTime);
-}
-
-void GameManager::UpdateEnterInicialMovement( const float deltaTime)
-{
-	StartLevel();
-	_currentState = STATES::INITIAL_MOVEMENT;
-}
 
 void GameManager::GetMinMaxXPosiblePosition(float &minX, float &maxX) const
 {
@@ -304,29 +310,10 @@ void GameManager::PaintBattle()
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player.GetWidth(), _player.GetHeight(), playerX, playerY);
 	}
 }
-void GameManager::PaintInitialMovement()
-{
-	{
-		float playerX, playerY;
-		_player.GetPaintPosition(playerX, playerY);
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player.GetWidth(), _player.GetHeight(), playerX, playerY);
-	}
-
-	{
-		_enemiesPool.for_each_active([this](const Plane &p)
-									 {
-			float posX, posY;
-			p.GetPaintPosition(posX, posY);
-			_painterManager->AddToPaint(PainterManager::SPRITE_ID::ENEMY, 
-				p.GetWidth(), p.GetHeight(), posX, posY); });
-	}
-}
 
 void GameManager::StartLevel()
 {
-	ConfigurePlane(_player, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.9, playerData, true);
 	SpawnEnemies();
-	PlayInitialAnimation();
 }
 
 void GameManager::EndLevel()
@@ -491,15 +478,3 @@ void GameManager::DamagePlayer()
 {
 }
 
-void GameManager::PlayInitialAnimation()
-{
-	_enemiesPool.for_each_active(
-		[this](Plane &p)
-		{
-			_easingManager.AddEase(INTIAL_ANIMATION_DURATION, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-				 p.GetX(), p.GetY(), EasingManager::EASE_TYPES::INOUTCUBE, 
-				 [this] {_currentState = STATES::BATTLE;}, 
-				 [&p](float x, float y)
-					{ p.SetPosition(x, y); });
-		});
-}

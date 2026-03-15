@@ -6,7 +6,7 @@
 #include "ButtonA.h"
 
 MainMenuState::MainMenuState(Plane *player, PainterManager *painter,ButtonA* buttonAManager) : 
-State(player, painter, buttonAManager)
+State(player, painter),_buttonAManager(buttonAManager)
 {
 }
 

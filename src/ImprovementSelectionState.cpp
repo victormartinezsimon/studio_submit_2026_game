@@ -7,7 +7,7 @@
 
 ImprovementSelectionState::ImprovementSelectionState(Plane *player, PainterManager *painter,ButtonA* buttonAManager, 
 	std::function<void(const std::string& optionForPlayer,const std::string& optionForEnemy)> callbackSeleccion) : 
-State(player, painter, buttonAManager),_callbackSeleccion(callbackSeleccion)
+State(player, painter),_callbackSeleccion(callbackSeleccion), _buttonAManager(buttonAManager)
 {
 	InitializeImprovementsUI();
 }

@@ -1,12 +1,15 @@
 #pragma once
 #include "State.h"
+#include "GameConfig.h"
+#include "Pool.h"
 
-class ButtonA;
+class EasingManager;
+class Plane;
 
-class MainMenuState: public State
+class InitialMovementState: public State
 {
     public:
-        MainMenuState(Plane* player, PainterManager* painter, ButtonA* buttonAManager);
+        InitialMovementState(Plane* player, PainterManager* painter, EasingManager* easingManager, Pool<Plane, PLANES_POOL_SIZE>* enemiesPool);
         
     public:    
         STATES Update(const float deltaTime, float _currentFrameInputValueNormalized,
@@ -17,5 +20,6 @@ class MainMenuState: public State
 
     private:
         STATES _nextState;
-        ButtonA *_buttonAManager;
+        EasingManager* _easingManager;
+        Pool<Plane, PLANES_POOL_SIZE>* _enemiesPool;
 };

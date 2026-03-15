@@ -2,7 +2,6 @@
 
 class Plane;
 class PainterManager;
-class ButtonA;
 
 class State
 {
@@ -17,8 +16,8 @@ public:
     };
 
 public:
-    State(Plane *player, PainterManager *painter, ButtonA *buttonAManager)
-        : _player(player), _painterManager(painter), _buttonAManager(buttonAManager) {};
+    State(Plane *player, PainterManager *painter)
+        : _player(player), _painterManager(painter) {};
 
 public:
     virtual STATES Update(const float deltaTime, float _currentFrameInputValueNormalized,
@@ -30,5 +29,4 @@ public:
 protected:
     Plane *_player;
     PainterManager *_painterManager;
-    ButtonA *_buttonAManager;
 };

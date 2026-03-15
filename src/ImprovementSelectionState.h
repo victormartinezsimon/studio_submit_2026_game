@@ -5,6 +5,8 @@
 #include <map>
 #include "PainterManager.h"
 
+class ButtonA;
+
 class ImprovementSelectionState: public State
 {
     public:
@@ -30,4 +32,5 @@ class ImprovementSelectionState: public State
         std::string _leftSelection;
         std::string _rightSelection;
         std::map<std::string, PainterManager::SPRITE_ID> _improvementsUI;
+        ButtonA *_buttonAManager;
 };

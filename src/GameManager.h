@@ -36,20 +36,17 @@ public:
 	void Update(const float deltaTime);
 	void Paint();
 
+
 private:
 	void UpdateBattle(const float deltaTime);
-
-	void UpdateInitialMovement(const float deltaTime);
-	void UpdateEnterInicialMovement( const float deltaTime);
-
 private:
 	void PaintBattle();
-	void PaintInitialMovement();
 
 private:
 	void InitializeConstantValues();
 	void InitializeImprovementsFunctions();
 	void InitializeRandomImprovements();
+	void InitializeStatesBegin();
 
 private:
 	void GetMinMaxXPosiblePosition(float &minX, float &maxX) const;
@@ -84,9 +81,6 @@ private:
 
 private:
 	void DoExplosion(Bullet& bullet);
-
-private:
-	void PlayInitialAnimation();
 
 public:
 [[deprecated]]
@@ -126,4 +120,5 @@ private:
 	std::map<State::STATES, State*> _statesLogic;
 	State::STATES _currentStateLogic;
 	State::STATES _oldStateLogic;
+	std::map<State::STATES, std::function<void()>> _statesBeginFunction;
 };
