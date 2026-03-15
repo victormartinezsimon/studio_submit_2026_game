@@ -13,6 +13,8 @@ constexpr float MAIN_MENU_MIN_VALUE = 0.3;
 constexpr float MAIN_MENU_MAX_VALUE = 0.7;
 constexpr float MAIN_MENU_TIME_TO_ENTER = 2;
 
+constexpr float POSITION_Y_PLAYER = 0.9f;
+
 constexpr float INTIAL_ANIMATION_DURATION = 1;
 
 constexpr float DEFAULT_BULLET_VEL_X = 0;

@@ -5,15 +5,22 @@
 #include "Sprites.h"
 #include <ctime>
 #include <random>
+#include "MainMenuState.h"
 
 GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	: _inputManager(input),
-	  _painterManager(painterManager), _currentState(STATES::ENTER_IN_MENU), _currentLevel(0)
+	  _painterManager(painterManager), _currentState(STATES::ENTER_IN_MENU), _currentLevel(0), 
+	  _currentStateLogic(State::STATES::MENU)
 {
 	InitializeConstantValues();
 	InitializeImprovementsFunctions();
 	InitializeImprovementsUI();
 	InitializeRandomImprovements();
+
+	_statesLogic[State::STATES::MENU] = new MainMenuState(&_player, painterManager, &_buttonAManager);
+
+
+	_statesLogic[State::STATES::MENU]->OnEnter();
 }
 
 void GameManager::InitializeConstantValues()
@@ -88,7 +95,7 @@ void GameManager::Update(const float deltaTime)
 {
 	_currentFrameInputValue = _inputManager->GetInputValue();
 	_currentFrameInputValueNormalized = _inputManager->NormalizeValue(_currentFrameInputValue);
-
+/*
 	switch (_currentState)
 	{
 	case STATES::BATTLE:
@@ -112,11 +119,25 @@ void GameManager::Update(const float deltaTime)
 		UpdateEnterInicialMovement(deltaTime);
 		
 	}
+	*/
+
+	MovePlayer();
+	auto nextState = _statesLogic[_currentStateLogic]->Update(deltaTime, _currentFrameInputValueNormalized, _currentFrameInputValue);
+
+	_oldStateLogic = _currentStateLogic;
+	if(nextState != _currentStateLogic)
+	{
+		_statesLogic[_currentStateLogic]->OnExit();
+		_statesLogic[nextState]->OnEnter();
+		_currentStateLogic = nextState;
+	}
 }
 
 void GameManager::Paint()
 {
 	_painterManager->ClearListPaint();
+	_statesLogic[_oldStateLogic]->Paint();
+	/*
 	switch (_currentState)
 	{
 	case STATES::BATTLE:
@@ -135,30 +156,9 @@ void GameManager::Paint()
 		PaintInitialMovement();
 		break;
 	}
+	*/
 }
 
-void GameManager::UpdateEnterMenu(const float deltaTime)
-{
-	_buttonAManager.SelectInPosition(MAIN_MENU_TIME_TO_ENTER, {SCREEN_WIDTH * MAIN_MENU_MIN_VALUE, SCREEN_WIDTH * MAIN_MENU_MAX_VALUE}, 
-		[this](int selection)
-	{
-		_currentState = STATES::ENTER_IN_INITIAL_MOVEMENT;
-
-	});
-	
-	_currentState = STATES::MENU;
-
-	_player.SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
-	_player.SetPosition(0, SCREEN_HEIGHT * 0.9);
-}
-
-void GameManager::UpdateMenu(const float deltaTime)
-{
-	_buttonAManager.Update(deltaTime, _currentFrameInputValueNormalized, _currentFrameInputValue);
-	
-	// move player
-	MovePlayer();
-}
 void GameManager::UpdateBattle(const float deltaTime)
 {
 	// move player
@@ -312,18 +312,6 @@ void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, c
 	}
 }
 
-void GameManager::PaintMenu()
-{
-	{
-		float playerX, playerY;
-		_player.GetPaintPosition(playerX, playerY);
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player.GetWidth(), _player.GetHeight(), playerX, playerY);
-	}
-
-	{
-		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE, SCREEN_WIDTH*0.5f, SCREEN_HEIGHT * 0.3f);
-	}
-}
 void GameManager::PaintBattle()
 {
 	{

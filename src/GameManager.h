@@ -10,7 +10,7 @@
 #include "ButtonA.h"
 #include <array>
 #include "PainterManager.h"
-
+#include "State.h"
 
 class InputManager;
 
@@ -37,9 +37,6 @@ public:
 	void Paint();
 
 private:
-	void UpdateEnterMenu(const float deltaTime);
-	void UpdateMenu(const float deltaTime);
-	
 	void UpdateBattle(const float deltaTime);
 
 	void UpdateEnterImprovement(const float deltaTime);
@@ -49,7 +46,6 @@ private:
 	void UpdateEnterInicialMovement( const float deltaTime);
 
 private:
-	void PaintMenu();
 	void PaintBattle();
 	void PaintImprovements();
 	void PaintInitialMovement();
@@ -95,7 +91,8 @@ private:
 private:
 	void PlayInitialAnimation();
 
-private:
+public:
+[[deprecated]]
 	enum class STATES
 	{
 		ENTER_IN_MENU,
@@ -130,4 +127,9 @@ private:
 	std::map<std::string, std::function<void(modifiable_data &)>> _improvementFunctions;
 	std::map<std::string, PainterManager::SPRITE_ID> _improvementsUI;
 	std::array<std::string, TOTAL_IMPROVEMENTS_TO_SELECT * 2> _randomImprovements;
+
+private:
+	std::map<State::STATES, State*> _statesLogic;
+	State::STATES _currentStateLogic;
+	State::STATES _oldStateLogic;
 };
