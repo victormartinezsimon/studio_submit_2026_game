@@ -60,7 +60,7 @@ bool EasingManager::AddEase(float duration, float startX, float startY,
             return true;
         }
     }
-    endCallback();//just in case
+    endCallback();//just in case    
     return false;
 }
 
@@ -88,6 +88,11 @@ void EasingManager::GetValues(int id, float &x, float &y) const
         case EASE_TYPES::INOUTQUINT:
         x = inOutQuint(progress, _eases[id].startX, _eases[id].endX);
         y = inOutQuint(progress, _eases[id].startY, _eases[id].endY);
+        break;
+
+        case EASE_TYPES::PINGPONG:
+        x = pingPong(progress, _eases[id].startX, _eases[id].endX);
+        y = pingPong(progress, _eases[id].startY, _eases[id].endY);
         break;
     break;
     }
@@ -144,4 +149,18 @@ float EasingManager::inOutCirc(float progress, float startValue, float endValue)
         return -change / 2.0 * (sqrt(1.0 - t * t) - 1.0) + startValue;
     t -= 2.0;
     return change / 2.0 * (sqrt(1.0 - t * t) + 1.0) + startValue;
+}
+
+float EasingManager::pingPong(float progress, float startValue, float endValue) const
+{
+    // Normalize progress to [0, 1] using ping-pong logic
+    // progress mod 2: [0,1] goes forward, [1,2] goes backward
+    float t = std::fmod(progress, 2.0f);
+    if (t > 1.0f)
+        t = 2.0f - t;
+
+    // Apply a smooth ease-in-out (cubic)
+    t = t * t * (3.0f - 2.0f * t);
+
+    return startValue + t * (endValue - startValue);
 }
