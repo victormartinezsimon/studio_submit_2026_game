@@ -154,14 +154,19 @@ void GameManager::Update(const float deltaTime)
 void GameManager::Paint()
 {
 	_painterManager->ClearListPaint();
-
-	int leftTime = MAX_SECS_PLAYING - _currentTimePlaying;
-	//_numberManager.PaintNumber(81, SCREEN_WIDTH/2, SCREEN_HEIGHT *0.1, 3, NumberManager::PIVOT::CENTER);
-	//_numberManager.PaintNumber(81, SCREEN_WIDTH, SCREEN_HEIGHT *0.4, 3, NumberManager::PIVOT::RIGHT);
-	//_numberManager.PaintNumber(81, 0, SCREEN_HEIGHT *0.8, 3, NumberManager::PIVOT::LEFT);
-	//_numberManager.PaintNumber(leftTime, SCREEN_WIDTH/2, SCREEN_HEIGHT *0.1, 3, NumberManager::PIVOT::CENTER);
 	_statesLogic[_oldStateLogic]->Paint();
-}
+
+	if(_oldStateLogic == State::STATES::BATTLE)
+	{
+		int leftTime = MAX_SECS_PLAYING - _currentTimePlaying;
+		_numberManager.PaintNumber(leftTime, SCREEN_WIDTH, NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::RIGHT);
+	}
+
+	if(_oldStateLogic != State::STATES::MENU && _oldStateLogic != State::STATES::HIGH_SCORE)
+	{
+		_numberManager.PaintNumber(_currentScore, 0, NUMBER_0_HEIGHT, 4, NumberManager::PIVOT::LEFT);
+	}
+}	
 
 void GameManager::ApplyImprovements(const std::string& playerSelection, const std::string& enemySelection)
 {

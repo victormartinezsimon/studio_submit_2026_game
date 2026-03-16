@@ -91,7 +91,7 @@ unsigned int totalSize = 0;
 	if(digitsUsed < minDigits)
 	{
 		int diff = minDigits - digitsUsed;
-		totalSize += diff + _digitWidth[0];
+		totalSize += (diff * _digitWidth[0]);
 	}
 	return totalSize;
 }
