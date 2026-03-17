@@ -32,6 +32,10 @@ Painter::Painter()
 	VPUClear(s_platform->vx, 0x00000000);
 	VPUSwapPages(s_platform->vx, s_platform->sc);
 	VPUClear(s_platform->vx, 0x00000000);
+
+	halfMask = vreinterpretq_u8_u16(vdupq_n_u16(0x00FF));
+	quarterMask = vreinterpretq_u8_u32(vdupq_n_u32(0x000000FF));
+	allMask = vdupq_n_u8(0xFF);
 }
 
 Painter::~Painter()
@@ -54,8 +58,6 @@ void Painter::EndPaint()
 	VPUSyncSwap(s_platform->vx, 0);
 	//Insert a no-operation command (barrier) that we can wait on
 	VPUNoop(s_platform->vx);
-	
-	//std::this_thread::sleep_for(std::chrono::milliseconds(16));
 }
 
 void Painter::PaintBackground()
@@ -66,8 +68,19 @@ void Painter::PaintBackground()
 
 void Painter::PaintItem(const uint8_t* sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y)
 {
-	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, ALPHA_INDEX);
+	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, ALPHA_INDEX, allMask);
 }
+
+void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y, int maskType)
+{
+
+	uint8x16_t mask = allMask;
+	if(maskType == 1){mask == halfMask;}
+	if(maskType == 2){mask == quarterMask;}
+
+	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, ALPHA_INDEX, mask);
+}
+
 
 void Painter::init_palette(struct EVideoContext *vctx)
 {
@@ -89,6 +102,7 @@ void Painter::init_palette(struct EVideoContext *vctx)
 	VPUSetPal(vctx, 13, 178,193,218);
 	VPUSetPal(vctx, 14, 211,224,232);
 	VPUSetPal(vctx, 15, 245,247,249);
+
 	VPUSetPal(vctx, 16, 8,15,42);//background
 }
 
@@ -102,8 +116,8 @@ void Painter::masked_blit_8(
 	int src_h,
 	int dst_x,
 	int dst_y,
-	uint8_t key)
-#
+	uint8_t transparent, 
+	uint8x16_t extraAlphaMask)
 {
 	int src_x = 0;
 	int src_y = 0;
@@ -131,7 +145,8 @@ void Painter::masked_blit_8(
 		return;
 
 #if defined(__ARM_NEON) || defined(__ARM_NEON__)
-	uint8x16_t keyv = vdupq_n_u8(key); // Broadcast the key to 16 bytes
+	uint8x16_t keyv = vdupq_n_u8(transparent); // Broadcast the key to 16 bytes
+	keyv = vandq_u8(keyv, extraAlphaMask);
 #endif
 
 	for (int y = 0; y < h; ++y)
@@ -157,7 +172,7 @@ void Painter::masked_blit_8(
 		for (; x < w; ++x)
 		{
 			uint8_t px = s[x];
-			if (px != key)
+			if (px != transparent)
 				d[x] = px;
 		}
 	}

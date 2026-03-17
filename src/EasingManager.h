@@ -35,9 +35,9 @@ public:
 
 public:
 	void Update(const float deltaTime);
-	bool AddEase(float duration, float startX, float startY, 
+	int AddEase(float duration, float startX, float startY, 
 		float endX, float endY, EASE_TYPES type);
-	bool AddEase(float duration, float startX, float startY, 
+	int AddEase(float duration, float startX, float startY, 
 		float endX, float endY, EASE_TYPES type, std::function<void()> endCallback,
 		std::function<void(float currentX, float currentY)> tickCallback);
 	void FinishAll();

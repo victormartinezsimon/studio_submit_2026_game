@@ -18,18 +18,19 @@ State::STATES MainMenuState::Update(const float deltaTime, float _currentFrameIn
 }
 void MainMenuState::Paint()
 {
+	/*
     {
 		float playerX, playerY;
 		_player->GetPaintPosition(playerX, playerY);
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, 
             _player->GetWidth(), _player->GetHeight(), playerX, playerY);
 	}
-
+*/
 	{
 		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE, 
             SCREEN_WIDTH*0.5f, SCREEN_HEIGHT * 0.3f);
 	}
-
+/*
 	{
 		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::START_GAME,
 			SCREEN_WIDTH *0.5f, SCREEN_HEIGHT * 0.7f);
@@ -39,6 +40,7 @@ void MainMenuState::Paint()
 		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE_PLAYER_POSITION,
 			SCREEN_WIDTH *0.5f, SCREEN_HEIGHT * 0.9f);
 	}
+			*/
 }
 void MainMenuState::OnEnter()
 {

@@ -33,13 +33,13 @@ void EasingManager::Update(const float deltaTime)
     }
 }
 
-bool EasingManager::AddEase(float duration, float startX, float startY, 
+int EasingManager::AddEase(float duration, float startX, float startY, 
 		float endX, float endY, EASE_TYPES type)
 {
     return AddEase(duration, startX, startY, endX, endY, type, nullptr, nullptr);
 }
 
-bool EasingManager::AddEase(float duration, float startX, float startY,
+int EasingManager::AddEase(float duration, float startX, float startY,
                             float endX, float endY, EASE_TYPES type, std::function<void()> endCallback,
                             std::function<void(float currentX, float currentY)> tickCallback)
 {
@@ -57,11 +57,11 @@ bool EasingManager::AddEase(float duration, float startX, float startY,
             _eases[i].endY = endY;
             _eases[i].type = type;
             _eases[i].tickCallback = tickCallback;
-            return true;
+            return i;
         }
     }
     endCallback();//just in case    
-    return false;
+    return -1;
 }
 
 void EasingManager::GetValues(int id, float &x, float &y) const

@@ -49,6 +49,7 @@ public:
 public:
 	void PaintBackground();
 	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
+	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y, int maskType);
 
 private:
 	void init_palette(struct EVideoContext *vctx);
@@ -62,12 +63,16 @@ private:
 		int src_h,
 		int dst_x,
 		int dst_y,
-		uint8_t key);
+		uint8_t key,
+		uint8x16_t extraAlphaMask);
 
 private:
 	SPPlatform *s_platform;
 	uint32_t stride;
 	uint8_t *dst;
+	uint8x16_t allMask;
+	uint8x16_t halfMask;
+	uint8x16_t quarterMask;
 };
 
 #endif

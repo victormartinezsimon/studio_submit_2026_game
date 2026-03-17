@@ -81,11 +81,25 @@ void PainterManager::Paint() const
 	{
 		if(d.id == SPRITE_ID::TITLE)
 		{
-			_painter->PaintItem(sprite_TITLE, d.width, d.height, d.x, d.y);
+			if(d.mask != -1)
+			{
+				_painter->PaintItem(sprite_TITLE, d.width, d.height, d.x, d.y, d.mask);
+			}
+			else
+			{
+				_painter->PaintItem(sprite_TITLE, d.width, d.height, d.x, d.y);
+			}
 		}
 		else
 		{
-			_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y);
+			if(d.mask != -1)
+			{
+				_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y, d.mask);
+			}
+			else
+			{
+				_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y);
+			}
 		}
 	}
 
@@ -105,6 +119,7 @@ void PainterManager::AddToPaint(SPRITE_ID id, unsigned int width, unsigned int h
 	d.height = height;
 	d.x = x;
 	d.y = y;
+	d.mask = -1;
 
 	_toPaint.push_back(d);
 }
@@ -114,4 +129,23 @@ void PainterManager::AddUIToPaint(SPRITE_ID id, unsigned int x, unsigned int y)
 	auto width = _sizes[id].first;
 	auto height = _sizes[id].second;
 	AddToPaint(id, width, height, x - width/2, y - height /2);
+}
+
+void PainterManager::AddToPaintWithAlpha(SPRITE_ID id, unsigned int width, unsigned int height, unsigned int x, unsigned int y, int maskID)
+{
+	data d;
+	d.id = id;
+	d.width = width;
+	d.height = height;
+	d.x = x;
+	d.y = y;
+	d.mask = maskID;
+
+	_toPaint.push_back(d);
+}
+void PainterManager::AddUIToPaintWithAlpha(SPRITE_ID id, unsigned int x, unsigned int y, int maskID)
+{
+	auto width = _sizes[id].first;
+	auto height = _sizes[id].second;
+	AddToPaintWithAlpha(id, width, height, x - width/2, y - height /2, maskID);
 }
