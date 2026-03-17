@@ -99,7 +99,7 @@ void AlphaManager::Paint()
 {
     for (int i = 0; i < _inUse.size(); ++i)
     {
-        if (!_inUse[i])
+        if (_inUse[i])
         {
             float percent = _alphas[i].acumTime / _alphas[i].duration;
 
@@ -121,6 +121,11 @@ void AlphaManager::Paint()
             {
                 _painterManager->AddToPaintWithAlpha(_alphas[i].sprite, _alphas[i].width, _alphas[i].height,
                     _alphas[i].currentX, _alphas[i].currentY, maskIndex);
+            }
+
+            if(percent >= 1.0)
+            {
+                _inUse[i] = false;
             }
         }
     }
