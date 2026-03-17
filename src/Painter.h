@@ -11,6 +11,7 @@
 #include "core.h"
 #include "platform.h"
 #include "vpu.h"
+#include <array>
 
 #if defined(__ARM_NEON) || defined(__ARM_NEON__)
 #include <arm_neon.h>
@@ -63,7 +64,7 @@ private:
 		int src_h,
 		int dst_x,
 		int dst_y,
-		uint8_t key,
+		const uint8_t *transparent_ids, uint8_t transparent_count,
 		uint8x16_t extraAlphaMask);
 
 private:

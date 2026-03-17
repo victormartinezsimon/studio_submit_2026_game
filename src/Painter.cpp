@@ -2,7 +2,8 @@
 #include <stdexcept>
 #include <thread>
 
-constexpr int ALPHA_INDEX = 9;
+constexpr uint8_t TRANSPARENT_IDS[] = {  9,8,7,6,5 };  // your 3 IDs
+constexpr uint8_t TRANSPARENT_COUNT = 5;
 
 Painter::Painter()
 {
@@ -68,7 +69,7 @@ void Painter::PaintBackground()
 
 void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y)
 {
-	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, ALPHA_INDEX, allMask);
+	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, TRANSPARENT_IDS, TRANSPARENT_COUNT, allMask);
 }
 
 void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y, int maskType)
@@ -83,7 +84,7 @@ void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int 
 		mask = quarterMask;
 	}
 
-	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, ALPHA_INDEX, mask);
+	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, TRANSPARENT_IDS, TRANSPARENT_COUNT, mask);
 }
 
 void Painter::init_palette(struct EVideoContext *vctx)
@@ -120,7 +121,8 @@ void Painter::masked_blit_8(
 	int src_h,
 	int dst_x,
 	int dst_y,
-	uint8_t transparent,
+	const uint8_t *transparent_ids,  // <-- array instead of single value
+    uint8_t transparent_count,
 	uint8x16_t extraAlphaMask)
 {
 	int src_x = 0;
@@ -149,7 +151,11 @@ void Painter::masked_blit_8(
 		return;
 
 #if defined(__ARM_NEON) || defined(__ARM_NEON__)
-	uint8x16_t keyv = vdupq_n_u8(transparent); // Broadcast the key to 16 bytes
+	uint8x16_t keyv0 = vdupq_n_u8(transparent_ids[0]);
+    uint8x16_t keyv1 = vdupq_n_u8(transparent_ids[1]);
+    uint8x16_t keyv2 = vdupq_n_u8(transparent_ids[2]);
+    uint8x16_t keyv3 = vdupq_n_u8(transparent_ids[3]);
+    uint8x16_t keyv4 = vdupq_n_u8(transparent_ids[4]);
 #endif
 
 	for (int y = 0; y < h; ++y)
@@ -168,19 +174,29 @@ void Painter::masked_blit_8(
 			uint8x16_t dv = vld1q_u8(d + x);		 // Load destination pixels
 
 			// Apply extra alpha mask: where mask byte is 0x00, replace src pixel with transparent value
-    		sv = vbslq_u8(extraAlphaMask, sv, keyv); 
+    		 // Apply extra alpha mask first
+            sv = vbslq_u8(extraAlphaMask, sv, keyv0);
 
-			uint8x16_t mask = vceqq_u8(sv, keyv);	 // Compare source pixels with key, result is 0xFF where equal, 0x00 where not
-			uint8x16_t out = vbslq_u8(mask, dv, sv); // If mask bit is 1, select from dv (keep dest), else select from sv (copy src)
-			vst1q_u8(d + x, out);					 // Store result back to destination
+            // Build transparency mask: 0xFF where pixel matches ANY transparent id
+            uint8x16_t tmask = vceqq_u8(sv, keyv0);
+            tmask = vorrq_u8(tmask, vceqq_u8(sv, keyv1));
+            tmask = vorrq_u8(tmask, vceqq_u8(sv, keyv2));
+            tmask = vorrq_u8(tmask, vceqq_u8(sv, keyv3));
+            tmask = vorrq_u8(tmask, vceqq_u8(sv, keyv4));
+
+			uint8x16_t out = vbslq_u8(tmask, dv, sv); // transparent -> keep dst, else copy src
+            vst1q_u8(d + x, out);
 		}
 #endif
 		// Process any remaining pixels that don't fit into a 16-byte block
 		for (; x < w; ++x)
 		{
 			uint8_t px = s[x];
-			if (px != transparent)
-				d[x] = px;
+			bool is_transparent = false;
+            for (int i = 0; i < transparent_count; ++i)
+                is_transparent |= (px == transparent_ids[i]);
+            if (!is_transparent)
+                d[x] = px;
 		}
 	}
 }
