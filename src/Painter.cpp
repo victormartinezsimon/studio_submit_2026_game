@@ -2,8 +2,8 @@
 #include <stdexcept>
 #include <thread>
 
-constexpr uint8_t TRANSPARENT_IDS[] = {  9,8,7,6,5 };  // your 3 IDs
-constexpr uint8_t TRANSPARENT_COUNT = 5;
+constexpr uint8_t TRANSPARENT_IDS[] = {  7,6,5,4 };  // your 3 IDs
+constexpr uint8_t TRANSPARENT_COUNT = 4;
 
 Painter::Painter()
 {
@@ -91,22 +91,22 @@ void Painter::init_palette(struct EVideoContext *vctx)
 {
 	VPUSetDefaultPalette(vctx);
 
-	VPUSetPal(vctx, 0, 10, 12, 29);
-	VPUSetPal(vctx, 1, 81, 55, 85);
-	VPUSetPal(vctx, 2, 222, 48, 21);
-	VPUSetPal(vctx, 3, 252, 199, 27);
-	VPUSetPal(vctx, 4, 17, 84, 182);
-	VPUSetPal(vctx, 5, 164, 18, 165);
-	VPUSetPal(vctx, 6, 202, 64, 182);
-	VPUSetPal(vctx, 7, 211, 10, 210);
-	VPUSetPal(vctx, 8, 228, 1, 228);
-	VPUSetPal(vctx, 9, 255, 0, 255);
-	VPUSetPal(vctx, 10, 53, 156, 226);
-	VPUSetPal(vctx, 11, 168, 168, 171);
-	VPUSetPal(vctx, 12, 200, 204, 190);
-	VPUSetPal(vctx, 13, 212, 214, 221);
-	VPUSetPal(vctx, 14, 229, 231, 233);
-	VPUSetPal(vctx, 15, 254, 255, 255);
+	VPUSetPal(vctx,0,11,22,29);
+	VPUSetPal(vctx,1,39,87,48);
+	VPUSetPal(vctx,2,109,109,111);
+	VPUSetPal(vctx,3,218,51,14);
+	VPUSetPal(vctx,4,25,172,22);
+	VPUSetPal(vctx,5,5,207,3);
+	VPUSetPal(vctx,6,0,234,1);
+	VPUSetPal(vctx,7,0,255,0);
+	VPUSetPal(vctx,8,235,187,24);
+	VPUSetPal(vctx,9,13,86,179);
+	VPUSetPal(vctx,10,209,125,129);
+	VPUSetPal(vctx,11,44,163,221);
+	VPUSetPal(vctx,12,167,167,165);
+	VPUSetPal(vctx,13,211,213,219);
+	VPUSetPal(vctx,14,233,237,242);
+	VPUSetPal(vctx,15,255,255,255);
 
 	VPUSetPal(vctx, 16, 8, 15, 42); // background
 }
@@ -155,7 +155,6 @@ void Painter::masked_blit_8(
     uint8x16_t keyv1 = vdupq_n_u8(transparent_ids[1]);
     uint8x16_t keyv2 = vdupq_n_u8(transparent_ids[2]);
     uint8x16_t keyv3 = vdupq_n_u8(transparent_ids[3]);
-    uint8x16_t keyv4 = vdupq_n_u8(transparent_ids[4]);
 #endif
 
 	for (int y = 0; y < h; ++y)
@@ -182,7 +181,6 @@ void Painter::masked_blit_8(
             tmask = vorrq_u8(tmask, vceqq_u8(sv, keyv1));
             tmask = vorrq_u8(tmask, vceqq_u8(sv, keyv2));
             tmask = vorrq_u8(tmask, vceqq_u8(sv, keyv3));
-            tmask = vorrq_u8(tmask, vceqq_u8(sv, keyv4));
 
 			uint8x16_t out = vbslq_u8(tmask, dv, sv); // transparent -> keep dst, else copy src
             vst1q_u8(d + x, out);
