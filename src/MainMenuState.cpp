@@ -18,7 +18,6 @@ State::STATES MainMenuState::Update(const float deltaTime, float _currentFrameIn
 }
 void MainMenuState::Paint()
 {
-	
     {
 		float playerX, playerY;
 		_player->GetPaintPosition(playerX, playerY);

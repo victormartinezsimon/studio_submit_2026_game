@@ -26,7 +26,9 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	_statesLogic[State::STATES::IMPROVEMENT_SELECTOR] = new ImprovementSelectionState(&_player, painterManager, &_buttonAManager,
 	[this](const std::string& player, const std::string& enemy){ApplyImprovements(player, enemy);});
 	_statesLogic[State::STATES::BATTLE] = new BattleState(&_player, painterManager, &_enemiesPool, &_bulletsPool,
-		[this](){DamagePlayer();}, [this](){DamageEnemy();});
+		[this](){DamagePlayer();}, 
+		[this](){DamageEnemy();}, 
+		&_currentScore, &_currentTimePlaying, &_numberManager);
 	_statesLogic[_currentStateLogic]->OnEnter();
 }
 
@@ -158,18 +160,6 @@ void GameManager::Paint()
 {
 	_painterManager->ClearListPaint();
 	_statesLogic[_oldStateLogic]->Paint();
-
-	if(_oldStateLogic == State::STATES::BATTLE)
-	{
-		int leftTime = MAX_SECS_PLAYING - _currentTimePlaying;
-		_numberManager.PaintNumber(leftTime, SCREEN_WIDTH, NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::RIGHT);
-	}
-
-	if(_oldStateLogic != State::STATES::MENU && _oldStateLogic != State::STATES::HIGH_SCORE)
-	{
-		_numberManager.PaintNumber(_currentScore, 0, NUMBER_0_HEIGHT, 4, NumberManager::PIVOT::LEFT);
-	}
-
 	_alphaManager.Paint();
 }	
 

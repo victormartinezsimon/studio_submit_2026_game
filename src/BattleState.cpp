@@ -7,9 +7,11 @@
 
 BattleState::BattleState(Plane *player, PainterManager *painter, Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
                          Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, 
-                         std::function<void()> damagePlayerCallback, std::function<void()> damageEnemy) 
+                         std::function<void()> damagePlayerCallback, std::function<void()> damageEnemy,
+                        long long* score, float* time, NumberManager* numberManager) 
                          : State(player, painter), _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
-                         _damagePlayerCallback(damagePlayerCallback), _damageEnemy(damageEnemy)
+                         _damagePlayerCallback(damagePlayerCallback), _damageEnemy(damageEnemy),
+                         _score(score), _timeLeft(time), _numberManager(numberManager)
 {
 }
 
@@ -55,6 +57,17 @@ void BattleState::Paint()
         _player->GetPaintPosition(playerX, playerY);
         _painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player->GetWidth(), _player->GetHeight(), playerX, playerY);
     }
+
+    {
+        long long value = *_score;
+        _numberManager->PaintNumber(value, SCREEN_WIDTH, NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::RIGHT);
+    }
+
+    {
+        float value = *_timeLeft;
+        _numberManager->PaintNumber(MAX_SECS_PLAYING - value, SCREEN_WIDTH /2, NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::CENTER);
+    }
+
 }
 void BattleState::OnEnter()
 {

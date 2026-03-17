@@ -4,6 +4,7 @@
 #include "PainterManager.h"
 #include "GameConfig.h"
 #include "Pool.h"
+#include "NumberManager.h"
 
 class Plane;
 class Bullet;
@@ -14,7 +15,9 @@ class BattleState: public State
         
         BattleState(Plane *player, PainterManager *painter, Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
                          Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, 
-                         std::function<void()> damagePlayerCallback, std::function<void()> damageEnemy);
+                         std::function<void()> damagePlayerCallback, 
+                         std::function<void()> damageEnemy,
+                         long long* score, float* time, NumberManager* numberManager);
         
     public:    
         STATES Update(const float deltaTime, float currentFrameInputValueNormalized,
@@ -39,4 +42,7 @@ class BattleState: public State
         Pool<Bullet, BULLETS_POOL_SIZE>* _bulletsPool;
         std::function<void()> _damagePlayerCallback;
         std::function<void()> _damageEnemy;
+        long long* _score;
+        float* _timeLeft;
+        NumberManager* _numberManager;
 };
