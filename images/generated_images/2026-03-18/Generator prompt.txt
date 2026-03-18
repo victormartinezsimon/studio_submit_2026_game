@@ -1,0 +1,31 @@
+Minimalistic retro videogame UI text image.
+
+Text: "<TEXT_HERE>"
+Canvas size: <WIDTH>x<HEIGHT> pixels
+Background: fully transparent
+
+Font & style:
+- Flat, plain 2D pixel font (NO 3D, no bevel, no shadow depth)
+- All letters aligned to a tight pixel grid
+- High readability when scaled down to very small resolutions (as low as 79x32)
+- Even stroke thickness, blocky arcade-style lettering
+
+Colors:
+- Letter fill: solid white
+- Inner outline: solid blue
+- Outer outline / accent: solid red
+- No gradients, no lighting, no glow, no blur
+
+Layout:
+- Text perfectly centered horizontally and vertically
+- Tight spacing between letters, but still readable at low resolution
+- Use only flat colors and sharp pixel edges
+
+Constraints:
+- No text effects (no glow, no blur, no gradient, no highlights)
+- No background shapes or frames
+- No additional symbols, icons, or decorations
+- Pure retro arcade / NES-era UI look
+
+Optimized to contrast clearly with a very dark background (rgb(8, 15, 42)).
+``
