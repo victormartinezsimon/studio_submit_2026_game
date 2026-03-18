@@ -22,4 +22,5 @@ private:
 	std::pair<int, int> _optionB;
 	std::function<void(int)> _callback;
 	float _acumTime;
+	int _currentSelection = -1;
 };
