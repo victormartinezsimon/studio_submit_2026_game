@@ -21,7 +21,7 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	InitializeRandomImprovements();
 	InitializeStatesBegin();
 
-	_statesLogic[State::STATES::MENU] = new MainMenuState(&_player, painterManager, &_buttonAManager);
+	_statesLogic[State::STATES::MENU] = new MainMenuState(&_player, painterManager, &_buttonAManager, &_numberManager);
 	_statesLogic[State::STATES::INITIAL_MOVEMENT] = new InitialMovementState(&_player, painterManager, &_easingManager, &_enemiesPool);
 	_statesLogic[State::STATES::IMPROVEMENT_SELECTOR] = new ImprovementSelectionState(&_player, painterManager, &_buttonAManager,
 	[this](const std::string& player, const std::string& enemy){ApplyImprovements(player, enemy);});

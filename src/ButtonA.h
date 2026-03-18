@@ -9,6 +9,7 @@ public:
 	ButtonA(){}
 public:
 	void Update(const float deltaTime, const float currentInputValueNormalized, const float currentInputValue);
+	float GetLeftTime() const;
 private:
 	void UpdateSelectInPosition(const float deltaTime,const float currentInputValueNormalized, const float currentInputValue);
 	void UpdateSelectAfterTime(const float deltaTime,const float currentInputValueNormalized, const float currentInputValue);

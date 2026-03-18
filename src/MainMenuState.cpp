@@ -4,14 +4,15 @@
 #include "GameConfig.h"
 #include "Sprites.h"
 #include "ButtonA.h"
+#include "NumberManager.h"
 
 constexpr int TITLE_Y = 70;
 constexpr int START_Y = 153;
 constexpr int SELECTOR_Y = 205;
 
 
-MainMenuState::MainMenuState(Plane *player, PainterManager *painter,ButtonA* buttonAManager) : 
-State(player, painter),_buttonAManager(buttonAManager)
+MainMenuState::MainMenuState(Plane *player, PainterManager *painter,ButtonA* buttonAManager, NumberManager* numberManager) : 
+State(player, painter),_buttonAManager(buttonAManager), _numberManager(numberManager)
 {
 }
 
@@ -29,6 +30,15 @@ void MainMenuState::Paint()
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, 
             _player->GetWidth(), _player->GetHeight(), playerX, playerY);
 	}
+
+	{
+		float playerX, playerY;
+		_player->GetPaintPosition(playerX, playerY);
+		float posY = _player->GetY();
+		int time = _buttonAManager->GetLeftTime() + 1;
+		_numberManager->PaintNumber(time, playerX, posY, 1, NumberManager::PIVOT::RIGHT);
+	}
+
 	{
 		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE, 
             SCREEN_WIDTH*0.5f, TITLE_Y);

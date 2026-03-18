@@ -68,3 +68,8 @@ void ButtonA::UpdateSelectAfterTime(const float deltaTime, const float currentIn
         _enabled = false;
     }
 }
+
+float ButtonA::GetLeftTime() const
+{
+    return _duration - _acumTime;
+}
