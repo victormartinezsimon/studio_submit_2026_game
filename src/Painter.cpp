@@ -67,12 +67,12 @@ void Painter::PaintBackground()
 	VPUClear(s_platform->vx, 0x10101010);
 }
 
-void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y)
+void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y)
 {
 	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, TRANSPARENT_IDS, TRANSPARENT_COUNT, allMask);
 }
 
-void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y, int maskType)
+void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType)
 {
 	uint8x16_t mask = allMask;
 	if (maskType == 1)

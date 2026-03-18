@@ -24,8 +24,8 @@ private:
 		SPRITE_ID id;
 		unsigned int width;
 		unsigned int height;
-		unsigned int x;
-		unsigned int y;
+		int x;
+		int y;
 		unsigned int mask;
 	};
 public:
@@ -36,11 +36,11 @@ public:
 
 public:
 	void ClearListPaint();
-	void AddToPaint(SPRITE_ID id, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
-	void AddUIToPaint(SPRITE_ID id, unsigned int x, unsigned int y);
+	void AddToPaint(SPRITE_ID id, unsigned int width, unsigned int height, int x, int y);
+	void AddUIToPaint(SPRITE_ID id, int x, int y);
 
-	void AddToPaintWithAlpha(SPRITE_ID id, unsigned int width, unsigned int height, unsigned int x, unsigned int y, int maskID);
-	void AddUIToPaintWithAlpha(SPRITE_ID id, unsigned int x, unsigned int y, int maskID);
+	void AddToPaintWithAlpha(SPRITE_ID id, unsigned int width, unsigned int height, int x, int y, int maskID);
+	void AddUIToPaintWithAlpha(SPRITE_ID id, int x, int y, int maskID);
 
 
 private:

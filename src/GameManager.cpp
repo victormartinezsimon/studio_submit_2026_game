@@ -248,7 +248,14 @@ void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, c
 			bullet.SetPosition(positionX, p.GetY());
 			bullet.SetVelocity(velocityBulletX, data.velocityBulletY);
 			bullet.SetSize(BULLET_WIDTH, BULLET_HEIGHT);
-			bullet.SetPlayerTeam(forPlayer);
+			if(forPlayer)
+			{
+				bullet.SetPlayerTeam(TEAM_PLAYER);
+			}
+			else
+			{
+				bullet.SetPlayerTeam(TEAM_ENEMY);
+			}
 			bullet.SetHasPenetration(data.bulletHasPenetration);
 			bullet.SetHasExplostion(data.bulletHasExplosion); });
 	}

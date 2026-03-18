@@ -49,8 +49,8 @@ public:
 
 public:
 	void PaintBackground();
-	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
-	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, unsigned int x, unsigned int y, int maskType);
+	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y);
+	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType);
 
 private:
 	void init_palette(struct EVideoContext *vctx);

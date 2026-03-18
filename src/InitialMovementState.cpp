@@ -39,7 +39,7 @@ void InitialMovementState::OnEnter()
 	_nextState = STATES::INITIAL_MOVEMENT;
 
 	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
-	_player->SetPositionY(SCREEN_HEIGHT * POSITION_Y_PLAYER);
+	_player->SetPositionY(POSITION_Y_PLAYER);
 
 	_enemiesPool->for_each_active(
 		[this](Plane &p)

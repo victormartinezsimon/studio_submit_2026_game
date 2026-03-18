@@ -111,7 +111,7 @@ void PainterManager::ClearListPaint()
 	_toPaint.clear();
 }
 
-void PainterManager::AddToPaint(SPRITE_ID id, unsigned int width, unsigned int height, unsigned int x, unsigned int y)
+void PainterManager::AddToPaint(SPRITE_ID id, unsigned int width, unsigned int height, int x, int y)
 {
 	data d;
 	d.id = id;
@@ -124,14 +124,14 @@ void PainterManager::AddToPaint(SPRITE_ID id, unsigned int width, unsigned int h
 	_toPaint.push_back(d);
 }
 
-void PainterManager::AddUIToPaint(SPRITE_ID id, unsigned int x, unsigned int y)
+void PainterManager::AddUIToPaint(SPRITE_ID id, int x, int y)
 {
 	auto width = _sizes[id].first;
 	auto height = _sizes[id].second;
 	AddToPaint(id, width, height, x - width/2, y - height /2);
 }
 
-void PainterManager::AddToPaintWithAlpha(SPRITE_ID id, unsigned int width, unsigned int height, unsigned int x, unsigned int y, int maskID)
+void PainterManager::AddToPaintWithAlpha(SPRITE_ID id, unsigned int width, unsigned int height, int x, int y, int maskID)
 {
 	data d;
 	d.id = id;
@@ -143,7 +143,7 @@ void PainterManager::AddToPaintWithAlpha(SPRITE_ID id, unsigned int width, unsig
 
 	_toPaint.push_back(d);
 }
-void PainterManager::AddUIToPaintWithAlpha(SPRITE_ID id, unsigned int x, unsigned int y, int maskID)
+void PainterManager::AddUIToPaintWithAlpha(SPRITE_ID id, int x, int y, int maskID)
 {
 	auto width = _sizes[id].first;
 	auto height = _sizes[id].second;
