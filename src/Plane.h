@@ -26,6 +26,10 @@ public:
 	void SetHasShield(bool value);
 	bool GetHasShield() const;
 
+public:
+	void SetTimeInmortal(float value);
+	float GetTimeInmortal() const;
+
 private:
 	std::function<void(int, const Plane&)> _callbackFire = nullptr;
 	float _fireRate = 0;
@@ -33,4 +37,5 @@ private:
 	float _currentAcumTime = 0;
 	bool _hasShield = false;
 	int _bulletsPerShot = 1;
+	float _timeInmortal = 0;
 };

@@ -76,9 +76,28 @@ void BattleState::Paint()
 
     {
         float playerX, playerY;
-        _player->GetPaintPosition(playerX, playerY);
-        _painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player->GetWidth(), _player->GetHeight(), playerX, playerY);
-    
+        float currentTimeInmortal = _player->GetTimeInmortal();
+        if( currentTimeInmortal <= 0)
+        {
+            _player->GetPaintPosition(playerX, playerY);
+            _painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player->GetWidth(), _player->GetHeight(), playerX, playerY);
+        }
+        else
+        {
+            float playerX, playerY;
+            _player->GetPaintPosition(playerX, playerY);
+            float percent = currentTimeInmortal / TIME_INMORTAL;
+
+            int mask = 0;
+            if((percent >= 0.25 && percent <= 0.50) || (percent >= 0.75 && percent <= 1.0))
+            {
+                mask = 1;
+            }
+
+            _painterManager->AddToPaintWithAlpha(PainterManager::SPRITE_ID::PLAYER, 
+                _player->GetWidth(), _player->GetHeight(), playerX, playerY, mask);
+        }
+
         if(_player->GetHasShield())
         {
             _painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SHIELD,
@@ -320,7 +339,10 @@ bool BattleState::CollsisionDetection(float ax, float ay, float aw, float ah,
 
 void BattleState::DamagePlayer()
 {
+    if(_player->GetTimeInmortal() > 0){return;}
+    
     _damagePlayerCallback();
+    _player->SetTimeInmortal(TIME_INMORTAL);
 }
 
 void BattleState::UpdateMeteorites(float deltaTime)

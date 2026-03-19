@@ -40,6 +40,11 @@ void Plane::Update(const float deltaTime)
 {
 	_currentAcumTime += deltaTime;
 
+	if(_timeInmortal > 0)
+	{
+		_timeInmortal-= deltaTime;
+	}
+
 	if (_currentAcumTime > _fireRate)
 	{
 		for (int i = 0; i < _bulletsTotalSources; ++i)
@@ -56,4 +61,13 @@ void Plane::Update(const float deltaTime)
 void Plane::Reset()
 {
 	_currentAcumTime = 0;
+}
+
+void Plane::SetTimeInmortal(float value)
+{
+	_timeInmortal = value;
+}
+float Plane::GetTimeInmortal() const
+{
+	return _timeInmortal;
 }
