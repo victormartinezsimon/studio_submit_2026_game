@@ -85,30 +85,11 @@ echo ==========================================
 echo              Generate images
 echo ==========================================
 
-rem "remove result file"
-del "%OUTPUT_DIR%\sprites.txt"
+for %%F in (%INPUT_DIR%\*.png) do (
+    echo Processing %%~nxF
 
-for /d %%D in ("%INPUT_DIR%\*") do (
-    set "FOLDER_NAME=%%~nxD"
-    
-    :: Split "WxH" into WIDTH and HEIGHT
-    for /f "tokens=1,2 delims=x" %%A in ("!FOLDER_NAME!") do (
-        set "WIDTH=%%A"
-        set "HEIGHT=%%B"
-    )
-    
-    echo Processing: !FOLDER_NAME! ^(WIDTH=!WIDTH! HEIGHT=!HEIGHT!^)
-    set "FOLDER_IN=%INPUT_DIR%\!FOLDER_NAME!"
-    set "FOLDER_OUT=%OUTPUT_DIR%\!FOLDER_NAME!"
-    echo Input !FOLDER_IN!
-    echo Output !FOLDER_OUT!
-
-    for %%F in (!FOLDER_IN!\*.png) do (
-        echo Processing %%~nxF
-
-        echo Generando CSV para %%~nF...
-        python image_to_palette_png.py "!FOLDER_IN!\%%~nxF" "%PALETE_FILE%" "%OUTPUT_DIR%\%%~nxF"
-    )
+    echo Generando CSV para %%~nF...
+    python image_to_palette_png.py "%INPUT_DIR%\%%~nxF" "%PALETE_FILE%" "%OUTPUT_DIR%\%%~nxF"
 )
 
 pause
