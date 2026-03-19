@@ -7,6 +7,7 @@
 #include "NumberManager.h"
 #include "Meteorite.h"
 #include <array>
+#include "Explosion.h"
 
 class Plane;
 class Bullet;
@@ -31,6 +32,7 @@ class BattleState: public State
         void OnExit()override;
 
     private:
+        void UpdatePlayer(float deltaTime);
         void UpdateBullets(float deltaTime);
         void UpdateEnemies(float deltaTime);
         void UpdateMeteorites(float deltaTime);
@@ -45,6 +47,9 @@ class BattleState: public State
 
         void ReturnEnemy(Plane& plane);
 
+        void EndExplosion(Explosion* exp);
+        void ConfigureExplosion(Explosion& exp, const Bullet& bullet);
+
     private:
         Pool<Plane, PLANES_POOL_SIZE>* _enemiesPool;
         Pool<Bullet, BULLETS_POOL_SIZE>* _bulletsPool;
@@ -56,4 +61,5 @@ class BattleState: public State
         AlphaManager* _alphaManager;
         int _enemiesAlive;
         Pool<Meteorite, TOTAL_METEORITES> _meteoritesPool;
+        Pool<Explosion, TOTAL_EXPLOSIONS> _explosionPool;
 };

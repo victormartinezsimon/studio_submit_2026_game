@@ -52,7 +52,6 @@ public:
 	}
 
 public:
-public:
 	unsigned char  GetPlayerTeam() const
 	{
 		return _playerTeam;

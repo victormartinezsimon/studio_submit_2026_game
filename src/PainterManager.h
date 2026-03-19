@@ -15,7 +15,7 @@ public:
 						GIVE_EXPLOSION,GIVE_SHIELD,FAST_SHOTS,SLOW_SHOTS,
 						NUMBER_0,NUMBER_1,NUMBER_2,NUMBER_3,NUMBER_4,NUMBER_5,NUMBER_6,
 						NUMBER_7,NUMBER_8,NUMBER_9,
-						METEORITE
+						METEORITE, EXPLOSION
 					};
 
 private:
@@ -45,7 +45,7 @@ public:
 
 private:
 	Painter* _painter;
-	std::vector<data> _toPaint;
+	std::vector<data> _toPaint;//TODO change to array
 	std::map<SPRITE_ID, const uint8_t*> _sprites;
 	std::map<SPRITE_ID, std::pair<int, int>> _sizes;
 };

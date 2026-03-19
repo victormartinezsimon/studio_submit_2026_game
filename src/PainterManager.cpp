@@ -8,7 +8,7 @@ PainterManager::PainterManager()
 	_sprites[SPRITE_ID::PLAYER] = sprite_PLAYER;
 	_sprites[SPRITE_ID::ENEMY] = sprite_ENEMY;
 	_sprites[SPRITE_ID::BULLET] = sprite_BULLET;
-	_sprites[SPRITE_ID::TITLE] = sprite_void;
+	_sprites[SPRITE_ID::TITLE] = sprite_TITLE;
 	_sprites[SPRITE_ID::PLAYER_SELECTOR] = sprite_PLAYER_SELECTOR;
 	_sprites[SPRITE_ID::START_GAME] = sprite_START_GAME;
 	_sprites[SPRITE_ID::ENEMY_SELECTOR] = sprite_ENEMY_SELECTOR;
@@ -16,11 +16,13 @@ PainterManager::PainterManager()
 	_sprites[SPRITE_ID::INCREASE_ORIGIN] = sprite_MORE_SOURCE;
 	_sprites[SPRITE_ID::INCRASE_FIRE_RATE] = sprite_MORE_FIRERATE;
 	_sprites[SPRITE_ID::GIVE_PENETRATION] = sprite_PENETRATION;
-	_sprites[SPRITE_ID::GIVE_EXPLOSION] = sprite_EXPLOSION;
+	_sprites[SPRITE_ID::GIVE_EXPLOSION] = sprite_EXPLOSIVE_BULLETS;
 	_sprites[SPRITE_ID::FAST_SHOTS] = sprite_FAST_SHOT;
 	_sprites[SPRITE_ID::SLOW_SHOTS] = sprite_SLOW;	
 	_sprites[SPRITE_ID::GIVE_SHIELD] = sprite_GIVE_SHIELD;	
 	_sprites[SPRITE_ID::METEORITE] = sprite_METERORITE;	
+	_sprites[SPRITE_ID::EXPLOSION] = sprite_EXPLOSION;
+
 
 	_sprites[SPRITE_ID::NUMBER_0] = sprite_NUMBER_0;
 	_sprites[SPRITE_ID::NUMBER_1] = sprite_NUMBER_1;
@@ -47,12 +49,13 @@ PainterManager::PainterManager()
 	_sizes[SPRITE_ID::INCREASE_ORIGIN] = {MORE_SOURCE_WIDTH, MORE_SOURCE_HEIGHT};
 	_sizes[SPRITE_ID::INCRASE_FIRE_RATE] = {MORE_FIRERATE_WIDTH, MORE_FIRERATE_HEIGHT};
 	_sizes[SPRITE_ID::GIVE_PENETRATION] = {PENETRATION_WIDTH, PENETRATION_HEIGHT};
-	_sizes[SPRITE_ID::GIVE_EXPLOSION] = {EXPLOSION_WIDTH, EXPLOSION_HEIGHT};
+	_sizes[SPRITE_ID::GIVE_EXPLOSION] = {EXPLOSIVE_BULLETS_WIDTH, EXPLOSIVE_BULLETS_HEIGHT};
 	_sizes[SPRITE_ID::FAST_SHOTS] = {FAST_SHOT_WIDTH, FAST_SHOT_HEIGHT};
 	_sizes[SPRITE_ID::SLOW_SHOTS] = {SLOW_WIDTH, SLOW_HEIGHT};
 	_sizes[SPRITE_ID::GIVE_SHIELD] = {GIVE_SHIELD_WIDTH, GIVE_SHIELD_HEIGHT};
 
 	_sizes[SPRITE_ID::METEORITE] = {METERORITE_WIDTH, METERORITE_HEIGHT};
+	_sizes[SPRITE_ID::EXPLOSION] = {EXPLOSION_WIDTH, EXPLOSION_HEIGHT};
 
 	_sizes[SPRITE_ID::NUMBER_0] = {NUMBER_0_WIDTH, NUMBER_0_HEIGHT};
 	_sizes[SPRITE_ID::NUMBER_1] = {NUMBER_1_WIDTH, NUMBER_1_HEIGHT};
@@ -79,27 +82,13 @@ void PainterManager::Paint() const
 
 	for (auto &&d : _toPaint)
 	{
-		if(d.id == SPRITE_ID::TITLE)
+		if(d.mask != -1)
 		{
-			if(d.mask != -1)
-			{
-				_painter->PaintItem(sprite_TITLE, d.width, d.height, d.x, d.y, d.mask);
-			}
-			else
-			{
-				_painter->PaintItem(sprite_TITLE, d.width, d.height, d.x, d.y);
-			}
+			_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y, d.mask);
 		}
 		else
 		{
-			if(d.mask != -1)
-			{
-				_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y, d.mask);
-			}
-			else
-			{
-				_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y);
-			}
+			_painter->PaintItem(_sprites.at(d.id), d.width, d.height, d.x, d.y);
 		}
 	}
 
