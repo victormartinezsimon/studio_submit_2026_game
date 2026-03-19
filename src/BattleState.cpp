@@ -196,15 +196,15 @@ void BattleState::ManageBulletCollisions(Bullet &bullet)
         isDestroyed = true;
     }
 
+    //check meteorites
     if(!isDestroyed)
     {
         _meteoritesPool.for_each_active([&](Meteorite& meteorite)
             {
                 if (HasCollision(bullet, meteorite))
                 {
-                    if (!bullet.GetHasPenetration())
+                    if(TryDestroyBullet(bullet))
                     {
-                        _bulletsPool->Release(bullet);
                         isDestroyed = true;
                     }
                 }
@@ -212,17 +212,19 @@ void BattleState::ManageBulletCollisions(Bullet &bullet)
         );
     }
 
-    
+    //check enemies
     if(!isDestroyed && bullet.GetPlayerTeam() == TEAM_PLAYER)
     {
         // check collision against enemies
         _enemiesPool->for_each_active([&](Plane &enemy)
                                     {
+                                        if(isDestroyed){return;}//only affect one enemy
                                         bool solution = ManageCollisionBetweenBulletAndEnemy(bullet, enemy);
-                                        isDestroyed |= solution; });
+                                        isDestroyed |= solution; 
+                                    });
     }
     
-
+    //check player
     if(!isDestroyed && bullet.GetPlayerTeam() == TEAM_ENEMY)
     {
         //check player
@@ -233,6 +235,7 @@ void BattleState::ManageBulletCollisions(Bullet &bullet)
         {
             _player->SetHasShield(false);
             hasCollision = false;
+            isDestroyed = true;
         }
 
         if (hasCollision)
@@ -242,6 +245,8 @@ void BattleState::ManageBulletCollisions(Bullet &bullet)
             isDestroyed = true;
         }
     }
+   
+    //manage explosion
     if (isDestroyed)
     {
         if (bullet.GetHasExplostion())
@@ -260,20 +265,34 @@ bool BattleState::ManageCollisionBetweenBulletAndEnemy(Bullet &bullet, Plane &en
     if(hasCollision && hasShield)
     {
         enemy.SetHasShield(false);
-        return false;
+        if (TryDestroyBullet(bullet))
+        {
+            isBulletDestroyed = true;
+        }
+        hasCollision = false;
     }
 
     if (hasCollision)
     {
-        if (!bullet.GetHasPenetration())
+        if (TryDestroyBullet(bullet))
         {
-            _bulletsPool->Release(bullet);
             isBulletDestroyed = true;
         }
         ReturnEnemy(enemy);
     }
     return isBulletDestroyed;
 }
+
+bool BattleState::TryDestroyBullet(Bullet& bullet)
+{
+    if (!bullet.GetHasPenetration())
+    {
+        _bulletsPool->Release(bullet);
+        return false;
+    }
+    return true;
+}
+
 
 bool BattleState::HasCollision(const Bullet &bullet, Plane *plane) const
 {

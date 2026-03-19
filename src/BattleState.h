@@ -49,6 +49,7 @@ class BattleState: public State
 
         void EndExplosion(Explosion& exp);
         void ConfigureExplosion(const int id, Explosion& exp, const Bullet& bullet);
+        bool TryDestroyBullet(Bullet& bullet);
 
     private:
         Pool<Plane, PLANES_POOL_SIZE>* _enemiesPool;
