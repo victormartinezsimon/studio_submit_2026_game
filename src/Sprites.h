@@ -3,6 +3,33 @@
 #include "GameConfig.h"
 #include <stdint.h>
 
+constexpr unsigned int FAR_STAR_WIDHT = 4;
+constexpr unsigned int FAR_STAR_HEIGHT = 4;
+static const uint8_t sprite_FAR_STAR[FAR_STAR_WIDHT * FAR_STAR_WIDHT]={
+17,17,17,17,
+17,17,17,17,
+17,17,17,17,
+17,17,17,17,
+};
+
+constexpr unsigned int MID_STAR_WIDHT = 4;
+constexpr unsigned int MID_STAR_HEIGHT = 4;
+static const uint8_t sprite_MID_STAR[MID_STAR_WIDHT * MID_STAR_WIDHT]={
+18,18,18,18,
+18,18,18,18,
+18,18,18,18,
+18,18,18,18,
+};
+
+constexpr unsigned int NEAR_STAR_WIDHT = 4;
+constexpr unsigned int NEAR_STAR_HEIGHT = 4;
+static const uint8_t sprite_NEAR_STAR[NEAR_STAR_WIDHT * NEAR_STAR_WIDHT]={
+19,19,19,19,
+19,19,19,19,
+19,19,19,19,
+19,19,19,19,
+};
+
 constexpr unsigned int BULLET_WIDTH=16;
 constexpr unsigned int BULLET_HEIGHT=15;
 static const uint8_t sprite_BULLET[BULLET_WIDTH * BULLET_HEIGHT]={

@@ -6,9 +6,9 @@ Far:  speed = 0.2 px/frame
 Mid:  speed = 0.5 px/frame
 Near: speed = 1.2 px/frame
 
-#FFFFFF (near)
-#BFD7FF (mid)
-#6B7FAE (far)
+rgb(255, 255, 255) (near)
+rgb(191, 215, 255) (mid)
+rgb(107, 127, 174) (far)
 
 Instead of vertical movement, drift everything diagonally or horizontally.
 Examples:

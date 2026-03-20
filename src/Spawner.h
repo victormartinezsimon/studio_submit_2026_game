@@ -28,13 +28,13 @@ public:
 		_objects.for_each_active([&](T& obj){UpdateObject(deltaTime, obj);});
 	}
 
-	void Paint(PainterManager::SPRITE_ID sprite)
+	void Paint()
 	{
 		 _objects.for_each_active([&](const T& obj)
         {
             float posX, posY;
             obj.GetPaintPosition(posX, posY);
-            _painterManager->AddToPaint(sprite, 
+            _painterManager->AddToPaint(obj.GetSprite(), 
                 obj.GetWidth(), obj.GetHeight(), posX, posY);
         });
 	}

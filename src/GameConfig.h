@@ -75,3 +75,9 @@ constexpr float MAX_VELOCITY_METEORITE = 0.7;
 constexpr float MIN_HEIGHT_METEORITE = 0.3;
 constexpr float MAX_HEIGHT_METEORITE = 0.7;
 constexpr float TIME_SPAWN_METEORITE = 3;
+
+constexpr int TOTAL_STARS = 50;
+constexpr float TIME_SPAWN_STAR = 0.7;
+constexpr float VELOCITY_START_FAR = 0.2;
+constexpr float VELOCITY_START_MID = 0.5;
+constexpr float VELOCITY_START_NEAR = 1.2;

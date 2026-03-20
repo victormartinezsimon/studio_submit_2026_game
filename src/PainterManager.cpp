@@ -24,6 +24,9 @@ PainterManager::PainterManager()
 	_sprites[SPRITE_ID::EXPLOSION] = sprite_EXPLOSION;
 	_sprites[SPRITE_ID::PLAYER_SHIELD] = sprite_SHIELD_PLAYER;
 	_sprites[SPRITE_ID::ENEMY_SHIELD] = sprite_SHIELD_ENEMY;
+	_sprites[SPRITE_ID::NEAR_STAR] = sprite_NEAR_STAR;
+	_sprites[SPRITE_ID::MID_STAR] = sprite_MID_STAR;
+	_sprites[SPRITE_ID::FAR_STAR] = sprite_FAR_STAR;
 
 
 	_sprites[SPRITE_ID::NUMBER_0] = sprite_NUMBER_0;
@@ -71,6 +74,11 @@ PainterManager::PainterManager()
 	_sizes[SPRITE_ID::NUMBER_7] = {NUMBER_7_WIDTH, NUMBER_7_HEIGHT};
 	_sizes[SPRITE_ID::NUMBER_8] = {NUMBER_8_WIDTH, NUMBER_8_HEIGHT};
 	_sizes[SPRITE_ID::NUMBER_9] = {NUMBER_9_WIDTH, NUMBER_9_HEIGHT};
+	
+	_sizes[SPRITE_ID::NEAR_STAR] = {NEAR_STAR_WIDHT, NEAR_STAR_HEIGHT};
+	_sizes[SPRITE_ID::MID_STAR] = {MID_STAR_WIDHT, MID_STAR_HEIGHT};
+	_sizes[SPRITE_ID::FAR_STAR] = {FAR_STAR_WIDHT, FAR_STAR_HEIGHT};
+
 }
 
 PainterManager::~PainterManager()

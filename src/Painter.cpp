@@ -114,6 +114,11 @@ void Painter::init_palette(struct EVideoContext *vctx)
 	VPUSetPal(vctx,15,255,255,255);
 
 	VPUSetPal(vctx, 16, 8, 15, 42); // background
+
+	VPUSetPal(vctx, 17, 107, 127, 174); // fat star
+	VPUSetPal(vctx, 18, 191, 215, 255); // mid star
+	VPUSetPal(vctx, 19, 255, 255, 255); // near star
+
 }
 
 void Painter::masked_blit_8(

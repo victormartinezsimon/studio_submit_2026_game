@@ -41,7 +41,7 @@ State::STATES BattleState::Update(const float deltaTime, float currentFrameInput
 void BattleState::Paint()
 {
     {
-        _spawnerMeteorites.Paint(PainterManager::SPRITE_ID::METEORITE);
+        _spawnerMeteorites.Paint();
     }
     
     {
