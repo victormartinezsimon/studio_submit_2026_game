@@ -5,23 +5,26 @@
 #include "Sprites.h"
 #include "Bullet.h"
 #include "AlphaManager.h"
+#include "EasingManager.h"
 
 BattleState::BattleState(Plane *player, PainterManager *painter, Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
                          Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, 
                          std::function<void()> damagePlayerCallback, 
                          std::function<void(float x, float y)> damageEnemy,
                          long long* score, float* time, 
-                         NumberManager* numberManager, AlphaManager* alphaManager) 
+                         NumberManager* numberManager, AlphaManager* alphaManager, EasingManager* easingManager) 
                          : State(player, painter), _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
                          _damagePlayerCallback(damagePlayerCallback), _damageEnemyCallback(damageEnemy),
                          _score(score), _timeLeft(time), _numberManager(numberManager),_alphaManager(alphaManager),
-                         _generator(std::random_device{}()), _spawnerMeteorites(TIME_SPAWN_METEORITE, painter)
+                         _generator(std::random_device{}()), _spawnerMeteorites(TIME_SPAWN_METEORITE, painter), _easingManager(easingManager)
 {
     _spawnerMeteorites.SetCallbackConfiguration([this](Meteorite& m){ConfigureMeteoriteSpawn(m);});
 }
 
 State::STATES BattleState::Update(const float deltaTime, float currentFrameInputValueNormalized, int currentFrameInputValue)
 {
+    _easingManager->Update(deltaTime);
+    
     // update player
     UpdatePlayer(deltaTime);
 
@@ -121,6 +124,16 @@ void BattleState::OnEnter()
     _enemiesAlive = _enemiesPool->TotalInUse();
     _spawnerMeteorites.Reset();
 
+    _destinyManager.Reset();
+    _enemiesPool->for_each_active([this](Plane& p)
+    {
+        _destinyManager.AddPosition(p.GetX(), p.GetY());
+    });
+
+    _enemiesPool->for_each_active([this](Plane& p)
+    {
+        ConfigureRandomMovement(p);
+    });
 }
 void BattleState::OnExit()
 {
@@ -321,6 +334,8 @@ void BattleState::ReturnEnemy(Plane& enemy)
 {
     _enemiesPool->Release(enemy);
 
+    _easingManager->FinishWithoutCallback(enemy.GetRandomMovementID());
+
     float x, y;
     enemy.GetPaintPosition(x, y);
     int id = _alphaManager->AddAlpha(ALPHA_TIME_DESTROY_PLANE, x, y, false, 
@@ -393,3 +408,31 @@ void BattleState::ConfigureMeteoriteSpawn(Meteorite& meteorite)
         meteorite.SetMoveLeft(false);
     }
 }
+
+ void BattleState::ConfigureRandomMovement(Plane& plane)
+ {
+    if(_destinyManager.GetTotalPositions() == 0){return;}
+
+    float newX, newY;
+    _destinyManager.GetRandomPosition(newX, newY);
+
+    float duration = 10;
+
+    std::uniform_int_distribution<int> typeDist(0, 3);
+	int type = typeDist(_generator);
+    EasingManager::EASE_TYPES easeType = EasingManager::EASE_TYPES::INOUTQUINT;
+
+    switch (type)
+    {
+        case 0: easeType = EasingManager::EASE_TYPES::INOUTSINE; break;
+        case 1: easeType = EasingManager::EASE_TYPES::INOUTCUBE; break;
+        case 2: easeType = EasingManager::EASE_TYPES::INOUTQUINT; break;
+        case 3: easeType = EasingManager::EASE_TYPES::INOUTCIRC; break;
+    }
+
+    int easeID = _easingManager->AddEase(duration, plane.GetX(), plane.GetY(), newX, newY, easeType,
+        [&](){ ConfigureRandomMovement(plane); },
+        [&plane](float x, float y) { plane.SetPosition(x, y); }
+    );
+    plane.SetRandomMovementID(easeID);
+ }

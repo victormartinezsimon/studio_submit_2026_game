@@ -42,6 +42,7 @@ public:
 		std::function<void(float currentX, float currentY)> tickCallback);
 	void FinishAll();
 	void FinishEase(int id);
+	void FinishWithoutCallback(int id);
 
 private:
 	void GetValues(int id, float& x, float& y)const;

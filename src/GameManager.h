@@ -54,7 +54,7 @@ private:
 	void MovePlayer();
 
 private:
-	void ConfigurePlane(Plane &p, const float posX, const float posY, const modifiable_data &data, bool isPlayer);
+	void ConfigurePlane(Plane &p, const float posX, const float posY, const modifiable_data &data, bool isPlayer, float initialDelay);
 	void DamagePlayer();
 	void DamageEnemy(float x, float y);
 

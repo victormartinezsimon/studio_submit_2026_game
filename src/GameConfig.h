@@ -86,3 +86,6 @@ constexpr float MIN_HEIGHT_STAR = -0.5;
 constexpr float MAX_HEIGHT_STAR = 1.5;
 constexpr float MIN_VELOCITY_STAR = 80;
 constexpr float MAX_VELOCITY_STAR = 180;
+
+constexpr float MIN_SHOOTING_DELAY = 0;
+constexpr float MAX_SHOOTING_DELAY = 0.6;

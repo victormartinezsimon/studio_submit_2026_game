@@ -117,6 +117,13 @@ void EasingManager::FinishEase(int id)
     }
 }
 
+void EasingManager::FinishWithoutCallback(int id)
+{
+    if(!_inUse[id]){return;}
+    _inUse[id] = false;
+    _eases[id].acumTime = _eases[id].duration;
+}
+
 
 float EasingManager::inOutSine(float progress, float startValue, float endValue) const
 {

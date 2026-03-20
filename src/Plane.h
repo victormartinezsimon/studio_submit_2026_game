@@ -6,7 +6,7 @@ class Plane : public WorldObject
 {
 public:
 	void Update(const float deltaTime);
-	void Reset();
+	void Reset(float value);
 
 public:
 	void SetCallbackFire(std::function<void(int, const Plane&)> fun);
@@ -30,6 +30,10 @@ public:
 	void SetTimeInmortal(float value);
 	float GetTimeInmortal() const;
 
+public:
+	void SetRandomMovementID(int value);
+	int GetRandomMovementID() const;
+
 private:
 	std::function<void(int, const Plane&)> _callbackFire = nullptr;
 	float _fireRate = 0;
@@ -38,4 +42,5 @@ private:
 	bool _hasShield = false;
 	int _bulletsPerShot = 1;
 	float _timeInmortal = 0;
+	int _randomMovementID = -1;
 };

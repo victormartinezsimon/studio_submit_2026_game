@@ -58,9 +58,9 @@ void Plane::Update(const float deltaTime)
 	}
 }
 
-void Plane::Reset()
+void Plane::Reset(float value)
 {
-	_currentAcumTime = 0;
+	_currentAcumTime = -value;
 }
 
 void Plane::SetTimeInmortal(float value)
@@ -70,4 +70,13 @@ void Plane::SetTimeInmortal(float value)
 float Plane::GetTimeInmortal() const
 {
 	return _timeInmortal;
+}
+
+void Plane::SetRandomMovementID(int value)
+{
+	_randomMovementID = value;
+}
+int Plane::GetRandomMovementID() const
+{
+	return _randomMovementID;
 }

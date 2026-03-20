@@ -7,7 +7,8 @@
 -~~ Test with other mask~~
 -~~ 2 obstacles~~
 - Enemy movement
-- Delay start shooting
+- ~~Delay start shooting~~
 - Highscore screen with a way to come back
-- Remove vector in painter manager
+- ~~Remove vector in painter manager~~
 - Sound
+- Text missing: title, "return to menu", +, -

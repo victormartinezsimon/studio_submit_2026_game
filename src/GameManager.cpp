@@ -40,7 +40,7 @@ void GameManager::InitializeStates()
 	_statesLogic[State::STATES::BATTLE] = new BattleState(&_player, _painterManager, &_enemiesPool, &_bulletsPool,
 		[this](){DamagePlayer();}, 
 		[this](float x, float y){DamageEnemy(x, y);}, 
-		&_currentScore, &_currentTimePlaying, &_numberManager, &_alphaManager);
+		&_currentScore, &_currentTimePlaying, &_numberManager, &_alphaManager, &_easingManager);
 }
 
 void GameManager::InitializeConstantValues()
@@ -202,7 +202,7 @@ void GameManager::MovePlayer()
 }
 
 void GameManager::ConfigurePlane(Plane &p, const float posX, const float posY,
-								 const modifiable_data &data, bool isPlayer)
+								 const modifiable_data &data, bool isPlayer, float initialDelay)
 {
 	p.SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	if(posX >=0 && posY >= 0)
@@ -221,7 +221,7 @@ void GameManager::ConfigurePlane(Plane &p, const float posX, const float posY,
 	{
 		p.SetPlayerTeam(TEAM_ENEMY);
 	}
-	p.Reset();
+	p.Reset(initialDelay);
 	p.SetCallbackFire([this, isPlayer, data](int sourceIndex, const Plane &p)
 					  { this->SpawnBullet(sourceIndex, p, isPlayer, data); });
 }
@@ -276,7 +276,7 @@ void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, c
 void GameManager::StartLevel()
 {
 	SpawnEnemies();
-	ConfigurePlane(_player, -1, -1, playerData, true);
+	ConfigurePlane(_player, -1, -1, playerData, true, 0);
 }
 
 void GameManager::EndLevel()
@@ -321,8 +321,12 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 		currentPositionX += ENEMY_WIDTH + holeDistance;
 
 		auto id = _enemiesPool.Get();
-		_enemiesPool.call_for_element(id, [posX, posY, this](Plane &enemy)
-									  { ConfigurePlane(enemy, posX, posY, enemyData, false); });
+
+		std::uniform_real_distribution<float> delayDist(MIN_SHOOTING_DELAY, MAX_SHOOTING_DELAY);
+		float delay = delayDist(_generator);
+
+		_enemiesPool.call_for_element(id, [posX, posY, this, delay](Plane &enemy)
+									  { ConfigurePlane(enemy, posX, posY, enemyData, false, delay); });
 	}
 }
 
