@@ -10,7 +10,7 @@ else
 	endif
 endif
 
-TARGET = the_rogue_battle
+TARGET = the_battle_of_rogue
 
 default: $(TARGET)
 

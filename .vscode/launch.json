@@ -5,11 +5,11 @@
             "name": "Remote Debug (gdbserver)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/the_rogue_battle",
+            "program": "${workspaceFolder}/the_battle_of_rogue",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "miDebuggerPath": "arm-none-linux-gnueabihf-gdb",
-            "miDebuggerServerAddress": "${config:the_rogue_battle.remoteHost}:${config:the_rogue_battle.port}",
+            "miDebuggerServerAddress": "${config:the_battle_of_rogue.remoteHost}:${config:the_battle_of_rogue.port}",
             "externalConsole": false,
             "preLaunchTask": "start remote gdbserver",
             "setupCommands": [

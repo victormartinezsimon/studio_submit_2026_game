@@ -20,8 +20,8 @@
             "command": "scp",
             "args": [
                 "-P", "2222",
-                "the_rogue_battle",
-                "${config:the_rogue_battle.user}@${config:the_rogue_battle.remoteHost}:${config:the_rogue_battle.remoteDir}/the_rogue_battle"
+                "the_battle_of_rogue",
+                "${config:the_battle_of_rogue.user}@${config:the_battle_of_rogue.remoteHost}:${config:the_battle_of_rogue.remoteDir}/the_battle_of_rogue"
             ],
             "dependsOn": "build",
             "problemMatcher": []
@@ -32,8 +32,8 @@
             "command": "ssh",
             "args": [
                 "-p", "2222",
-                "${config:the_rogue_battle.user}@${config:the_rogue_battle.remoteHost}",
-                "killall -9 gdbserver > /dev/null 2>&1; chmod +x ${config:the_rogue_battle.remoteDir}/the_rogue_battle; gdbserver --once :${config:the_rogue_battle.port} ${config:the_rogue_battle.remoteDir}/the_rogue_battle"
+                "${config:the_battle_of_rogue.user}@${config:the_battle_of_rogue.remoteHost}",
+                "killall -9 gdbserver > /dev/null 2>&1; chmod +x ${config:the_battle_of_rogue.remoteDir}/the_battle_of_rogue; gdbserver --once :${config:the_battle_of_rogue.port} ${config:the_battle_of_rogue.remoteDir}/the_battle_of_rogue"
             ],
             "dependsOn": "deploy",
             "isBackground": true,
