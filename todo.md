@@ -6,8 +6,10 @@
 - ~~Redesign selection menu~~
 -~~ Test with other mask~~
 -~~ 2 obstacles~~
-- Enemy movement
+- ~~Enemy movement~~
 - ~~Delay start shooting~~
+- Improve pool
+- Move alpha manager and Easing manager to pool
 - Highscore screen with a way to come back
 - ~~Remove vector in painter manager~~
 - Sound

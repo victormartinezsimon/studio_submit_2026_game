@@ -5,6 +5,7 @@
 #include "Sprites.h"
 #include "ButtonA.h"
 #include "NumberManager.h"
+#include "AlphaManager.h"
 
 constexpr int SELECTOR_Y_PLAYER = 190;
 constexpr int SELECTOR_Y_ENEMY = SCREEN_HEIGHT - SELECTOR_Y_PLAYER;
@@ -13,8 +14,9 @@ constexpr float OPTION_RIGHT_X = 0.8;
 
 ImprovementSelectionState::ImprovementSelectionState(Plane *player, PainterManager *painter, ButtonA *buttonAManager,
 													 std::function<void(const std::string &optionForPlayer, const std::string &optionForEnemy)> callbackSeleccion,
-													 NumberManager *numberManager) : State(player, painter), _callbackSeleccion(callbackSeleccion),
-																					 _buttonAManager(buttonAManager), _numberManager(numberManager)
+													 NumberManager *numberManager, AlphaManager* alphaManager) : State(player, painter), _callbackSeleccion(callbackSeleccion),
+																					 _buttonAManager(buttonAManager), _numberManager(numberManager),
+																					 _alphaManager(alphaManager)
 {
 	InitializeImprovementsUI();
 }
@@ -29,7 +31,7 @@ State::STATES ImprovementSelectionState::Update(const float deltaTime, float cur
 }
 void ImprovementSelectionState::Paint()
 {
-
+	if(_doingFadeOut){return;}
 	{
 		float playerX, playerY;
 		_player->GetPaintPosition(playerX, playerY);
@@ -88,7 +90,6 @@ void ImprovementSelectionState::OnEnter()
 	_buttonAManager->SelectInPosition(TIME_TO_SELECT_IMPROVEMENT, zoneA, zoneB,
 									  [this](int selection)
 									  {
-										  _nextState = STATES::INITIAL_MOVEMENT;
 										  if (_callbackSeleccion != nullptr)
 										  {
 											  auto optionForPlayer = _leftSelection;
@@ -102,12 +103,23 @@ void ImprovementSelectionState::OnEnter()
 
 											  _callbackSeleccion(optionForPlayer, optionForEnemy);
 										  }
+
+										  int idLeft = _alphaManager->AddUIAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * OPTION_LEFT_X, SCREEN_HEIGHT * 0.5f, false, 
+											_improvementsUI[_leftSelection]);
+
+											_alphaManager->AddUIAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * OPTION_RIGHT_X, SCREEN_HEIGHT * 0.5f, false, 
+											_improvementsUI[_rightSelection]);
+
+										  	_alphaManager->AddCallback(idLeft, [this]()
+																	{ _nextState = STATES::INITIAL_MOVEMENT; });
+											_doingFadeOut = true;
 									  });
 
 	_nextState = STATES::IMPROVEMENT_SELECTOR;
 
 	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
+	_doingFadeOut = false;
 }
 void ImprovementSelectionState::OnExit()
 {

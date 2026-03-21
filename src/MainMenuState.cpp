@@ -75,6 +75,7 @@ void MainMenuState::OnEnter()
 }
 void MainMenuState::OnExit()
 {
+	_startingGame = false;
 }
 
 void MainMenuState::StartGame()
