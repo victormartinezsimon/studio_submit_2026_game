@@ -80,7 +80,7 @@ void MainMenuState::OnExit()
 
 void MainMenuState::StartGame()
 {
-	int id = _alphaManager->AddUIAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * 0.5f, TITLE_Y, false, PainterManager::SPRITE_ID::TITLE);
+	int id = _alphaManager->AddUIAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * 0.5f, TITLE_Y, PainterManager::SPRITE_ID::TITLE);
 	_alphaManager->AddCallback(id, [this]()
 							   { _nextState = STATES::INITIAL_MOVEMENT; });
 	_startingGame = true;

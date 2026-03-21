@@ -338,7 +338,7 @@ void BattleState::ReturnEnemy(Plane& enemy)
 
     float x, y;
     enemy.GetPaintPosition(x, y);
-    int id = _alphaManager->AddAlpha(ALPHA_TIME_DESTROY_PLANE, x, y, false, 
+    int id = _alphaManager->AddAlpha(ALPHA_TIME_DESTROY_PLANE, x, y,
         ENEMY_WIDTH, ENEMY_HEIGHT, PainterManager::SPRITE_ID::ENEMY);
     _alphaManager->AddCallback(id, [this]()
     {
@@ -369,7 +369,7 @@ void BattleState::ConfigureExplosion(const int id, Explosion& exp ,const Bullet&
     auto alphaID =_alphaManager->AddAlpha(EXPLOSION_DURATION, 
         x - EXPLOSION_WIDTH/2, 
         y - EXPLOSION_HEIGHT/2, 
-        true, EXPLOSION_WIDTH, EXPLOSION_HEIGHT, 
+        EXPLOSION_WIDTH, EXPLOSION_HEIGHT, 
         PainterManager::SPRITE_ID::EXPLOSION);
     
     _alphaManager->AddCallback(alphaID, 

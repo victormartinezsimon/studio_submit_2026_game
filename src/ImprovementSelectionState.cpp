@@ -104,10 +104,10 @@ void ImprovementSelectionState::OnEnter()
 											  _callbackSeleccion(optionForPlayer, optionForEnemy);
 										  }
 
-										  int idLeft = _alphaManager->AddUIAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * OPTION_LEFT_X, SCREEN_HEIGHT * 0.5f, false, 
+										  int idLeft = _alphaManager->AddUIAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * OPTION_LEFT_X, SCREEN_HEIGHT * 0.5f, 
 											_improvementsUI[_leftSelection]);
 
-											_alphaManager->AddUIAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * OPTION_RIGHT_X, SCREEN_HEIGHT * 0.5f, false, 
+											_alphaManager->AddUIAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * OPTION_RIGHT_X, SCREEN_HEIGHT * 0.5f,
 											_improvementsUI[_rightSelection]);
 
 										  	_alphaManager->AddCallback(idLeft, [this]()

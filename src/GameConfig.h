@@ -22,7 +22,7 @@ constexpr float MAIN_MENU_TIME_TO_ENTER = 2;
 
 constexpr float POSITION_Y_PLAYER = 204;
 
-constexpr float INTIAL_ANIMATION_DURATION = 1;
+constexpr float INTIAL_ANIMATION_DURATION = 0.5;
 
 constexpr float DEFAULT_BULLET_VEL_X = 0;
 constexpr float DEFAULT_BULLET_VEL_Y = 70;
