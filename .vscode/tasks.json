@@ -103,6 +103,33 @@
                     "endsPattern": "^Listening on port"
                 }
             }
+        },
+        {
+            "label": "start remote gdbserver release",
+            "type": "shell",
+            "command": "ssh",
+            "args": [
+                "-p", "2222",
+                "${config:the_battle_of_rogue.user}@${config:the_battle_of_rogue.remoteHost}",
+                "killall -9 gdbserver > /dev/null 2>&1; chmod +x ${config:the_battle_of_rogue.remoteDir}/the_battle_of_rogue; gdbserver --once :${config:the_battle_of_rogue.port} ${config:the_battle_of_rogue.remoteDir}/the_battle_of_rogue"
+            ],
+            "dependsOn": "deploy release",
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": "^Listening on port \\d+$",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^Listening on port",
+                    "endsPattern": "^Listening on port"
+                }
+            }
         }
     ]
 }

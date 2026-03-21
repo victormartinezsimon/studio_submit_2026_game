@@ -30,7 +30,7 @@
             "miDebuggerPath": "arm-none-linux-gnueabihf-gdb",
             "miDebuggerServerAddress": "${config:the_battle_of_rogue.remoteHost}:${config:the_battle_of_rogue.port}",
             "externalConsole": false,
-            "preLaunchTask": "deploy release",
+            "preLaunchTask": "start remote gdbserver release",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
