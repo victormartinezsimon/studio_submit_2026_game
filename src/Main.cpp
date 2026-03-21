@@ -38,4 +38,5 @@ int main(int argc, char **argv)
 
 	delete inputManager;
 	delete painterManager;
+	delete gm;
 }

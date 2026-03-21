@@ -27,12 +27,18 @@ public:
 
 	int Get()
 	{
-		for(std::size_t i = 0; i< N; ++i)
+		for(int i = 0; i< N; ++i)
 		{
 			if(!_used[i])
 			{
 				_used[i] = true;
 				++_currentUse;
+
+				if( i > _lastInUse)
+				{
+					_lastInUse = i;
+				}
+
 				return i;
 			}
 		}
@@ -44,18 +50,25 @@ public:
 		int index = elem.GetID();
 		_used[index] = false;
 		--_currentUse;
+
+		while(_lastInUse >= 0 && !_used[_lastInUse] )
+		{
+			--_lastInUse;
+		}
+
 	}
 
 	void ReturnAll()
 	{
 		_used.fill(false);
 		_currentUse = 0;
+		_lastInUse = -1;
 
 	}
 
 	void for_each_active(std::function<void(T&)> func) 
 	{
-		for(int i = 0; i < N; ++i)
+		for(int i = 0; i <= _lastInUse; ++i)
 		{
 			if(!_used[i]){continue;}
 			func(_poolElements[i]);
@@ -77,4 +90,5 @@ private:
 	std::array<T,N> _poolElements; 
 	std::array<bool,N> _used; 
 	int _currentUse = 0;
+	int _lastInUse = -1;
 };
