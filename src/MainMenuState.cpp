@@ -72,10 +72,10 @@ void MainMenuState::OnEnter()
 
 	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
+	_startingGame = false;
 }
 void MainMenuState::OnExit()
 {
-	_startingGame = false;
 }
 
 void MainMenuState::StartGame()

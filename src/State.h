@@ -12,7 +12,7 @@ public:
         BATTLE,
         IMPROVEMENT_SELECTOR,
         INITIAL_MOVEMENT,
-        HIGH_SCORE
+        END_GAME
     };
 
 public:

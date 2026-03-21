@@ -8,6 +8,7 @@
 #include "MainMenuState.h"
 #include "ImprovementSelectionState.h"
 #include "InitialMovementState.h"
+#include "EndGameState.h"
 #include "BattleState.h"
 #include "Star.h"
 
@@ -25,6 +26,7 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	
 	_spawnerStars.SetCallbackConfiguration([this](Star& star){ConfigureStar(star);});
 
+	_statesBeginFunction[_currentStateLogic]();
 	_statesLogic[_currentStateLogic]->OnEnter();
 }
 
@@ -41,6 +43,8 @@ void GameManager::InitializeStates()
 		[this](){DamagePlayer();}, 
 		[this](float x, float y){DamageEnemy(x, y);}, 
 		&_currentScore, &_currentTimePlaying, &_numberManager, &_alphaManager, &_easingManager);
+	
+	_statesLogic[State::STATES::END_GAME] = new EndGameState(&_player, _painterManager, &_buttonAManager, &_numberManager, &_alphaManager);
 }
 
 void GameManager::InitializeConstantValues()
@@ -112,6 +116,10 @@ void GameManager::InitializeStatesBegin()
 	{
 		StartLevel();
 	};
+	_statesBeginFunction[State::STATES::END_GAME] = [this]()
+	{
+		static_cast<EndGameState*>(_statesLogic[State::STATES::END_GAME])->Configure(_currentScore);
+	};
 }
 
 void GameManager::Update(const float deltaTime)
@@ -133,7 +141,8 @@ void GameManager::Update(const float deltaTime)
 
 	if(_currentTimePlaying >= MAX_SECS_PLAYING)
 	{
-		nextState = State::STATES::HIGH_SCORE;//TODO: add it
+		nextState = State::STATES::END_GAME;
+		_currentTimePlaying = 0;
 	}
 
 	_oldStateLogic = _currentStateLogic;
@@ -151,7 +160,7 @@ void GameManager::Update(const float deltaTime)
 			}
 		}
 
-		if(_oldStateLogic == State::STATES::BATTLE && nextState != State::STATES::HIGH_SCORE)
+		if(_oldStateLogic == State::STATES::BATTLE && nextState != State::STATES::END_GAME)
 		{
 			EndLevel();
 		}
@@ -359,20 +368,20 @@ void GameManager::ConfigureStar(Star& star)
 	switch (type)
 	{
 	case 0:
-		star.SetSize(NEAR_STAR_WIDHT, NEAR_STAR_HEIGHT);
-		star.SetPosition(-static_cast<int>(NEAR_STAR_WIDHT), SCREEN_HEIGHT*height);
+		star.SetSize(NEAR_STAR_WIDTH, NEAR_STAR_HEIGHT);
+		star.SetPosition(-static_cast<int>(NEAR_STAR_WIDTH), SCREEN_HEIGHT*height);
 		star.SetTypeStar(Star::Type::NEAR);
 		velocity *= VELOCITY_STAR_NEAR;
 		break;
 	case 1:
-		star.SetSize(MID_STAR_WIDHT, MID_STAR_HEIGHT);
-		star.SetPosition(-static_cast<int>(MID_STAR_WIDHT), SCREEN_HEIGHT*height);
+		star.SetSize(MID_STAR_WIDTH, MID_STAR_HEIGHT);
+		star.SetPosition(-static_cast<int>(MID_STAR_WIDTH), SCREEN_HEIGHT*height);
 		star.SetTypeStar(Star::Type::MID);
 		velocity *= VELOCITY_STAR_MID;
 		break;
 	case 2:
-		star.SetSize(FAR_STAR_WIDHT, FAR_STAR_HEIGHT);
-		star.SetPosition(-static_cast<int>(FAR_STAR_WIDHT), SCREEN_HEIGHT*height);
+		star.SetSize(FAR_STAR_WIDTH, FAR_STAR_HEIGHT);
+		star.SetPosition(-static_cast<int>(FAR_STAR_WIDTH), SCREEN_HEIGHT*height);
 		star.SetTypeStar(Star::Type::FAR);
 		velocity *= VELOCITY_STAR_FAR;
 		break;

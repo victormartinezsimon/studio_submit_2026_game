@@ -89,3 +89,5 @@ constexpr float MAX_VELOCITY_STAR = 150;
 
 constexpr float MIN_SHOOTING_DELAY = 0;
 constexpr float MAX_SHOOTING_DELAY = 0.6;
+
+constexpr float END_GAME_TIME_TO_MAIN_MENU = 2;
