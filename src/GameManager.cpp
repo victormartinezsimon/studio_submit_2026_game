@@ -124,6 +124,7 @@ void GameManager::InitializeStatesBegin()
 
 void GameManager::Update(const float deltaTime)
 {
+	_lastDeltaTime = deltaTime;
 	_currentFrameInputValue = _inputManager->GetInputValue();
 	_currentFrameInputValueNormalized = _inputManager->NormalizeValue(_currentFrameInputValue);
 
@@ -180,6 +181,10 @@ void GameManager::Update(const float deltaTime)
 void GameManager::Paint()
 {
 	_painterManager->ClearListPaint();
+
+	int frameRate = 1 / _lastDeltaTime;
+	_numberManager.PaintNumber(frameRate, 0, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 2, NumberManager::PIVOT::LEFT);
+	
 	_statesLogic[_oldStateLogic]->Paint();
 	_alphaManager.Paint();
 	_spawnerStars.Paint();

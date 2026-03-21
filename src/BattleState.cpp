@@ -164,10 +164,11 @@ void BattleState::UpdateBullets(float deltaTime)
 }
 void BattleState::UpdateEnemies(float deltaTime)
 {
+    /*
     _enemiesPool->for_each_active([deltaTime](Plane &enemy)
                                   { enemy.Update(deltaTime); });
 
-    
+    */
     //check collision
     _enemiesPool->for_each_active([&](Plane &enemy)
     { 
@@ -287,9 +288,9 @@ bool BattleState::TryDestroyBullet(const Bullet& bullet)
     if (!bullet.GetHasPenetration())
     {
         _bulletsPool->Release(bullet);
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 
@@ -361,14 +362,25 @@ void BattleState::ConfigureExplosion(const int id, Explosion& exp ,const Bullet&
 {
     float x = bullet.GetX();
     float y = bullet.GetY();
+    if(y <= 0)
+    {
+        y += EXPLOSION_HEIGHT/2;
+    }
+    if(y >= SCREEN_HEIGHT)
+    {
+        y -= EXPLOSION_HEIGHT/2;
+    }
     exp.SetPosition(x, y);
+    x -= EXPLOSION_WIDTH/2;
+    y -= EXPLOSION_HEIGHT/2;
+
     exp.SetID(id);
     exp.SetSize(EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
     exp.SetPlayerTeam(bullet.GetPlayerTeam());
     
     auto alphaID =_alphaManager->AddAlpha(EXPLOSION_DURATION, 
-        x - EXPLOSION_WIDTH/2, 
-        y - EXPLOSION_HEIGHT/2, 
+        x, 
+        y, 
         EXPLOSION_WIDTH, EXPLOSION_HEIGHT, 
         PainterManager::SPRITE_ID::EXPLOSION);
     

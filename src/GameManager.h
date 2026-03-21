@@ -96,6 +96,7 @@ private:
 	int _currentLevel = 0;
 	float _currentTimePlaying = 0;
 	long long _currentScore = 0;
+	float _lastDeltaTime;
 
 private:
 	std::map<std::string, std::function<void(modifiable_data &)>> _improvementFunctions;
