@@ -19,6 +19,49 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "Remote Run (Release)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/the_battle_of_rogue",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "arm-none-linux-gnueabihf-gdb",
+            "miDebuggerServerAddress": "${config:the_battle_of_rogue.remoteHost}:${config:the_battle_of_rogue.port}",
+            "externalConsole": false,
+            "preLaunchTask": "deploy release",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Remote Profile (gdbserver, Release+Symbols)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/the_battle_of_rogue",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "arm-none-linux-gnueabihf-gdb",
+            "miDebuggerServerAddress": "${config:the_battle_of_rogue.remoteHost}:${config:the_battle_of_rogue.port}",
+            "externalConsole": false,
+            "preLaunchTask": "deploy release with debug symbols",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Disable optimisation stepping issues",
+                    "text": "-gdb-set scheduler-locking step",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }

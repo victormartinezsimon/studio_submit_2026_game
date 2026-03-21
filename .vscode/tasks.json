@@ -15,6 +15,33 @@
             "problemMatcher": ["$gcc"]
         },
         {
+            "label": "build release",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "RELEASE=1"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build release with debug symbols",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "RELEASE=1",
+                "DEBUG_SYMBOLS=1"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
             "label": "deploy",
             "type": "shell",
             "command": "scp",
@@ -24,6 +51,30 @@
                 "${config:the_battle_of_rogue.user}@${config:the_battle_of_rogue.remoteHost}:${config:the_battle_of_rogue.remoteDir}/the_battle_of_rogue"
             ],
             "dependsOn": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "deploy release",
+            "type": "shell",
+            "command": "scp",
+            "args": [
+                "-P", "2222",
+                "the_battle_of_rogue",
+                "${config:the_battle_of_rogue.user}@${config:the_battle_of_rogue.remoteHost}:${config:the_battle_of_rogue.remoteDir}/the_battle_of_rogue"
+            ],
+            "dependsOn": "build release",
+            "problemMatcher": []
+        },
+        {
+            "label": "deploy release with debug symbols",
+            "type": "shell",
+            "command": "scp",
+            "args": [
+                "-P", "2222",
+                "the_battle_of_rogue",
+                "${config:the_battle_of_rogue.user}@${config:the_battle_of_rogue.remoteHost}:${config:the_battle_of_rogue.remoteDir}/the_battle_of_rogue"
+            ],
+            "dependsOn": "build release with debug symbols",
             "problemMatcher": []
         },
         {
