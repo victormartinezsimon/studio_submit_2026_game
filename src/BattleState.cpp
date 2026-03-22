@@ -421,6 +421,8 @@ void BattleState::ConfigureMeteoriteSpawn(Meteorite& meteorite)
 
  void BattleState::ConfigureRandomMovement(Plane& plane)
  {
+    return;
+    
     if(_destinyManager.GetTotalPositions() == 0){return;}
 
     float newX, newY;

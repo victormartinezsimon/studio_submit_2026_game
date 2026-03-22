@@ -20,11 +20,16 @@ void DestinyManager::AddPosition(float x, float y)
 }
 void DestinyManager::GetRandomPosition(float &x, float &y)
 {
+    x = _positions[0].x;
+    y = _positions[0].y;
+    //TODO: review this
+/*
     std::uniform_int_distribution<int> positionDist(0, _lastPosition-1);
 	int posID = positionDist(_generator);
 
     x = _positions[posID].x;
     y = _positions[posID].y;
+    */
 }
 
 int DestinyManager::GetTotalPositions() const
