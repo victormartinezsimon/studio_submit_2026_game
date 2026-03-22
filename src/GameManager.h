@@ -15,7 +15,7 @@
 #include "AlphaManager.h"
 #include "Spawner.h"
 #include "Star.h"
-#include <random>
+#include "RandomManager.h"
 
 class InputManager;
 
@@ -90,7 +90,7 @@ private:
 	Spawner<Star, TOTAL_STARS> _spawnerStars;
 	float _currentFrameInputValueNormalized;
 	int _currentFrameInputValue;
-	std::mt19937 _generator;
+	RandomManager _randomManager;
 
 private:
 	int _currentLevel = 0;

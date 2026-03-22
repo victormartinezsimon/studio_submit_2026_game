@@ -6,17 +6,19 @@
 #include "Bullet.h"
 #include "AlphaManager.h"
 #include "EasingManager.h"
+#include "RandomManager.h"
 
 BattleState::BattleState(Plane *player, PainterManager *painter, Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
                          Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, 
                          std::function<void()> damagePlayerCallback, 
                          std::function<void(float x, float y)> damageEnemy,
                          long long* score, float* time, 
-                         NumberManager* numberManager, AlphaManager* alphaManager, EasingManager* easingManager) 
+                         NumberManager* numberManager, AlphaManager* alphaManager, EasingManager* easingManager, RandomManager* randomManager) 
                          : State(player, painter), _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
                          _damagePlayerCallback(damagePlayerCallback), _damageEnemyCallback(damageEnemy),
                          _score(score), _timeLeft(time), _numberManager(numberManager),_alphaManager(alphaManager),
-                         _generator(std::random_device{}()), _spawnerMeteorites(TIME_SPAWN_METEORITE, painter), _easingManager(easingManager)
+                         _spawnerMeteorites(TIME_SPAWN_METEORITE, painter), _easingManager(easingManager),
+                         _randomManager(randomManager)
 {
     _spawnerMeteorites.SetCallbackConfiguration([this](Meteorite& m){ConfigureMeteoriteSpawn(m);});
 }
@@ -121,17 +123,15 @@ void BattleState::OnEnter()
 
     _enemiesAlive = _enemiesPool->TotalInUse();
     _spawnerMeteorites.Reset();
+    _explosionPool.ReturnAll();
 
-    _destinyManager.Reset();
-    _enemiesPool->for_each_active([this](Plane& p)
+    if(_currentLevel > 1)
     {
-        _destinyManager.AddPosition(p.GetX(), p.GetY());
-    });
-
-    _enemiesPool->for_each_active([this](Plane& p)
-    {
-        ConfigureRandomMovement(p);
-    });
+        _enemiesPool->for_each_active([this](Plane& p)
+        {
+            ConfigureRandomMovement(p);
+        });
+    }
 }
 void BattleState::OnExit()
 {
@@ -394,14 +394,9 @@ void BattleState::ConfigureMeteoriteSpawn(Meteorite& meteorite)
 {
     meteorite.SetSize(METEORITE_WIDTH, METEORITE_HEIGHT);
 
-    bool goingLeft = _generator()% 2;   
-
-    std::uniform_real_distribution<float> velocityDist(MIN_VELOCITY_METEORITE, MAX_VELOCITY_METEORITE);
-    float velocity = velocityDist(_generator);
-
-    std::uniform_real_distribution<float> heightDist(MIN_HEIGHT_METEORITE, MAX_HEIGHT_METEORITE);
-    float height = heightDist(_generator);
-
+    bool goingLeft = _randomManager->GetNextIntValue() % 2;
+    float velocity = _randomManager->GetValue(MIN_VELOCITY_METEORITE, MAX_VELOCITY_METEORITE);
+    float height =  _randomManager->GetValue(MIN_HEIGHT_METEORITE, MAX_HEIGHT_METEORITE);
 
     if(goingLeft)
     {
@@ -421,20 +416,21 @@ void BattleState::ConfigureMeteoriteSpawn(Meteorite& meteorite)
 
  void BattleState::ConfigureRandomMovement(Plane& plane)
  {
-    return;
-    
-    if(_destinyManager.GetTotalPositions() == 0){return;}
+    float minX;
+    float maxX;
+    GetMinMaxXPosiblePositionForEnemies(minX, maxX);
 
-    float newX, newY;
-    _destinyManager.GetRandomPosition(newX, newY);
+    float minY = SCREEN_HEIGHT * MIN_Y_ENEMY;
+    float maxY = SCREEN_HEIGHT * MAX_Y_ENEMY;
 
-    float duration = 10;
+    float nextX = _randomManager->GetValue(minX, maxX);
+    float nextY = _randomManager->GetValue(minY, maxY);
 
-    std::uniform_int_distribution<int> typeDist(0, 3);
-	int type = typeDist(_generator);
+    int movementType = _randomManager->GetValue(0,3);
+
     Ease::EASE_TYPES easeType = Ease::EASE_TYPES::INOUTQUINT;
 
-    switch (type)
+    switch (movementType)
     {
         case 0: easeType = Ease::EASE_TYPES::INOUTSINE; break;
         case 1: easeType = Ease::EASE_TYPES::INOUTCUBE; break;
@@ -442,9 +438,23 @@ void BattleState::ConfigureMeteoriteSpawn(Meteorite& meteorite)
         case 3: easeType = Ease::EASE_TYPES::INOUTCIRC; break;
     }
 
-    int easeID = _easingManager->AddEase(duration, plane.GetX(), plane.GetY(), newX, newY, easeType,
+    float duration = _randomManager->GetValue(MIN_DURATION_MOVEMENT_ENEMY, MAX_DURATION_MOVEMENT_ENEMY);
+
+    int easeID = _easingManager->AddEase(duration, plane.GetX(), plane.GetY(), nextX, nextY, easeType,
         [&](){ ConfigureRandomMovement(plane); },
         [&plane](float x, float y) { plane.SetPosition(x, y); }
     );
     plane.SetRandomMovementID(easeID);
+
  }
+
+void BattleState::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const
+{
+    minX = 0 + ENEMY_WIDTH / 2;
+    maxX = SCREEN_WIDTH - ENEMY_WIDTH / 2;
+}
+
+void BattleState::SetCurrentLevel(int value)
+{
+    _currentLevel = value;
+}

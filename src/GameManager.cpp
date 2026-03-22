@@ -16,7 +16,7 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	: _inputManager(input),
 	  _painterManager(painterManager), _currentLevel(0), 
 	  _currentStateLogic(State::STATES::MENU),_currentScore(0), _numberManager(_painterManager),
-	  _alphaManager(_painterManager, &_easingManager), _spawnerStars(TIME_SPAWN_STAR, painterManager), _generator(std::random_device{}())
+	  _alphaManager(_painterManager, &_easingManager), _spawnerStars(TIME_SPAWN_STAR, painterManager)
 {
 	InitializeConstantValues();
 	InitializeImprovementsFunctions();
@@ -42,7 +42,7 @@ void GameManager::InitializeStates()
 	_statesLogic[State::STATES::BATTLE] = new BattleState(&_player, _painterManager, &_enemiesPool, &_bulletsPool,
 		[this](){DamagePlayer();}, 
 		[this](float x, float y){DamageEnemy(x, y);}, 
-		&_currentScore, &_currentTimePlaying, &_numberManager, &_alphaManager, &_easingManager);
+		&_currentScore, &_currentTimePlaying, &_numberManager, &_alphaManager, &_easingManager, &_randomManager);
 	
 	_statesLogic[State::STATES::END_GAME] = new EndGameState(&_player, _painterManager, &_buttonAManager, &_numberManager, &_alphaManager);
 }
@@ -98,13 +98,16 @@ void GameManager::InitializeRandomImprovements()
 		++index;
 	}
 
-    std::shuffle(_randomImprovements.begin(), _randomImprovements.end(), _generator);
+    std::shuffle(_randomImprovements.begin(), _randomImprovements.end(), _randomManager.GetGenerator());
 }
 
 void GameManager::InitializeStatesBegin()
 {
 	_statesBeginFunction[State::STATES::MENU] = []{};
-	_statesBeginFunction[State::STATES::BATTLE] = [this]{};
+	_statesBeginFunction[State::STATES::BATTLE] = [this]
+	{
+		static_cast<BattleState*>(_statesLogic[State::STATES::BATTLE])->SetCurrentLevel(_currentLevel);
+	};
 	_statesBeginFunction[State::STATES::IMPROVEMENT_SELECTOR] = [this]()
 	{
 		int levelToCheck = _currentLevel -1;
@@ -317,7 +320,7 @@ void GameManager::SpawnEnemies()
 	int levelConfigID = std::min(_currentLevel, TOTAL_LEVELS_CONFIG - 1);
 	int enemiesToSpawn = LEVELS_CONFIGS[levelConfigID];
 
-	float currentY = SCREEN_HEIGHT * 0.1f;
+	float currentY = SCREEN_HEIGHT * MIN_Y_ENEMY;
 
 	while (enemiesToSpawn > 0)
 	{
@@ -343,9 +346,7 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 
 		auto id = _enemiesPool.Get();
 
-		std::uniform_real_distribution<float> delayDist(MIN_SHOOTING_DELAY, MAX_SHOOTING_DELAY);
-		float delay = delayDist(_generator);
-
+		float delay =_randomManager.GetValue(MIN_SHOOTING_DELAY, MAX_SHOOTING_DELAY);
 		_enemiesPool.call_for_element(id, [posX, posY, this, delay](Plane &enemy)
 									  { ConfigurePlane(enemy, posX, posY, enemyData, false, delay); });
 	}
@@ -368,15 +369,9 @@ void GameManager::DamageEnemy(float x, float y)
 
 void GameManager::ConfigureStar(Star& star)
 {
-	std::uniform_real_distribution<float> velocityDist(MIN_VELOCITY_STAR, MAX_VELOCITY_STAR);
-    float velocity = velocityDist(_generator);
-
-    std::uniform_real_distribution<float> heightDist(MIN_HEIGHT_STAR, MAX_HEIGHT_STAR);
-    float height = heightDist(_generator);
-
-	std::uniform_int_distribution<int> typeDist(0, 9);
-
-	int typeValue = typeDist(_generator);
+    float velocity = _randomManager.GetValue(MIN_VELOCITY_STAR, MAX_VELOCITY_STAR);
+    float height = _randomManager.GetValue(MIN_HEIGHT_STAR, MAX_HEIGHT_STAR);
+	int typeValue = _randomManager.GetValue(0,9);
 
 	int type = 0;//0 1 2 3 4
 	if(typeValue >= 5 && typeValue < 8)
