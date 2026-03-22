@@ -29,6 +29,7 @@ PainterManager::PainterManager()
 	_sprites[SPRITE_ID::FAR_STAR] = sprite_FAR_STAR;
 	_sprites[SPRITE_ID::FINAL_SCORE] = sprite_FINAL_SCORE;
 	_sprites[SPRITE_ID::RETURN_MENU] = sprite_RETURN;
+	_sprites[SPRITE_ID::EXIT_GAME] = sprite_EXIT;
 
 
 	_sprites[SPRITE_ID::NUMBER_0] = sprite_NUMBER_0;
@@ -83,6 +84,7 @@ PainterManager::PainterManager()
 
 	_sizes[SPRITE_ID::FINAL_SCORE] = {FINAL_SCORE_WIDTH, FINAL_SCORE_HEIGHT};
 	_sizes[SPRITE_ID::RETURN_MENU] = {RETURN_WIDTH, RETURN_HEIGHT};
+	_sizes[SPRITE_ID::EXIT_GAME] = {EXIT_WIDTH, EXIT_HEIGHT};
 
 }
 

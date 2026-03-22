@@ -47,6 +47,11 @@ void MainMenuState::Paint()
 	}
 
 	{
+		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE,
+									  SCREEN_WIDTH * 0.5f, TITLE_Y);
+	}
+
+	{
 		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::PLAYER_SELECTOR,
 									  START_GAME_X, SELECTOR_Y);
 	}
@@ -58,13 +63,15 @@ void MainMenuState::Paint()
 	
 	{
 		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::START_GAME,
-									  SCREEN_WIDTH * 0.5f, START_Y);
+									  START_GAME_X, START_Y);
 	}
 
 	{
-		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::TITLE,
-									  SCREEN_WIDTH * 0.5f, TITLE_Y);
+		_painterManager->AddUIToPaint(PainterManager::SPRITE_ID::EXIT_GAME,
+									  EXIT_GAME_X, START_Y);
 	}
+
+	
 	
 }
 void MainMenuState::OnEnter()
