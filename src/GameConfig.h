@@ -9,7 +9,7 @@ constexpr int SCREEN_HEIGHT = 240;
 
 constexpr unsigned int PLANES_POOL_SIZE = 11;
 constexpr unsigned int BULLETS_POOL_SIZE = 100;
-constexpr unsigned int MAX_EASING_VALUES = PLANES_POOL_SIZE + 1;
+constexpr unsigned int MAX_EASING_VALUES = 30;
 constexpr unsigned int MAX_ALPHA_VALUES = 20;
 constexpr unsigned int MAX_PAINTED_OBJECTS = 100;
 
