@@ -18,8 +18,6 @@ public:
 		float endX, float endY, Ease::EASE_TYPES type, std::function<void(bool)> endCallback,
 		std::function<void(float currentX, float currentY)> tickCallback);
 
-	void FinishAll();
-	void FinishEase(int id);
 	void KillEase(int id);
 	void KillAll();
 

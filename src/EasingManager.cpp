@@ -4,13 +4,13 @@
 
 void EasingManager::Update(const float deltaTime)
 {
-
     _poolEases.for_each_active([&](Ease& ease)
     {
         bool finished = ease.Update(deltaTime);
         if(finished)
         {
             _poolEases.Release(ease);
+            ease.CallEndCallback(true);
         }
     });
 
@@ -43,18 +43,13 @@ int EasingManager::AddEase(float duration, float startX, float startY,
     }
     return easeID;
 }
-void EasingManager::FinishAll()
-{
-    _poolEases.for_each_active([](Ease& ease){ease.EndEase();});
-    _poolEases.ReturnAll();
-}
-void EasingManager::FinishEase(int id)
-{
-     _poolEases.call_for_element(id, [](Ease& ease){ease.EndEase();});
-}
 void EasingManager::KillEase(int id)
 {
-    _poolEases.call_for_element(id, [](Ease& ease){ease.KillEase();});
+    _poolEases.call_for_element(id, [&](Ease& ease)
+    {
+        ease.KillEase(); 
+        _poolEases.Release(ease);
+    });
 }
 void EasingManager::KillAll()
 {

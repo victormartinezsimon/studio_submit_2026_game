@@ -27,7 +27,6 @@ BattleState::BattleState(
 
 State::STATES BattleState::Update(const float deltaTime, float currentFrameInputValueNormalized, int currentFrameInputValue)
 {
-    // update player
     UpdatePlayer(deltaTime);
 
     UpdateBullets(deltaTime);
@@ -163,9 +162,10 @@ void BattleState::UpdateEnemies(float deltaTime)
     
     _enemiesPool->for_each_active([deltaTime](Plane &enemy)
                                   { enemy.Update(deltaTime); });
-
+    
     
     //check collision
+    
     _enemiesPool->for_each_active([&](Plane &enemy)
     { 
         bool someCollision = ManagePlaneCollisions(enemy);
@@ -174,7 +174,6 @@ void BattleState::UpdateEnemies(float deltaTime)
             ReturnEnemy(enemy);
         }   
     });
-
 }
 
  bool BattleState::ManagePlaneCollisions(Plane& plane)
@@ -194,6 +193,7 @@ void BattleState::UpdateEnemies(float deltaTime)
     );
 
     //check explosion
+
     _bulletsPool->for_each_active([this, &someCollision, &plane](Bullet &bullet)
     {
         if(someCollision){return;}

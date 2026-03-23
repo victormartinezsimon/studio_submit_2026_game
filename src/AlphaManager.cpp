@@ -12,7 +12,7 @@ void AlphaManager::Update(const float deltaTime)
         if(finished)
         {
             int easeID = alpha.GetEaseID();
-            _easingManager->FinishEase(easeID);
+            _easingManager->KillEase(easeID);
             _alphaPool.Release(alpha);
         }
     });

@@ -34,9 +34,9 @@ public:
 		std::function<void(float currentX, float currentY)> tickCallback);
 
 	void GetValues(float& x, float& y)const;
+	void CallEndCallback(bool value);
 
 public:
-	void EndEase();
 	void KillEase();
 
 private:

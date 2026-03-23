@@ -12,7 +12,7 @@ bool Ease::Update(const float deltaTime)
 
     if (_acumTime > _duration)
     {
-        EndEase();
+        KillEase();
         return true;
     }
     else
@@ -82,17 +82,17 @@ void Ease::GetValues(float &x, float &y) const
     }
 }
 
-void Ease::EndEase()
-{
-    KillEase();
-     if(_endCallback)
-    {
-        _endCallback(true);
-    }
-}
 void Ease::KillEase()
 {
     _acumTime = _duration;
+}
+
+void Ease::CallEndCallback(bool value)
+{
+    if(_endCallback != nullptr)
+    {
+        _endCallback(value);
+    }
 }
 
 
