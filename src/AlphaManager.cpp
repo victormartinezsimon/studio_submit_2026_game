@@ -39,7 +39,7 @@ int AlphaManager::AddInternalAlpha(float duration, bool isUI, float startX, floa
         if(startX != endX || startY != endY)
         {
             int easeID = _easingManager->AddEase(duration, startX, startY, endX, endY, Ease::EASE_TYPES::INOUTCIRC,
-                        [&](){_alphaPool.call_for_element(poolID, [&](Alpha& a){a.SetPosition(endX, endY);});},
+                        [&](bool normalEnded){_alphaPool.call_for_element(poolID, [&](Alpha& a){a.SetPosition(endX, endY);});},
                         [&](const float x, const float y){_alphaPool.call_for_element(poolID, [&](Alpha& a){a.SetPosition(x, y);});}
                         );
             if(easeID != -1)

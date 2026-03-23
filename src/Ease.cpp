@@ -33,7 +33,7 @@ void Ease::BuildEase(float duration, float startX, float startY,
 }
 
 void Ease::BuildEase(float duration, float startX, float startY,
-                            float endX, float endY, EASE_TYPES type, std::function<void()> endCallback,
+                            float endX, float endY, EASE_TYPES type, std::function<void(bool)> endCallback,
                             std::function<void(float currentX, float currentY)> tickCallback)
 {
     
@@ -87,7 +87,7 @@ void Ease::EndEase()
     KillEase();
      if(_endCallback)
     {
-        _endCallback();
+        _endCallback(true);
     }
 }
 void Ease::KillEase()

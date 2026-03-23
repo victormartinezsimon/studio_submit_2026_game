@@ -410,7 +410,10 @@ void BattleState::ConfigureExplosion(const int id, Explosion& exp ,const Bullet&
     float duration = _randomManager->GetValue(MIN_DURATION_MOVEMENT_ENEMY, MAX_DURATION_MOVEMENT_ENEMY, 100.0f);
 
     int easeID = _easingManager->AddEase(duration, plane.GetX(), plane.GetY(), nextX, nextY, easeType,
-        [&](){ ConfigureRandomMovement(plane); },
+        [&](bool normalEnded)
+        { 
+            if(normalEnded){ConfigureRandomMovement(plane);} 
+        },
         [&plane](float x, float y) { plane.SetPosition(x, y); }
     );
     plane.SetRandomMovementID(easeID);

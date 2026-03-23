@@ -12,10 +12,10 @@ public:
 	void Update(const float deltaTime);
 
 	int AddEase(float duration, float startX, float startY, 
-		float endX, float endY, Ease::EASE_TYPES type);
+		float endX, float endY, Ease::EASE_TYPES);
 
 	int AddEase(float duration, float startX, float startY, 
-		float endX, float endY, Ease::EASE_TYPES type, std::function<void()> endCallback,
+		float endX, float endY, Ease::EASE_TYPES type, std::function<void(bool)> endCallback,
 		std::function<void(float currentX, float currentY)> tickCallback);
 
 	void FinishAll();

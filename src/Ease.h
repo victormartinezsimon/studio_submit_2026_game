@@ -30,7 +30,7 @@ public:
 	void BuildEase(float duration, float startX, float startY, 
 		float endX, float endY, EASE_TYPES type);
 	void BuildEase(float duration, float startX, float startY, 
-		float endX, float endY, EASE_TYPES type, std::function<void()> endCallback,
+		float endX, float endY, EASE_TYPES type, std::function<void(bool)> endCallback,
 		std::function<void(float currentX, float currentY)> tickCallback);
 
 	void GetValues(float& x, float& y)const;
@@ -54,7 +54,7 @@ private:
 	float _startY;
 	float _endX;
 	float _endY;
-	std::function<void()> _endCallback = nullptr;
+	std::function<void(bool)> _endCallback = nullptr;
 	std::function<void(float currentX, float currentY)> _tickCallback = nullptr;
 	int _id;
 };
