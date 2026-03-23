@@ -244,13 +244,13 @@ void BattleState::ManageBulletCollisions(Bullet &bullet)
     if(hasCollision && hasShield)
     {
         plane.SetHasShield(false);
-        TryDestroyBullet(bullet);
-        return false;
+        TryDestroyBullet(bullet, false);
+        return true;
     }
 
     if( hasCollision )
     {
-        bool bulletDestroyed = TryDestroyBullet(bullet);
+        bool bulletDestroyed = TryDestroyBullet(bullet, false);
         if (bulletDestroyed && bullet.GetHasExplostion())
         {
             DoExplosion(bullet);
@@ -270,20 +270,21 @@ bool BattleState::ManageMeteoriteBulletCollision(const Meteorite& meteorite, con
 {
     if (HasCollision(bullet, meteorite))
     {
-        return TryDestroyBullet(bullet);
+        return TryDestroyBullet(bullet, true);
     }
     return false;
 }
 
 
-bool BattleState::TryDestroyBullet(const Bullet& bullet)
+bool BattleState::TryDestroyBullet(const Bullet& bullet, bool isAsteroid)
 {
-    if (!bullet.GetHasPenetration())
+    if(isAsteroid && bullet.GetHasPenetration())
     {
-        _bulletsPool->Release(bullet);
-        return true;
+        return false;
     }
-    return false;
+    
+    _bulletsPool->Release(bullet);
+    return true;
 }
 
 

@@ -66,7 +66,7 @@ class BattleState: public State
     private:
         void EndExplosion(Explosion& exp);
         void ConfigureExplosion(const int id, Explosion& exp, const Bullet& bullet);
-        bool TryDestroyBullet(const Bullet& bullet);
+        bool TryDestroyBullet(const Bullet& bullet, bool isAsteroid);
 
     private:
         void ConfigureRandomMovement(Plane& plane);
