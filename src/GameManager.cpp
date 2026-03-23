@@ -107,7 +107,6 @@ void GameManager::InitializeRandomImprovements()
 	}
 	std::mt19937 generator(std::random_device{}());
     std::shuffle(_randomImprovements.begin(), _randomImprovements.end(), generator);
-	_randomImprovements[0] = std::string(IMPROVEMENT_GIVE_SHIELD);
 }
 
 void GameManager::InitializeStatesBegin()
