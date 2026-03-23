@@ -7,7 +7,7 @@ constexpr int MAX_SECS_PLAYING = 120;
 constexpr int SCREEN_WIDTH = 320;
 constexpr int SCREEN_HEIGHT = 240;
 
-constexpr unsigned int PLANES_POOL_SIZE = 11;
+constexpr unsigned int PLANES_POOL_SIZE = 10;
 constexpr unsigned int BULLETS_POOL_SIZE = 100;
 constexpr unsigned int MAX_EASING_VALUES = 30;
 constexpr unsigned int MAX_ALPHA_VALUES = 20;
@@ -36,7 +36,7 @@ constexpr float EXPLOSION_SIZE= 30;
 
 constexpr int TOTAL_LEVELS_CONFIG = 5;
 constexpr int MAX_ENEMIES_PER_ROW = 5;
-constexpr std::array<int, TOTAL_LEVELS_CONFIG> LEVELS_CONFIGS = {1,3,5,8,PLANES_POOL_SIZE-1};
+constexpr std::array<int, TOTAL_LEVELS_CONFIG> LEVELS_CONFIGS = {1,3,5,8,PLANES_POOL_SIZE};
 
 constexpr std::string_view IMPROVEMENT_3_SHOTS = "3SHOTS";
 constexpr std::string_view IMPROVEMENT_INCREASE_ORIGIN = "MORE_ORIGIN";
@@ -55,6 +55,7 @@ constexpr int SHOTS_IN_3_SHOTS = 3;
 constexpr int NEW_EXTRA_SOURCES = 3;
 
 constexpr int TOTAL_IMPROVEMENTS_TO_SELECT = 3;
+constexpr std::array<int, TOTAL_IMPROVEMENTS_TO_SELECT> LEVELS_WITH_IMPROVEMENT_SELECTION = {0,2,4};
 constexpr float TIME_TO_SELECT_IMPROVEMENT = 2;
 constexpr int TOTAL_DEFINED_IMPROVEMENTS = 8;
 
@@ -97,3 +98,5 @@ constexpr float MAX_Y_ENEMY = 0.35f;
 
 constexpr float MIN_DURATION_MOVEMENT_ENEMY = 2;
 constexpr float MAX_DURATION_MOVEMENT_ENEMY = 5;
+
+constexpr int MIN_LEVEL_WITH_MOVEMENT = 2;

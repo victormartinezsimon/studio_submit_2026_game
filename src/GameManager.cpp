@@ -19,9 +19,7 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	  _alphaManager(_painterManager, &_easingManager), _spawnerStars(TIME_SPAWN_STAR, painterManager),
 	  _spawnerMeteorites(TIME_SPAWN_METEORITE, painterManager)
 {
-	InitializeConstantValues();
 	InitializeImprovementsFunctions();
-	InitializeRandomImprovements();
 	InitializeStatesBegin();
 	InitializeStates();
 	
@@ -73,6 +71,9 @@ void GameManager::InitializeConstantValues()
 	enemyData.bulletHasExplosion = DEFAULT_BULLET_HAS_EXPLOSION;
 	enemyData.hasShield = DEFAULT_HAS_SHIELD;
 	enemyData.bulletsPerShot = DEFAULT_BULLETS_PER_SHOT;
+
+	_totalImprovementSelected = 0;
+	InitializeRandomImprovements();
 }
 
 void GameManager::InitializeImprovementsFunctions()
@@ -117,9 +118,9 @@ void GameManager::InitializeStatesBegin()
 	};
 	_statesBeginFunction[State::STATES::IMPROVEMENT_SELECTOR] = [this]()
 	{
-		int levelToCheck = _currentLevel -1;
-		auto leftImprovement = _randomImprovements[levelToCheck * 2];
-		auto rightImprovement = _randomImprovements[levelToCheck * 2 + 1];
+		auto leftImprovement = _randomImprovements[_totalImprovementSelected * 2];
+		auto rightImprovement = _randomImprovements[_totalImprovementSelected * 2 + 1];
+		++_totalImprovementSelected;
 		static_cast<ImprovementSelectionState*>(_statesLogic[State::STATES::IMPROVEMENT_SELECTOR])->Configure(leftImprovement, rightImprovement);
 	};
 	_statesBeginFunction[State::STATES::INITIAL_MOVEMENT] = [this]()
@@ -170,9 +171,12 @@ bool GameManager::Update(const float deltaTime)
 
 		if(nextState == State::STATES::IMPROVEMENT_SELECTOR)
 		{
-			int levelToCheck = _currentLevel;
+			if(_totalImprovementSelected >= TOTAL_IMPROVEMENTS_TO_SELECT || _totalImprovementSelected > LEVELS_WITH_IMPROVEMENT_SELECTION.size())
+			{
+				nextState = State::STATES::INITIAL_MOVEMENT;
+			}
 
-			if(levelToCheck >= TOTAL_IMPROVEMENTS_TO_SELECT)
+			if(LEVELS_WITH_IMPROVEMENT_SELECTION[_totalImprovementSelected] != _currentLevel)
 			{
 				nextState = State::STATES::INITIAL_MOVEMENT;
 			}
@@ -187,6 +191,7 @@ bool GameManager::Update(const float deltaTime)
 		{
 			_currentScore = 0;
 			_currentTimePlaying = 0;
+			_currentLevel = 0;
 			InitializeConstantValues();
 		}
 

@@ -120,7 +120,7 @@ void BattleState::OnEnter()
     _enemiesAlive = _enemiesPool->TotalInUse();
     _explosionPool.ReturnAll();
 
-    if(_currentLevel > 1)
+    if(_currentLevel >= MIN_LEVEL_WITH_MOVEMENT)
     {
         _enemiesPool->for_each_active([this](Plane& p)
         {
