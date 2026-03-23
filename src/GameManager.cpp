@@ -208,13 +208,15 @@ void GameManager::Paint()
 {
 	_painterManager->ClearListPaint();
 
+	#ifndef FINAL_BUILD
 	int frameRate = 1 / _lastDeltaTime;
 	_numberManager.PaintNumber(frameRate, 0, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 2, NumberManager::PIVOT::LEFT);
+	#endif
 	
 	_statesLogic[_oldStateLogic]->Paint();
 	_alphaManager.Paint();
-	_spawnerStars.Paint();
 	_spawnerMeteorites.Paint();
+	_spawnerStars.Paint();
 }	
 
 void GameManager::ApplyImprovements(const std::string& playerSelection, const std::string& enemySelection)

@@ -11,7 +11,7 @@ constexpr unsigned int PLANES_POOL_SIZE = 10;
 constexpr unsigned int BULLETS_POOL_SIZE = 100;
 constexpr unsigned int MAX_EASING_VALUES = 30;
 constexpr unsigned int MAX_ALPHA_VALUES = 20;
-constexpr unsigned int MAX_PAINTED_OBJECTS = 100;
+constexpr unsigned int MAX_PAINTED_OBJECTS = 150;
 
 constexpr unsigned char TEAM_PLAYER = 1;
 constexpr unsigned char TEAM_ENEMY = 2;
