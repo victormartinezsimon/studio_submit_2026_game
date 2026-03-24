@@ -210,7 +210,7 @@ void GameManager::Paint()
 
 	#ifndef FINAL_BUILD
 	int frameRate = 1 / _lastDeltaTime;
-	_numberManager.PaintNumber(frameRate, 0, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 2, NumberManager::PIVOT::LEFT);
+	_numberManager.PaintNumber(frameRate, SCREEN_WIDTH, NUMBER_0_HEIGHT, 2, NumberManager::PIVOT::RIGHT);
 	#endif
 	
 	_statesLogic[_oldStateLogic]->Paint();
