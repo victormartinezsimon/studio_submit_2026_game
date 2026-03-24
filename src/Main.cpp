@@ -43,7 +43,6 @@ int main(int argc, char **argv)
 		gm->Paint();
 		painterManager->Paint();
 	}
-	soundManager->stop();
 
 	delete inputManager;
 	delete painterManager;

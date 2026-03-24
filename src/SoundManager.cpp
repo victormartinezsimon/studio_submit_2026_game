@@ -7,6 +7,7 @@ SoundManager::SoundManager(struct SPPlatform* platform)
 	, m_apuBuffer{}
 	, m_moduleLoaded(false)
 	, m_stopRequested(false)
+	, _ready(false)
 {
 	m_apuBuffer.size = SM_BUFFER_BYTE_COUNT;
 	SPAllocateBuffer(m_platform, &m_apuBuffer);
@@ -15,7 +16,7 @@ SoundManager::SoundManager(struct SPPlatform* platform)
 
 SoundManager::~SoundManager()
 {
-	stop();
+	//stop();
 
 	if (m_moduleLoaded)
 	{
@@ -85,7 +86,44 @@ void SoundManager::playThread()
 	}
 }
 
-short* SoundManager::getAudioBuffer() const
+void SoundManager::Update()
 {
-	return (short*)m_apuBuffer.cpuAddress;
+	if(!_ready){return;}
+
+	if (xmp_play_buffer(m_ctx, buf, SM_BUFFER_BYTE_COUNT, 0) != 0)
+	{
+		_ready = false;
+		return;
+	}
+
+	APUStartDMA(m_platform->ac, (uint32_t)m_apuBuffer.dmaAddress);
+	APUWaitSync(m_platform->ac);
+}
+
+void SoundManager::Prepare()
+{
+	_ready = false;
+
+	m_ctx = xmp_create_context();
+
+	if (xmp_load_module_from_memory(m_ctx, space_chorus_mod, space_chorus_mod_len) < 0)
+	{
+		xmp_free_context(m_ctx);
+		m_ctx = nullptr;
+		return;
+	}
+
+	m_moduleLoaded = true;
+
+	APUSetBufferSize(m_platform->ac, ABS_4096Bytes);
+	APUSetSampleRate(m_platform->ac, ASR_22_050_Hz);
+
+	if (xmp_start_player(m_ctx, 22050, 0) == 0)
+	{
+		struct xmp_module_info mi;
+		xmp_get_module_info(m_ctx, &mi);
+		buf = (short*)m_apuBuffer.cpuAddress;
+
+		_ready = true;
+	}
 }

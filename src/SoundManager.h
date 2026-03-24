@@ -1,11 +1,10 @@
 #pragma once
-
+#ifndef _WIN32
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <thread>
 #include <atomic>
-
 #include "core.h"
 #include "platform.h"
 #include "apu.h"
@@ -29,8 +28,8 @@ public:
 	// Stop playback and join the thread
 	void stop();
 
-	// Access the current audio buffer for visualization
-	short* getAudioBuffer() const;
+	void Update();
+	void Prepare();
 
 	// Get the number of samples per buffer
 	uint32_t getBufferSampleCount() const { return SM_BUFFER_SAMPLE_COUNT; }
@@ -44,4 +43,8 @@ private:
 	bool m_moduleLoaded;
 	std::thread m_thread;
 	std::atomic<bool> m_stopRequested;
+	short* buf;
+
+	bool _ready = false;
 };
+#endif
