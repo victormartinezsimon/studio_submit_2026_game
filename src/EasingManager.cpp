@@ -24,7 +24,7 @@ int EasingManager::AddEase(float duration, float startX, float startY,
 
 int EasingManager::AddEase(float duration, float startX, float startY,
                             float endX, float endY, Ease::EASE_TYPES type, std::function<void(bool)> endCallback,
-                            std::function<void(float currentX, float currentY)> tickCallback)
+                            std::function<void(float currentX, float currentY, Ease& ease)> tickCallback)
 {
 
     int easeID = _poolEases.Get();
@@ -55,4 +55,9 @@ void EasingManager::KillAll()
 {
     _poolEases.for_each_active([](Ease& ease){ease.KillEase();});
     _poolEases.ReturnAll();
+}
+
+void EasingManager::SetReferenceIDToEase(int easeID, int referenceID)
+{
+    _poolEases.call_for_element(easeID, [&](Ease& ease){ease.SetReferenceID(referenceID);});
 }

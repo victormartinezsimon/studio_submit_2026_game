@@ -75,3 +75,12 @@ void AlphaManager::AddCallback(int id, std::function<void()> callback)
         alpha.AddCallback(callback);
     });
 }   
+
+void AlphaManager::CallFunctionInPool(int id, std::function<void(Alpha& alpha)> fun)
+{
+    _alphaPool.call_for_element(id, [&](Alpha& alpha)
+        {
+            fun(alpha);
+        }
+    );
+}

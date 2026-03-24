@@ -19,7 +19,7 @@ bool Ease::Update(const float deltaTime)
     {
         if(_tickCallback)
         {
-            _tickCallback(x, y);
+            _tickCallback(x, y, *this);
         }
     }
     
@@ -34,7 +34,7 @@ void Ease::BuildEase(float duration, float startX, float startY,
 
 void Ease::BuildEase(float duration, float startX, float startY,
                             float endX, float endY, EASE_TYPES type, std::function<void(bool)> endCallback,
-                            std::function<void(float currentX, float currentY)> tickCallback)
+                            std::function<void(float currentX, float currentY, Ease& ease)> tickCallback)
 {
     
     _acumTime = 0;
@@ -46,6 +46,7 @@ void Ease::BuildEase(float duration, float startX, float startY,
     _endY = endY;
     _type = type;
     _tickCallback = tickCallback;
+    _referenceID = -1;
 }
 
 void Ease::GetValues(float &x, float &y) const

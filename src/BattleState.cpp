@@ -416,7 +416,7 @@ void BattleState::ConfigureExplosion(const int id, Explosion& exp ,const Bullet&
         { 
             if(normalEnded){ConfigureRandomMovement(plane);} 
         },
-        [&plane](float x, float y) { plane.SetPosition(x, y); }
+        [&plane](float x, float y, Ease& ease) { plane.SetPosition(x, y); }
     );
     plane.SetRandomMovementID(easeID);
 

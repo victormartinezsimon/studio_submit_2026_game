@@ -21,6 +21,7 @@ public:
 	void FinishAlpha(int id);
 	void Paint();
 	void AddCallback(int id, std::function<void()> callback);
+	void CallFunctionInPool(int id, std::function<void(Alpha& alpha)> function);
 
 private:
 int AddInternalAlpha(float duration, bool isUI, float startX, float startY,

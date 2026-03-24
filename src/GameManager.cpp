@@ -392,7 +392,22 @@ void GameManager::DamageEnemy(float x, float y)
 {
 	_currentScore += SCORE_PER_KILL;
 
+	/*
 	//add alpha and easing
+	float duration = 0.5f;
+	int alphaID = _alphaManager.AddAlpha(duration, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, NUMBER_0_WIDTH, NUMBER_0_HEIGHT, PainterManager::SPRITE_ID::NUMBER_0);
+
+	int easeID = _easingManager.AddEase(duration, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0,0, Ease::EASE_TYPES::INOUTCIRC, 
+		[](bool forced){},
+		[&](float x, float y, Ease& ease)
+		{
+			int idAlpha = ease.GetReferenceID();
+			_alphaManager.CallFunctionInPool(idAlpha, [&](Alpha& alpha){alpha.SetPosition(x, y);});
+		}
+	);
+	
+	_easingManager.SetReferenceIDToEase(easeID, alphaID);
+	*/
 }
 
 void GameManager::ConfigureStar(Star& star)
