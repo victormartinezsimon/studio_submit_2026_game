@@ -9,19 +9,19 @@
 #include "RandomManager.h"
 
 BattleState::BattleState(
-        Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
-        EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager,
-        Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
-        Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, 
-        std::function<void()> damagePlayerCallback, 
-        std::function<void(float x, float y)> damageEnemy,
-        long long* score, float* time, Spawner<Meteorite, TOTAL_METEORITES>* spawnerMeteorites
-) 
-                         : State(player, painter, numberManager, alphaManager, 
-			easingManager, randomManager, buttonAManager), _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
-                         _damagePlayerCallback(damagePlayerCallback), _damageEnemyCallback(damageEnemy),
-                         _score(score), _timeLeft(time), _spawnerMeteorites(spawnerMeteorites)
+    Plane *player, PainterManager *painter,
+    NumberManager *numberManager, AlphaManager *alphaManager,
+    EasingManager *easingManager, RandomManager *randomManager, ButtonA *buttonAManager,
+    Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
+    Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool,
+    std::function<void()> damagePlayerCallback,
+    std::function<void(float x, float y)> damageEnemy,
+    long long *score, float *time, Spawner<Meteorite, TOTAL_METEORITES> *spawnerMeteorites)
+    : State(player, painter, numberManager, alphaManager,
+            easingManager, randomManager, buttonAManager),
+      _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
+      _damagePlayerCallback(damagePlayerCallback), _damageEnemyCallback(damageEnemy),
+      _score(score), _timeLeft(time), _spawnerMeteorites(spawnerMeteorites)
 {
 }
 
@@ -45,7 +45,7 @@ void BattleState::Paint()
     {
         float playerX, playerY;
         float currentTimeInmortal = _player->GetTimeInmortal();
-        if( currentTimeInmortal <= 0)
+        if (currentTimeInmortal <= 0)
         {
             _player->GetPaintPosition(playerX, playerY);
             _painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player->GetWidth(), _player->GetHeight(), playerX, playerY);
@@ -57,19 +57,19 @@ void BattleState::Paint()
             float percent = currentTimeInmortal / TIME_INMORTAL;
 
             int mask = 0;
-            if((percent >= 0.25 && percent <= 0.50) || (percent >= 0.75 && percent <= 1.0))
+            if ((percent >= 0.25 && percent <= 0.50) || (percent >= 0.75 && percent <= 1.0))
             {
                 mask = 1;
             }
 
-            _painterManager->AddToPaintWithAlpha(PainterManager::SPRITE_ID::PLAYER, 
-                _player->GetWidth(), _player->GetHeight(), playerX, playerY, mask);
+            _painterManager->AddToPaintWithAlpha(PainterManager::SPRITE_ID::PLAYER,
+                                                 _player->GetWidth(), _player->GetHeight(), playerX, playerY, mask);
         }
 
-        if(_player->GetHasShield())
+        if (_player->GetHasShield())
         {
             _painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SHIELD,
-                SHIELD_PLAYER_WIDTH,SHIELD_PLAYER_HEIGHT, playerX, playerY );
+                                        SHIELD_PLAYER_WIDTH, SHIELD_PLAYER_HEIGHT, playerX, playerY);
         }
     }
 
@@ -84,7 +84,7 @@ void BattleState::Paint()
 
     {
         _enemiesPool->for_each_active([this](const Plane &p)
-            {
+                                      {
                 float posX, posY;
                 p.GetPaintPosition(posX, posY);
                 _painterManager->AddToPaint(PainterManager::SPRITE_ID::ENEMY, 
@@ -94,39 +94,35 @@ void BattleState::Paint()
                 {
                     _painterManager->AddToPaint(PainterManager::SPRITE_ID::ENEMY_SHIELD,
                         SHIELD_ENEMY_WIDTH,SHIELD_ENEMY_HEIGHT, posX, posY );
-                }
-             }
-        );
+                } });
     }
 
     {
         long long value = *_score;
-        _numberManager->PaintNumber(value, SCORE_POSITION_X, NUMBER_POSITION_Y, 3, NumberManager::PIVOT::RIGHT);
+        _numberManager->PaintNumber(value, SCORE_POSITION_X, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::RIGHT);
     }
 
     {
-        float value = MAX_SECS_PLAYING - (*_timeLeft);
-        _numberManager->PaintNumber(value, TIME_POSITION_X, NUMBER_POSITION_Y, 3, NumberManager::PIVOT::LEFT);
+        float value = *_timeLeft;
+        _numberManager->PaintNumber(MAX_SECS_PLAYING - value, TIME_POSITION_X, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::LEFT);
     }
 }
 
 void BattleState::OnEnter()
 {
     _easingManager->KillAll();
-	_alphaManager->FinishAll();
+    _alphaManager->FinishAll();
     _explosionPool.ReturnAll();
 
     _player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
-    _player->SetPositionY( POSITION_Y_PLAYER);
+    _player->SetPositionY(POSITION_Y_PLAYER);
 
     _enemiesAlive = _enemiesPool->TotalInUse();
 
-    if(_currentLevel >= MIN_LEVEL_WITH_MOVEMENT)
+    if (_currentLevel >= MIN_LEVEL_WITH_MOVEMENT)
     {
-        _enemiesPool->for_each_active([this](Plane& p)
-        {
-            ConfigureRandomMovement(p);
-        });
+        _enemiesPool->for_each_active([this](Plane &p)
+                                      { ConfigureRandomMovement(p); });
     }
 }
 void BattleState::OnExit()
@@ -141,72 +137,94 @@ void BattleState::UpdatePlayer(float deltaTime)
     _player->Update(deltaTime);
 
     bool someCollision = ManagePlaneCollisions(*_player);
-    if(someCollision)
+    if (someCollision)
     {
         DamagePlayer();
     }
 }
 
-void BattleState::UpdateBullets(float deltaTime)
-{
-    _bulletsPool->for_each_active([deltaTime](Bullet &bullet)
-                                  { bullet.Update(deltaTime); });
-
-    _bulletsPool->for_each_active([this, deltaTime](Bullet &bullet)
-                                  { ManageBulletCollisions(bullet); });
-                                  
-}
 void BattleState::UpdateEnemies(float deltaTime)
 {
-    
+
     _enemiesPool->for_each_active([deltaTime](Plane &enemy)
                                   { enemy.Update(deltaTime); });
-    
-    
-    //check collision
-    
+
+    // check collision
     _enemiesPool->for_each_active([&](Plane &enemy)
-    { 
+                                  { 
         bool someCollision = ManagePlaneCollisions(enemy);
         if(someCollision)
         {
             ReturnEnemy(enemy);
-        }   
-    });
+        } });
 }
 
- bool BattleState::ManagePlaneCollisions(Plane& plane)
- {
+void BattleState::UpdateBullets(float deltaTime)
+{
+    _bulletsPool->for_each_active([this, deltaTime](Bullet &bullet)
+                                  {
+                                    bullet.Update(deltaTime);
+                                    UpdateBullet(deltaTime, bullet);
+                                  });
+}
+
+void BattleState::UpdateBullet(float deltaTime, Bullet &bullet)
+{
+    bool isDestroyed = ManageBulletCollisions(bullet);
+    if (isDestroyed)
+    {
+        DoExplosion(bullet);
+        return;
+    }
+
+    // Enemy
+    if (bullet.GetPlayerTeam() == TEAM_PLAYER)
+    {
+        _enemiesPool->for_each_active([&](Plane &enemy)
+                                      {
+                                            if(isDestroyed){return;}
+                                            isDestroyed = ManageBulletPlaneCollision(bullet, enemy);
+                                            if(isDestroyed)
+                                            {
+                                                ReturnEnemy(enemy); 
+                                            }
+                                      });
+    }
+    if (isDestroyed)
+    {
+        DoExplosion(bullet);
+        return;
+    }
+
+    // PLAYER
+    if (bullet.GetPlayerTeam() == TEAM_ENEMY)
+    {
+        isDestroyed = ManageBulletPlaneCollision(bullet, *_player);
+    }
+    if (isDestroyed)
+    {
+        DoExplosion(bullet);
+        return;
+    }
+}
+bool BattleState::ManagePlaneCollisions(Plane &plane)
+{
     bool someCollision = false;
 
-    //check explosion
-     _explosionPool.for_each_active([&] (Explosion& explosion)
-        {
+    // check explosion
+    _explosionPool.for_each_active([&](Explosion &explosion)
+                                   {
             if(someCollision){return;}
             bool explosionCollision = ManageExplosionPlaneCollision(explosion, plane);
             if(explosionCollision)
             {
                 someCollision = true;
-            }
-        }
-    );
-
-    //check explosion
-
-    _bulletsPool->for_each_active([this, &someCollision, &plane](Bullet &bullet)
-    {
-        if(someCollision){return;}
-        bool bulletCollision = ManageBulletPlaneCollision(bullet, plane);
-        if(bulletCollision)
-        {
-            someCollision = true;
-        }
-    });
+            } });
 
     return someCollision;
- }
+}
 
-void BattleState::ManageBulletCollisions(Bullet &bullet)
+bool BattleState::ManageBulletCollisions(Bullet &bullet)
 {
     bool isDestroyed = false;
     // check out of screen
@@ -216,58 +234,45 @@ void BattleState::ManageBulletCollisions(Bullet &bullet)
         isDestroyed = true;
     }
 
-    //check meteorites
-    if(!isDestroyed)
+    // check meteorites
+    if (!isDestroyed)
     {
-        _spawnerMeteorites->for_each_active([&](Meteorite& meteorite)
-            {
+        _spawnerMeteorites->for_each_active([&](Meteorite &meteorite)
+                                            {
                 if(isDestroyed){return;}
-                isDestroyed = ManageMeteoriteBulletCollision(meteorite, bullet);
-            }
-        );
+                isDestroyed = ManageMeteoriteBulletCollision(meteorite, bullet); });
     }
-    
-    //manage explosion
-    if (isDestroyed)
-    {
-        if (bullet.GetHasExplostion())
-        {
-            DoExplosion(bullet);
-        }
-    }
+
+    return isDestroyed;
 }
 
- bool BattleState::ManageBulletPlaneCollision(const Bullet& bullet, Plane& plane)
- {
+bool BattleState::ManageBulletPlaneCollision(const Bullet &bullet, Plane &plane)
+{
     bool hasShield = plane.GetHasShield();
     bool hasCollision = HasCollision(bullet, plane);
 
-    if(hasCollision && hasShield)
+    if (hasCollision && hasShield)
     {
         plane.SetHasShield(false);
         TryDestroyBullet(bullet, false);
-        return false;//TODO: Review this, as we are setting as the bullet did not collide, bu we destoy it
+        return false;
     }
 
-    if( hasCollision )
+    if (hasCollision)
     {
-        bool bulletDestroyed = TryDestroyBullet(bullet, false);
-        if (bulletDestroyed && bullet.GetHasExplostion())
-        {
-            DoExplosion(bullet);
-        }
+        TryDestroyBullet(bullet, false);
     }
-    return hasCollision;
- }
-
-bool BattleState::ManageExplosionPlaneCollision(const Explosion& explosion, const Plane& plane)
-{
-    bool hasCollision = CollsisionDetection(explosion.GetX(), explosion.GetY(), explosion.GetWidth(), explosion.GetHeight(),
-                    plane.GetX(), plane.GetY(), plane.GetWidth(), plane.GetHeight());
     return hasCollision;
 }
 
-bool BattleState::ManageMeteoriteBulletCollision(const Meteorite& meteorite, const Bullet& bullet)
+bool BattleState::ManageExplosionPlaneCollision(const Explosion &explosion, const Plane &plane)
+{
+    bool hasCollision = CollsisionDetection(explosion.GetX(), explosion.GetY(), explosion.GetWidth(), explosion.GetHeight(),
+                                            plane.GetX(), plane.GetY(), plane.GetWidth(), plane.GetHeight());
+    return hasCollision;
+}
+
+bool BattleState::ManageMeteoriteBulletCollision(const Meteorite &meteorite, const Bullet &bullet)
 {
     if (HasCollision(bullet, meteorite))
     {
@@ -276,35 +281,33 @@ bool BattleState::ManageMeteoriteBulletCollision(const Meteorite& meteorite, con
     return false;
 }
 
-
-bool BattleState::TryDestroyBullet(const Bullet& bullet, bool isAsteroid)
+bool BattleState::TryDestroyBullet(const Bullet &bullet, bool isAsteroid)
 {
-    if(isAsteroid && bullet.GetHasPenetration())
+    if (isAsteroid && bullet.GetHasPenetration())
     {
         return false;
     }
-    
+
     _bulletsPool->Release(bullet);
     return true;
 }
 
-
-bool BattleState::HasCollision(const Bullet &bullet, const Plane& plane) const
+bool BattleState::HasCollision(const Bullet &bullet, const Plane &plane) const
 {
     if (bullet.GetPlayerTeam() == plane.GetPlayerTeam())
     {
         return false;
     }
-   
+
     return CollsisionDetection(bullet.GetX(), bullet.GetY(), bullet.GetWidth(), bullet.GetHeight(),
                                plane.GetX(), plane.GetY(), plane.GetWidth(), plane.GetHeight());
 }
 
- bool BattleState::HasCollision(const Bullet& bullet, const Meteorite& meteorite) const
- {
+bool BattleState::HasCollision(const Bullet &bullet, const Meteorite &meteorite) const
+{
     return CollsisionDetection(bullet.GetX(), bullet.GetY(), bullet.GetWidth(), bullet.GetHeight(),
                                meteorite.GetX(), meteorite.GetY(), meteorite.GetWidth(), meteorite.GetHeight());
- }
+}
 
 bool BattleState::CollsisionDetection(float ax, float ay, float aw, float ah,
                                       float bx, float by, float bw, float bh) const
@@ -315,13 +318,16 @@ bool BattleState::CollsisionDetection(float ax, float ay, float aw, float ah,
 
 void BattleState::DamagePlayer()
 {
-    if(_player->GetTimeInmortal() > 0){return;}
-    
+    if (_player->GetTimeInmortal() > 0)
+    {
+        return;
+    }
+
     _damagePlayerCallback();
     _player->SetTimeInmortal(TIME_INMORTAL);
 }
 
-void BattleState::ReturnEnemy(Plane& enemy)
+void BattleState::ReturnEnemy(Plane &enemy)
 {
     _enemiesPool->Release(enemy);
 
@@ -330,63 +336,66 @@ void BattleState::ReturnEnemy(Plane& enemy)
     float x, y;
     enemy.GetPaintPosition(x, y);
     int id = _alphaManager->AddAlpha(ALPHA_TIME_DESTROY_PLANE, x, y,
-        ENEMY_WIDTH, ENEMY_HEIGHT, PainterManager::SPRITE_ID::ENEMY);
+                                     ENEMY_WIDTH, ENEMY_HEIGHT, PainterManager::SPRITE_ID::ENEMY);
     _alphaManager->AddCallback(id, [this]()
-    {
-        _enemiesAlive--;
-    });
+                               { _enemiesAlive--; });
     _damageEnemyCallback(x, y);
 }
 
 void BattleState::DoExplosion(const Bullet &bullet)
 {
-    int id = _explosionPool.Get();
-    if(id != -1)
+    if (!bullet.GetHasExplostion())
     {
-        _explosionPool.call_for_element(id, [&](Explosion& exp){ConfigureExplosion(id, exp, bullet);});
+        return;
+    }
+
+    int id = _explosionPool.Get();
+    if (id != -1)
+    {
+        _explosionPool.call_for_element(id, [&](Explosion &exp)
+                                        { ConfigureExplosion(id, exp, bullet); });
     }
 }
 
-void BattleState::EndExplosion(Explosion& exp)
+void BattleState::EndExplosion(Explosion &exp)
 {
     _explosionPool.Release(exp);
 }
-void BattleState::ConfigureExplosion(const int id, Explosion& exp ,const Bullet& bullet)
+void BattleState::ConfigureExplosion(const int id, Explosion &exp, const Bullet &bullet)
 {
     float x = bullet.GetX();
     float y = bullet.GetY();
-    if(y <= 0)
+    if (y <= 0)
     {
-        y += EXPLOSION_HEIGHT/2;
+        y += EXPLOSION_HEIGHT / 2;
     }
-    if(y >= SCREEN_HEIGHT)
+    if (y >= SCREEN_HEIGHT)
     {
-        y -= EXPLOSION_HEIGHT/2;
+        y -= EXPLOSION_HEIGHT / 2;
     }
     exp.SetPosition(x, y);
-    x -= EXPLOSION_WIDTH/2;
-    y -= EXPLOSION_HEIGHT/2;
+    x -= EXPLOSION_WIDTH / 2;
+    y -= EXPLOSION_HEIGHT / 2;
 
     exp.SetID(id);
     exp.SetSize(EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
     exp.SetPlayerTeam(bullet.GetPlayerTeam());
-    
-    auto alphaID =_alphaManager->AddAlpha(EXPLOSION_DURATION, 
-        x, 
-        y, 
-        EXPLOSION_WIDTH, EXPLOSION_HEIGHT, 
-        PainterManager::SPRITE_ID::EXPLOSION);
-    
-    _alphaManager->AddCallback(alphaID, 
-        [&]()
-        {
-            EndExplosion(exp);
-        }
-    );
+
+    auto alphaID = _alphaManager->AddAlpha(EXPLOSION_DURATION,
+                                           x,
+                                           y,
+                                           EXPLOSION_WIDTH, EXPLOSION_HEIGHT,
+                                           PainterManager::SPRITE_ID::EXPLOSION);
+
+    _alphaManager->AddCallback(alphaID,
+                               [&]()
+                               {
+                                   EndExplosion(exp);
+                               });
 }
 
- void BattleState::ConfigureRandomMovement(Plane& plane)
- {
+void BattleState::ConfigureRandomMovement(Plane &plane)
+{
     float minX;
     float maxX;
     GetMinMaxXPosiblePositionForEnemies(minX, maxX);
@@ -397,30 +406,34 @@ void BattleState::ConfigureExplosion(const int id, Explosion& exp ,const Bullet&
     float nextX = _randomManager->GetValue(minX, maxX, 100.0f);
     float nextY = _randomManager->GetValue(minY, maxY, 100.0f);
 
-    int movementType = _randomManager->GetValue(0,3);
+    int movementType = _randomManager->GetValue(0, 3);
 
     Ease::EASE_TYPES easeType = Ease::EASE_TYPES::INOUTQUINT;
 
     switch (movementType)
     {
-        case 0: easeType = Ease::EASE_TYPES::INOUTSINE; break;
-        case 1: easeType = Ease::EASE_TYPES::INOUTCUBE; break;
-        case 2: easeType = Ease::EASE_TYPES::INOUTQUINT; break;
-        case 3: easeType = Ease::EASE_TYPES::INOUTCIRC; break;
+    case 0:
+        easeType = Ease::EASE_TYPES::INOUTSINE;
+        break;
+    case 1:
+        easeType = Ease::EASE_TYPES::INOUTCUBE;
+        break;
+    case 2:
+        easeType = Ease::EASE_TYPES::INOUTQUINT;
+        break;
+    case 3:
+        easeType = Ease::EASE_TYPES::INOUTCIRC;
+        break;
     }
 
     float duration = _randomManager->GetValue(MIN_DURATION_MOVEMENT_ENEMY, MAX_DURATION_MOVEMENT_ENEMY, 100.0f);
 
-    int easeID = _easingManager->AddEase(duration, plane.GetX(), plane.GetY(), nextX, nextY, easeType,
-        [&](bool normalEnded)
-        { 
-            if(normalEnded){ConfigureRandomMovement(plane);} 
-        },
-        [&plane](float x, float y, Ease& ease) { plane.SetPosition(x, y); }
-    );
+    int easeID = _easingManager->AddEase(duration, plane.GetX(), plane.GetY(), nextX, nextY, easeType, [&](bool normalEnded)
+                                         { 
+            if(normalEnded){ConfigureRandomMovement(plane);} }, [&plane](float x, float y, Ease &ease)
+                                         { plane.SetPosition(x, y); });
     plane.SetRandomMovementID(easeID);
-
- }
+}
 
 void BattleState::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const
 {

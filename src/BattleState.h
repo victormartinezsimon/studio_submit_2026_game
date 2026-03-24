@@ -43,9 +43,10 @@ class BattleState: public State
         void UpdatePlayer(float deltaTime);
         void UpdateBullets(float deltaTime);
         void UpdateEnemies(float deltaTime);
+        void UpdateBullet(float deltaTime, Bullet& bullet);
     
     private:
-        void ManageBulletCollisions(Bullet& bullet);
+        bool ManageBulletCollisions(Bullet& bullet);
         bool ManagePlaneCollisions(Plane& plane);
 
         bool ManageBulletPlaneCollision(const Bullet& bullet, Plane& plane);
