@@ -42,7 +42,6 @@ State::STATES BattleState::Update(const float deltaTime, float currentFrameInput
 }
 void BattleState::Paint()
 {
-
     {
         float playerX, playerY;
         float currentTimeInmortal = _player->GetTimeInmortal();
@@ -102,12 +101,12 @@ void BattleState::Paint()
 
     {
         long long value = *_score;
-        _numberManager->PaintNumber(value, SCREEN_WIDTH, NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::RIGHT);
+        _numberManager->PaintNumber(value, SCREEN_WIDTH, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::RIGHT);
     }
 
     {
         float value = *_timeLeft;
-        _numberManager->PaintNumber(MAX_SECS_PLAYING - value,0, NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::LEFT);
+        _numberManager->PaintNumber(MAX_SECS_PLAYING - value,0, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::LEFT);
     }
 }
 

@@ -20,7 +20,7 @@ constexpr unsigned char TEAM_NEUTRAL = 0;
 constexpr float MAIN_MENU_MAX_VALUE = 0.7;
 constexpr float MAIN_MENU_TIME_TO_ENTER = 2;
 
-constexpr float POSITION_Y_PLAYER = 204;
+constexpr float POSITION_Y_PLAYER = 194;
 
 constexpr float INTIAL_ANIMATION_DURATION = 0.5;
 
@@ -74,8 +74,8 @@ constexpr float TIME_INMORTAL = 2;
 constexpr int TOTAL_METEORITES = 6;
 constexpr float MIN_VELOCITY_METEORITE = 0.3;
 constexpr float MAX_VELOCITY_METEORITE = 0.7;
-constexpr float MIN_HEIGHT_METEORITE = 0.3;
-constexpr float MAX_HEIGHT_METEORITE = 0.7;
+constexpr float MIN_HEIGHT_METEORITE = 0.35;
+constexpr float MAX_HEIGHT_METEORITE = 0.65;
 constexpr float TIME_SPAWN_METEORITE = 3;
 
 constexpr int TOTAL_STARS = 50;
