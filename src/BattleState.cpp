@@ -342,7 +342,12 @@ void BattleState::ReturnEnemy(Plane &enemy)
     int id = _alphaManager->AddAlpha(ALPHA_TIME_DESTROY_PLANE, x, y,
                                      ENEMY_WIDTH, ENEMY_HEIGHT, PainterManager::SPRITE_ID::ENEMY);
     _alphaManager->AddCallback(id, [this]()
-                               { _enemiesAlive--; });
+                               { --_enemiesAlive; });
+
+    if( id == -1)
+    {
+        --_enemiesAlive;
+    }
     _damageEnemyCallback(x, y);
 }
 
