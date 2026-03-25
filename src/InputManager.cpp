@@ -33,15 +33,21 @@ InputManager::InputManager()
 
 int InputManager::GetInputValue()
 {
+    #ifdef DEBUG
     UpdateFakeController();
-    
     int     r, val;
     r = controller_read( &val );
     if( r == CONTROLLER_OK )
     {
+        _fakeControllerValue = val;
         return val;
     }
     return _fakeControllerValue;
+    #else
+    int     r, val;
+    r = controller_read( &val );
+    return val;
+    #endif
 }
 float InputManager::GetInputValueNormalized()
 {

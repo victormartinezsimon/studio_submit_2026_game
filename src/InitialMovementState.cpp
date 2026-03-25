@@ -16,7 +16,7 @@ State(player, painter, numberManager, alphaManager,
 {
 }
 
-State::STATES InitialMovementState::Update(const float deltaTime, float _currentFrameInputValueNormalized, int _currentFrameInputValue)
+State::STATES InitialMovementState::Update(const float deltaTime, float _currentFrameInputValueNormalized)
 {
 	return _nextState;
 }

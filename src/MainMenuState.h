@@ -13,8 +13,7 @@ class MainMenuState: public State
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager);
         
     public:    
-        STATES Update(const float deltaTime, float _currentFrameInputValueNormalized,
-	                        int _currentFrameInputValue)override;
+        STATES Update(const float deltaTime, float _currentFrameInputValueNormalized)override;
         void Paint()override;
         void OnEnter()override;
         void OnExit()override;

@@ -136,12 +136,22 @@ void GameManager::InitializeStatesBegin()
 
 bool GameManager::Update(const float deltaTime)
 {
-	PROFILE_BEGIN_FRAME();
+	//PROFILE_BEGIN_FRAME();
 
 	PROFILE_BEGIN(0, "INPUT");
 	_lastDeltaTime = deltaTime;
-	_currentFrameInputValue = _inputManager->GetInputValue();
-	_currentFrameInputValueNormalized = _inputManager->NormalizeValue(_currentFrameInputValue);
+	if(_countFramesToReadInput <= 0)
+	{
+		_currentFrameInputValueNormalized = _inputManager->GetInputValueNormalized();
+		_lastFrameInputValueNormalized = _currentFrameInputValueNormalized;
+		_countFramesToReadInput = NUM_FRAMES_TO_READ_INPUT;
+	}
+	else
+	{
+		_currentFrameInputValueNormalized = _lastFrameInputValueNormalized;
+	}
+	--_countFramesToReadInput;
+	
 	PROFILE_END(0);
 
 	if(_currentStateLogic == State::STATES::BATTLE)
@@ -158,7 +168,10 @@ bool GameManager::Update(const float deltaTime)
 	PROFILE_END(2);
 
 	PROFILE_BEGIN(3, "update spawner starts");
-	_spawnerStars.Update(deltaTime);
+	if(deltaTime < MIN_TIME_TO_NOT_UPDATE_STARS )
+	{
+		_spawnerStars.Update(deltaTime);
+	}
 	PROFILE_END(3);
 
 	PROFILE_BEGIN(4, "update spawner meteorites");
@@ -170,7 +183,7 @@ bool GameManager::Update(const float deltaTime)
 	PROFILE_END(5);
 
 	PROFILE_BEGIN(6, "update state");
-	auto nextState = _statesLogic[_currentStateLogic]->Update(deltaTime, _currentFrameInputValueNormalized, _currentFrameInputValue);
+	auto nextState = _statesLogic[_currentStateLogic]->Update(deltaTime, _currentFrameInputValueNormalized);
 	PROFILE_END(6);
 
 	if(nextState == State::STATES::EXIT)
@@ -225,7 +238,7 @@ bool GameManager::Update(const float deltaTime)
 	PROFILE_END(7);
 
 
-	PROFILE_END_FRAME();
+	//PROFILE_END_FRAME();
 	return false;
 }
 
@@ -233,7 +246,7 @@ void GameManager::Paint()
 {
 	_painterManager->ClearListPaint();
 
-	#ifndef FINAL_BUILD
+	#ifdef DEBUG
 	int frameRate = 1 / _lastDeltaTime;
 	_numberManager.PaintNumber(frameRate, SCREEN_WIDTH, NUMBER_0_HEIGHT, 2, NumberManager::PIVOT::RIGHT);
 	#endif

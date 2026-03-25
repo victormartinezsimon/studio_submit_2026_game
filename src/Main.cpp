@@ -11,6 +11,7 @@
 #include "PainterManager.h"
 #include "SoundManager.h"
 #include "Painter.h"
+#include "Profiler.h"
 
 int main(int argc, char **argv)
 {
@@ -23,14 +24,14 @@ int main(int argc, char **argv)
 
 	struct SPPlatform* platform = painterManager->GetPainter()->GetPlatform();
 
-	SoundManager* soundManager = new SoundManager(platform);
-
+	
 	float deltaTime = 0;
-
+	
 	auto lastTime = std::chrono::high_resolution_clock::now();
-
+	
 	bool ended = false;
-
+	
+	SoundManager* soundManager = new SoundManager(platform);
 	soundManager->start();
 
 	while (!ended)
@@ -44,8 +45,11 @@ int main(int argc, char **argv)
 		painterManager->Paint();
 	}
 
+	PROFILE_SAVE();
+	soundManager->stop();
+
+	delete soundManager;
 	delete inputManager;
 	delete painterManager;
 	delete gm;
-	delete soundManager;
 }

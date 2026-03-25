@@ -8,7 +8,7 @@ class ButtonA
 public:
 	ButtonA(){}
 public:
-	void Update(const float deltaTime, const float currentInputValueNormalized, const float currentInputValue);
+	void Update(const float deltaTime, const float currentInputValueNormalized);
 	float GetLeftTime() const;
 
 public:

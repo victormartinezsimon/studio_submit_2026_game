@@ -21,9 +21,9 @@ EndGameState::EndGameState(Plane *player, PainterManager *painter,
 {
 }
 
-State::STATES EndGameState::Update(const float deltaTime, float _currentFrameInputValueNormalized, int _currentFrameInputValue)
+State::STATES EndGameState::Update(const float deltaTime, float _currentFrameInputValueNormalized)
 {
-	_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized, _currentFrameInputValue);
+	_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized);
 
 	return _nextState;
 }

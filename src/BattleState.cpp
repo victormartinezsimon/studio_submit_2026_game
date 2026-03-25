@@ -25,7 +25,7 @@ BattleState::BattleState(
 {
 }
 
-State::STATES BattleState::Update(const float deltaTime, float currentFrameInputValueNormalized, int currentFrameInputValue)
+State::STATES BattleState::Update(const float deltaTime, float currentFrameInputValueNormalized)
 {
     UpdatePlayer(deltaTime);
 

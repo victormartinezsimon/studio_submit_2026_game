@@ -7,6 +7,7 @@ constexpr int MAX_SECS_PLAYING = 120;
 
 constexpr int SCREEN_WIDTH = 320;
 constexpr int SCREEN_HEIGHT = 240;
+constexpr int NUM_FRAMES_TO_READ_INPUT = 4;
 
 constexpr unsigned int PLANES_POOL_SIZE = 10;
 constexpr unsigned int BULLETS_POOL_SIZE = 100;
@@ -79,6 +80,7 @@ constexpr float MIN_HEIGHT_METEORITE = 0.35;
 constexpr float MAX_HEIGHT_METEORITE = 0.65;
 constexpr float TIME_SPAWN_METEORITE = 3;
 
+constexpr float MIN_TIME_TO_NOT_UPDATE_STARS = 1/30.0f;//30FPS
 constexpr int TOTAL_STARS = 50;
 constexpr float TIME_SPAWN_STAR = 0.1;
 constexpr float VELOCITY_STAR_FAR = 0.2;

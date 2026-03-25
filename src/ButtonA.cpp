@@ -22,7 +22,7 @@ void ButtonA::SelectInPosition(float duration, std::pair<int, int> optionA, std:
     _currentSelection = selectionNone;
 }
 
-void ButtonA::Update(float deltaTime, const float currentInputValueNormalized, const float currentInputValue)
+void ButtonA::Update(float deltaTime, const float currentInputValueNormalized)
 {
     if (!_enabled)
     {

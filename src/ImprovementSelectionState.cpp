@@ -22,11 +22,11 @@ ImprovementSelectionState::ImprovementSelectionState(Plane *player, PainterManag
 	InitializeImprovementsUI();
 }
 
-State::STATES ImprovementSelectionState::Update(const float deltaTime, float currentFrameInputValueNormalized, int currentFrameInputValue)
+State::STATES ImprovementSelectionState::Update(const float deltaTime, float currentFrameInputValueNormalized)
 {
 	_currentFrameInputValueNormalized = currentFrameInputValueNormalized;
 
-	_buttonAManager->Update(deltaTime, currentFrameInputValueNormalized, currentFrameInputValue);
+	_buttonAManager->Update(deltaTime, currentFrameInputValueNormalized);
 
 	return _nextState;
 }

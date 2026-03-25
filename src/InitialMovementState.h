@@ -15,8 +15,7 @@ class InitialMovementState: public State
          Pool<Plane, PLANES_POOL_SIZE>* enemiesPool);
         
     public:    
-        STATES Update(const float deltaTime, float _currentFrameInputValueNormalized,
-	                        int _currentFrameInputValue)override;
+        STATES Update(const float deltaTime, float _currentFrameInputValueNormalized)override;
         void Paint()override;
         void OnEnter()override;
         void OnExit()override;

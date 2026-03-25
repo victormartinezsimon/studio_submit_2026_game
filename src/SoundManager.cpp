@@ -16,8 +16,6 @@ SoundManager::SoundManager(struct SPPlatform* platform)
 
 SoundManager::~SoundManager()
 {
-	//stop();
-
 	if (m_moduleLoaded)
 	{
 		xmp_release_module(m_ctx);
@@ -28,7 +26,7 @@ SoundManager::~SoundManager()
 		xmp_free_context(m_ctx);
 		m_ctx = nullptr;
 	}
-	SPFreeBuffer(m_platform, &m_apuBuffer);
+	//SPFreeBuffer(m_platform, &m_apuBuffer);
 }
 
 void SoundManager::start()

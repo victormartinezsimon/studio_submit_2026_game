@@ -93,7 +93,8 @@ private:
 	AlphaManager _alphaManager;
 	Spawner<Star, TOTAL_STARS> _spawnerStars;
 	float _currentFrameInputValueNormalized;
-	int _currentFrameInputValue;
+	float _lastFrameInputValueNormalized;
+	int _countFramesToReadInput = NUM_FRAMES_TO_READ_INPUT;
 	RandomManager _randomManager;
 
 private:

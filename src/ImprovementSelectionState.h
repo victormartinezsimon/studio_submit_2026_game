@@ -18,8 +18,7 @@ class ImprovementSelectionState: public State
             std::function<void(const std::string& optionForPlayer,const std::string& optionForEnemy )> callbackSeleccion);
         
     public:    
-        STATES Update(const float deltaTime, float currentFrameInputValueNormalized,
-	                        int currentFrameInputValue)override;
+        STATES Update(const float deltaTime, float currentFrameInputValueNormalized)override;
         void Paint()override;
         void OnEnter()override;
         void OnExit()override;
