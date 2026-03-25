@@ -198,7 +198,7 @@ bool GameManager::Update(const float deltaTime)
 	}
 
 	_oldStateLogic = _currentStateLogic;
-	PROFILE_BEGIN(7, "TRY CHANGE STATE");
+	PROFILE_BEGIN(7, "try change state");
 	if(nextState != _currentStateLogic)
 	{
 		_statesLogic[_currentStateLogic]->OnExit();

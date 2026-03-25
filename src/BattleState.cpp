@@ -200,6 +200,10 @@ void BattleState::UpdateBullet(float deltaTime, Bullet &bullet)
     if (bullet.GetPlayerTeam() == TEAM_ENEMY)
     {
         isDestroyed = ManageBulletPlaneCollision(bullet, *_player);
+        if(isDestroyed)
+        {
+            DamagePlayer();
+        }
     }
     if (isDestroyed)
     {
@@ -215,6 +219,7 @@ bool BattleState::ManagePlaneCollisions(Plane &plane)
     _explosionPool.for_each_active([&](Explosion &explosion)
                                    {
             if(someCollision){return;}
+            if(explosion.GetPlayerTeam() == plane.GetPlayerTeam()){return;}
             bool explosionCollision = ManageExplosionPlaneCollision(explosion, plane);
             if(explosionCollision)
             {
