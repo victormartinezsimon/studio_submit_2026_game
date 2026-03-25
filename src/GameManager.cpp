@@ -13,6 +13,7 @@
 #include "Star.h"
 #include "Profiler.h"
 
+constexpr std::array<PainterManager::SPRITE_ID, 2> SPRITE_IDS_ANIMATION_HIT = {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_1};
 constexpr std::array<PainterManager::SPRITE_ID, 2> SPRITE_IDS_ANIMATION_KILL = {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_5};
 constexpr std::array<PainterManager::SPRITE_ID, 3> SPRITE_IDS_ANIMATION_LEVEL = {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_1};
 
@@ -134,8 +135,6 @@ void GameManager::InitializeStatesBegin()
 bool GameManager::Update(const float deltaTime)
 {
 	//PROFILE_BEGIN_FRAME();
-
-	
 	_lastDeltaTime = deltaTime;
 	if(_countFramesToReadInput <= 0)
 	{	PROFILE_BEGIN(0, "INPUT");
@@ -360,13 +359,18 @@ void GameManager::EndLevel()
 	++_currentLevel;
 	_currentScore += SCORE_PER_FINISH_LEVEL;
 
-	AnimateNumberScore(SPRITE_IDS_ANIMATION_LEVEL);
+	AnimateNumberScore(SPRITE_IDS_ANIMATION_LEVEL, true);
 }
 template <unsigned int N>
-void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID, N> elements)
+void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID, N> elements, bool up)
 {
 	float currentX = SCORE_POSITION_X - NUMBER_0_WIDTH;
 	float currentY = NUMBER_POSITION_Y - NUMBER_0_HEIGHT/2;
+	float endY = currentY - NUMBER_0_HEIGHT;
+	if(!up)
+	{
+		endY = currentY + NUMBER_0_HEIGHT;
+	}
 
 	for(auto spriteID : elements)
 	{
@@ -375,7 +379,7 @@ void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID,
 			spriteID);
 
 		int easeID = _easingManager.AddEase(DURATION_EASING_SCORE, currentX, currentY, 
-			currentX, currentY - NUMBER_0_HEIGHT, Ease::EASE_TYPES::INOUTCIRC, 
+			currentX, endY, Ease::EASE_TYPES::INOUTCIRC, 
 			[](bool forced){},
 			[&](float x, float y, Ease& ease)
 			{
@@ -387,7 +391,6 @@ void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID,
 		currentX -= NUMBER_0_WIDTH;
 	}
 }
-
 void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const
 {
 	minX = 0 + ENEMY_WIDTH / 2;
@@ -438,11 +441,15 @@ void GameManager::DamagePlayer()
 	{
 		_currentScore = 0;
 	}
+	else
+	{
+		AnimateNumberScore(SPRITE_IDS_ANIMATION_HIT, false);
+	}
 }
 void GameManager::DamageEnemy(float x, float y)
 {
 	_currentScore += SCORE_PER_KILL;
-	AnimateNumberScore(SPRITE_IDS_ANIMATION_KILL);
+	AnimateNumberScore(SPRITE_IDS_ANIMATION_KILL, true);
 }
 void GameManager::ConfigureStar(Star& star)
 {

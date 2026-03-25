@@ -32,7 +32,9 @@ int main(int argc, char **argv)
 	bool ended = false;
 	
 	SoundManager* soundManager = new SoundManager(platform);
+	#ifndef DEBUG
 	soundManager->start();
+	#endif
 
 	while (!ended)
 	{

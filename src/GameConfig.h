@@ -7,7 +7,11 @@ constexpr int MAX_SECS_PLAYING = 120;
 
 constexpr int SCREEN_WIDTH = 320;
 constexpr int SCREEN_HEIGHT = 240;
+#ifdef DEBUG
+constexpr int NUM_FRAMES_TO_READ_INPUT = 1;
+#else
 constexpr int NUM_FRAMES_TO_READ_INPUT = 4;
+#endif
 
 constexpr unsigned int PLANES_POOL_SIZE = 10;
 constexpr unsigned int BULLETS_POOL_SIZE = 100;
