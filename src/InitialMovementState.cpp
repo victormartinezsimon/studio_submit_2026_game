@@ -43,9 +43,6 @@ void InitialMovementState::OnEnter()
 
 	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
-	_easingManager->KillAll();
-	_alphaManager->FinishAll();
-
 	_enemiesPool->for_each_active(
 		[this](Plane &p)
 		{

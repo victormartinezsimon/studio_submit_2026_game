@@ -13,6 +13,9 @@
 #include "Star.h"
 #include "Profiler.h"
 
+constexpr std::array<PainterManager::SPRITE_ID, 2> SPRITE_IDS_ANIMATION_KILL = {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_5};
+constexpr std::array<PainterManager::SPRITE_ID, 3> SPRITE_IDS_ANIMATION_LEVEL = {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_1};
+
 GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	: _inputManager(input),
 	  _painterManager(painterManager), _currentLevel(0), 
@@ -30,7 +33,6 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	_statesBeginFunction[_currentStateLogic]();
 	_statesLogic[_currentStateLogic]->OnEnter();
 }
-
 void GameManager::InitializeStates()
 {
 	_statesLogic[State::STATES::MENU] = new MainMenuState(&_player, _painterManager, &_numberManager, &_alphaManager, 
@@ -52,7 +54,6 @@ void GameManager::InitializeStates()
 	_statesLogic[State::STATES::END_GAME] = new EndGameState(&_player, _painterManager, &_numberManager, &_alphaManager, 
 		&_easingManager, &_randomManager, &_buttonAManager);
 }
-
 void GameManager::InitializeConstantValues()
 {
 	playerData.velocityBulletX = DEFAULT_BULLET_VEL_X;
@@ -76,7 +77,6 @@ void GameManager::InitializeConstantValues()
 	_totalImprovementSelected = 0;
 	InitializeRandomImprovements();
 }
-
 void GameManager::InitializeImprovementsFunctions()
 {
 	_improvementFunctions[std::string(IMPROVEMENT_3_SHOTS)] = [](modifiable_data &data)
@@ -96,7 +96,6 @@ void GameManager::InitializeImprovementsFunctions()
 	_improvementFunctions[std::string(IMPROVEMENT_SLOW_SHOTS)] = [](modifiable_data &data)
 	{ data.velocityBulletX *= SLOW_SHOT_MULTIPLICATION, data.velocityBulletY *= SLOW_SHOT_MULTIPLICATION; };
 }
-
 void GameManager::InitializeRandomImprovements()
 {
 	int index = 0;
@@ -109,7 +108,6 @@ void GameManager::InitializeRandomImprovements()
 	std::mt19937 generator(std::random_device{}());
     std::shuffle(_randomImprovements.begin(), _randomImprovements.end(), generator);
 }
-
 void GameManager::InitializeStatesBegin()
 {
 	_statesBeginFunction[State::STATES::MENU] = []{};
@@ -133,7 +131,6 @@ void GameManager::InitializeStatesBegin()
 		static_cast<EndGameState*>(_statesLogic[State::STATES::END_GAME])->Configure(_currentScore);
 	};
 }
-
 bool GameManager::Update(const float deltaTime)
 {
 	//PROFILE_BEGIN_FRAME();
@@ -241,7 +238,6 @@ bool GameManager::Update(const float deltaTime)
 	//PROFILE_END_FRAME();
 	return false;
 }
-
 void GameManager::Paint()
 {
 	_painterManager->ClearListPaint();
@@ -256,19 +252,16 @@ void GameManager::Paint()
 	_spawnerMeteorites.Paint();
 	_spawnerStars.Paint();
 }	
-
 void GameManager::ApplyImprovements(const std::string& playerSelection, const std::string& enemySelection)
 {
 	_improvementFunctions[playerSelection](playerData);
 	_improvementFunctions[enemySelection](enemyData);
 }
-
 void GameManager::GetMinMaxXPosiblePosition(float &minX, float &maxX) const
 {
 	minX = 0 + _player.GetWidth() / 2;
 	maxX = SCREEN_WIDTH - _player.GetWidth() / 2;
 }
-
 void GameManager::MovePlayer()
 {
 	float minX, maxX;
@@ -281,7 +274,6 @@ void GameManager::MovePlayer()
 
 	_player.SetPositionX(realPosition);
 }
-
 void GameManager::ConfigurePlane(Plane &p, const float posX, const float posY,
 								 const modifiable_data &data, bool isPlayer, float initialDelay)
 {
@@ -306,7 +298,6 @@ void GameManager::ConfigurePlane(Plane &p, const float posX, const float posY,
 	p.SetCallbackFire([this, isPlayer, data](int sourceIndex, const Plane &p)
 					  { this->SpawnBullet(sourceIndex, p, isPlayer, data); });
 }
-
 void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, const modifiable_data &data)
 {
 	int totalBulletsPerShot = p.GetBulletsPerShot();
@@ -364,11 +355,37 @@ void GameManager::StartLevel()
 	SpawnEnemies();
 	ConfigurePlane(_player, -1, -1, playerData, true, 0);
 }
-
 void GameManager::EndLevel()
 {
 	++_currentLevel;
 	_currentScore += SCORE_PER_FINISH_LEVEL;
+
+	AnimateNumberScore(SPRITE_IDS_ANIMATION_LEVEL);
+}
+template <unsigned int N>
+void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID, N> elements)
+{
+	float currentX = SCORE_POSITION_X - NUMBER_0_WIDTH;
+	float currentY = NUMBER_POSITION_Y - NUMBER_0_HEIGHT/2;
+
+	for(auto spriteID : elements)
+	{
+		int alphaID = _alphaManager.AddAlpha(DURATION_EASING_SCORE, 
+			currentX, currentY, NUMBER_0_WIDTH, NUMBER_0_HEIGHT, 
+			spriteID);
+
+		int easeID = _easingManager.AddEase(DURATION_EASING_SCORE, currentX, currentY, 
+			currentX, currentY - NUMBER_0_HEIGHT, Ease::EASE_TYPES::INOUTCIRC, 
+			[](bool forced){},
+			[&](float x, float y, Ease& ease)
+			{
+				int idAlpha = ease.GetReferenceID();
+				_alphaManager.CallFunctionInPool(idAlpha, [&](Alpha& alpha){alpha.SetPosition(x, y);});
+			}
+		);
+		_easingManager.SetReferenceIDToEase(easeID, alphaID);
+		currentX -= NUMBER_0_WIDTH;
+	}
 }
 
 void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const
@@ -376,7 +393,6 @@ void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) 
 	minX = 0 + ENEMY_WIDTH / 2;
 	maxX = SCREEN_WIDTH - ENEMY_WIDTH / 2;
 }
-
 void GameManager::SpawnEnemies()
 {
 	int levelConfigID = std::min(_currentLevel, TOTAL_LEVELS_CONFIG - 1);
@@ -415,7 +431,6 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 		}
 	}
 }
-
 void GameManager::DamagePlayer()
 {
 	_currentScore -= SCORE_PER_PLAYER_HIT;
@@ -424,36 +439,11 @@ void GameManager::DamagePlayer()
 		_currentScore = 0;
 	}
 }
-
-
 void GameManager::DamageEnemy(float x, float y)
 {
 	_currentScore += SCORE_PER_KILL;
-
-	
-	float currentX = SCORE_POSITION_X - NUMBER_0_WIDTH;
-	float currentY = NUMBER_POSITION_Y - NUMBER_0_HEIGHT/2;
-
-	for(auto spriteID : {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_5})
-	{
-		int alphaID = _alphaManager.AddAlpha(DURATION_EASING_SCORE, 
-			currentX, currentY, NUMBER_0_WIDTH, NUMBER_0_HEIGHT, 
-			spriteID);
-
-		int easeID = _easingManager.AddEase(DURATION_EASING_SCORE, currentX, currentY, 
-			currentX, currentY - NUMBER_0_HEIGHT, Ease::EASE_TYPES::INOUTCIRC, 
-			[](bool forced){},
-			[&](float x, float y, Ease& ease)
-			{
-				int idAlpha = ease.GetReferenceID();
-				_alphaManager.CallFunctionInPool(idAlpha, [&](Alpha& alpha){alpha.SetPosition(x, y);});
-			}
-		);
-		_easingManager.SetReferenceIDToEase(easeID, alphaID);
-		currentX -= NUMBER_0_WIDTH;
-	}
+	AnimateNumberScore(SPRITE_IDS_ANIMATION_KILL);
 }
-
 void GameManager::ConfigureStar(Star& star)
 {
     float velocity = _randomManager.GetValue(MIN_VELOCITY_STAR, MAX_VELOCITY_STAR, 100.0f);
@@ -503,7 +493,6 @@ void GameManager::ConfigureStar(Star& star)
 	star.SetVelocities(velocity, velocity*0.5);
 	star.SetMoveLeft(false);
 }
-
 void GameManager::ConfigureMeteoriteSpawn(Meteorite& meteorite)
 {
     meteorite.SetSize(METEORITE_WIDTH, METEORITE_HEIGHT);

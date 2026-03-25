@@ -78,6 +78,11 @@ private:
 	void ConfigureMeteoriteSpawn(Meteorite& meteorite);
 
 private:
+
+	template <unsigned int N>
+	void AnimateNumberScore(const std::array<PainterManager::SPRITE_ID, N> elements);
+
+private:
 	modifiable_data playerData;
 	modifiable_data enemyData;
 
