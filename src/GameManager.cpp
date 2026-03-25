@@ -138,13 +138,14 @@ bool GameManager::Update(const float deltaTime)
 {
 	//PROFILE_BEGIN_FRAME();
 
-	PROFILE_BEGIN(0, "INPUT");
+	
 	_lastDeltaTime = deltaTime;
 	if(_countFramesToReadInput <= 0)
-	{
+	{	PROFILE_BEGIN(0, "INPUT");
 		_currentFrameInputValueNormalized = _inputManager->GetInputValueNormalized();
 		_lastFrameInputValueNormalized = _currentFrameInputValueNormalized;
 		_countFramesToReadInput = NUM_FRAMES_TO_READ_INPUT;
+		PROFILE_END(0);
 	}
 	else
 	{
@@ -152,7 +153,6 @@ bool GameManager::Update(const float deltaTime)
 	}
 	--_countFramesToReadInput;
 	
-	PROFILE_END(0);
 
 	if(_currentStateLogic == State::STATES::BATTLE)
 	{
