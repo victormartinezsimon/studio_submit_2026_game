@@ -37,6 +37,7 @@ void SoundManager::start()
 
 void SoundManager::stop()
 {
+	if(m_stopRequested){return;}
 	m_stopRequested = true;
 	if (m_thread.joinable())
 		m_thread.join();

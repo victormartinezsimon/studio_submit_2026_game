@@ -1,4 +1,5 @@
 #include "Plane.h"
+#include "GameConfig.h"
 
 void Plane::SetCallbackFire(std::function<void(int, const Plane&)> fun)
 {
@@ -47,13 +48,25 @@ void Plane::Update(const float deltaTime)
 
 	if (_currentAcumTime > _fireRate)
 	{
-		for (int i = 0; i < _bulletsTotalSources; ++i)
+		if(_bulletsTotalSources == DEFAULT_BULLETS_ORIGIN)
 		{
-			if(_callbackFire)
+			for (int i = 0; i < _bulletsTotalSources; ++i)
 			{
 				_callbackFire(i, *this);
 			}
 		}
+		else
+		{
+			for (int i = 1; i < _bulletsTotalSources; ++i)
+			{
+				if(_callbackFire)
+				{
+					_callbackFire(i, *this);
+				}
+			}
+		}
+
+		
 		_currentAcumTime = 0;
 	}
 }
