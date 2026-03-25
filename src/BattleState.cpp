@@ -52,7 +52,6 @@ void BattleState::Paint()
         }
         else
         {
-            float playerX, playerY;
             _player->GetPaintPosition(playerX, playerY);
             float percent = currentTimeInmortal / TIME_INMORTAL;
 
