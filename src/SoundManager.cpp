@@ -84,6 +84,6 @@ void SoundManager::Update()
 		return;
 	}
 
-	APUStartDMA(m_platform->ac, (uint32_t)m_apuBuffer.dmaAddress);
+	APUWaitSync(m_platform->ac);
 	m_lastFrame = frame;
 }
