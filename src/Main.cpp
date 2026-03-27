@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	
 	SoundManager* soundManager = new SoundManager(platform);
 	#ifndef DEBUG
-	soundManager->start();
+	soundManager->Prepare();
 	#endif
 
 	while (!ended)
@@ -45,10 +45,13 @@ int main(int argc, char **argv)
 		ended = gm->Update(deltaTime);
 		gm->Paint();
 		painterManager->Paint();
+		#ifndef DEBUG
+		soundManager->Update();
+		#endif
 	}
 
 	PROFILE_SAVE();
-	soundManager->stop();
+	soundManager->Shutdown();
 
 	delete soundManager;
 	delete inputManager;

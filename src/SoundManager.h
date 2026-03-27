@@ -3,14 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <thread>
-#include <atomic>
 #include "core.h"
 #include "platform.h"
 #include "apu.h"
 #include "xmp.h"
 
-// Number of 16bit stereo samples (valid values are 1024, 512, 256, 128 or 64)
+// Number of 16bit stereo samples per buffer half (valid values are 1024, 512, 256, 128 or 64)
 #define SM_BUFFER_SAMPLE_COUNT 1024
 #define SM_BUFFER_CHANNEL_COUNT 2
 #define SM_BUFFER_SAMPLE_SIZE sizeof(short)
@@ -22,29 +20,18 @@ public:
 	SoundManager(struct SPPlatform* platform);
 	~SoundManager();
 
-	// Start playback on a background thread
-	void start();
-
-	// Stop playback and join the thread
-	void stop();
-
-	void Update();
 	void Prepare();
+	void Update();
+	void Shutdown();
 
-	// Get the number of samples per buffer
 	uint32_t getBufferSampleCount() const { return SM_BUFFER_SAMPLE_COUNT; }
 
 private:
-	void playThread();
-
 	struct SPPlatform* m_platform;
 	xmp_context m_ctx;
 	SPSizeAlloc m_apuBuffer;
 	bool m_moduleLoaded;
-	std::thread m_thread;
-	std::atomic<bool> m_stopRequested;
-	short* buf;
-
-	bool _ready = false;
+	bool m_ready;
+	uint32_t m_lastFrame;
 };
 #endif
