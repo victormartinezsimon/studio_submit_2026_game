@@ -6,6 +6,8 @@
 
 #include "GameConfig.h"
 
+class PainterManager;
+
 template <typename T, unsigned int N>
 class Pool
 {
@@ -66,7 +68,7 @@ public:
 
 	}
 
-	void for_each_active(std::function<void(T&)> func) 
+	void for_each_active(std::function<void(T&)> func)
 	{
 		for(int i = 0; i <= _lastInUse; ++i)
 		{
@@ -88,6 +90,15 @@ public:
 	int TotalInUse() const
 	{
 		return _currentUse;
+	}
+
+	void Paint(PainterManager* painter)
+	{
+		for(int i = 0; i <= _lastInUse; ++i)
+		{
+			if(!_used[i]){continue;}
+			_poolElements[i].Paint(painter);
+		}
 	}
 
 private:

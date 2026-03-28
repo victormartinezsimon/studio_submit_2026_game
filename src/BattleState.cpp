@@ -50,17 +50,12 @@ void BattleState::Paint()
     }
 
     {
-        _bulletsPool->for_each_active([&](Bullet &bullet)
-                                      {
-                                        bullet.Paint(_painterManager);
-                                      });
+        _bulletsPool->Paint(_painterManager);
     }
 
     {
-        _enemiesPool->for_each_active([this](Plane &p)
-                                      {
-                                        p.Paint(_painterManager);
-                                    });
+        
+        _enemiesPool->Paint(_painterManager);
     }
 
     {

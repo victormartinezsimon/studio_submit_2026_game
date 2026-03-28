@@ -27,10 +27,7 @@ void InitialMovementState::Paint()
 	}
 
 	{
-		_enemiesPool->for_each_active([this](Plane &p)
-									 {
-										p.Paint(_painterManager);
-									});
+		_enemiesPool->Paint(_painterManager);
 	}
 }
 void InitialMovementState::OnEnter()
