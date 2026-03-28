@@ -42,8 +42,7 @@ void ImprovementSelectionState::Paint()
 		
 		float posY = _player->GetY();
 		int time = _buttonAManager->GetLeftTime() + 1;
-		float w,h;
-		_painterManager->GetSpriteSize(PainterManager::SPRITE_ID::PLAYER, w, h);
+		float w = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER);
 		_numberManager->PaintNumber(time, _player->GetX()-w/2, _player->GetY(), 1, NumberManager::PIVOT::RIGHT);
 	}
 

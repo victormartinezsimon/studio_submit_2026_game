@@ -48,8 +48,7 @@ void NumberManager::PaintRight(int number, int x, int y, int minDigits)
 {
 	int currentValue = number;
 	int digitsUsed = 0;
-	float w_0, h_0;
-	_painterManager->GetSpriteSize(_spriteIDs[0], w_0, h_0);
+	float w_0 = _painterManager->GetWidth(_spriteIDs[0]);
 	int currentX = x + w_0/2;
 	while(currentValue != 0)
 	{
@@ -57,9 +56,7 @@ void NumberManager::PaintRight(int number, int x, int y, int minDigits)
 		currentValue = currentValue/ 10;
 		++digitsUsed;
 
-		float w, h;
-		_painterManager->GetSpriteSize(_spriteIDs[digit], w, h);
-
+		float w = _painterManager->GetWidth(_spriteIDs[digit]);
 		currentX -= w;
 		_painterManager->AddToPaint(_spriteIDs[digit], currentX, y);
 	}
@@ -68,8 +65,7 @@ void NumberManager::PaintRight(int number, int x, int y, int minDigits)
 	{
 		int digit = 0;
 		++digitsUsed;
-		float w, h;
-		_painterManager->GetSpriteSize(_spriteIDs[digit], w, h);
+		float w = _painterManager->GetWidth(_spriteIDs[digit]);
 		currentX -= w;
 		_painterManager->AddToPaint(_spriteIDs[digit], currentX, y);
 	}

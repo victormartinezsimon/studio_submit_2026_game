@@ -39,7 +39,9 @@ public:
 	void Paint() const;
 
 	Painter* GetPainter(){return _painter;}
-	void GetSpriteSize(SPRITE_ID id, float& width, float& height);
+	void GetSpriteSize(SPRITE_ID id, float& width, float& height)const;
+	float GetWidth(SPRITE_ID id)const;
+	float GetHeight(SPRITE_ID id)const;
 
 public:
 	void ClearListPaint();

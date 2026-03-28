@@ -87,10 +87,19 @@ PainterManager::PainterManager()
 
 }
 
-void PainterManager::GetSpriteSize(SPRITE_ID id, float& width, float& height)
+void PainterManager::GetSpriteSize(SPRITE_ID id, float& width, float& height)const
 {
-	width = _sizes[id].first;
-	height = _sizes[id].second;
+	width = _sizes.at(id).first;
+	height = _sizes.at(id).second;
+}
+
+float PainterManager::GetWidth(SPRITE_ID id)const
+{
+	return _sizes.at(id).first;
+}
+float PainterManager::GetHeight(SPRITE_ID id)const
+{
+	return _sizes.at(id).second;
 }
 
 
