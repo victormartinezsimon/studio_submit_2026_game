@@ -31,6 +31,8 @@ private:
 		float x;
 		float y;
 		unsigned int mask;
+		int spriteCoordX;
+		int spriteCoordY;
 	};
 public:
 	PainterManager();
@@ -50,6 +52,7 @@ public:
 	void AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask);
 	void AddToPaint(SPRITE_ID id, float x, float y, unsigned int width, unsigned int height);
 	void AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, unsigned int width, unsigned int height);
+	void AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, unsigned int width, unsigned int height, int spriteCoordX, int spriteCoordY);
 
 private:
 	int GetMaskID(MASK_ID maskID);

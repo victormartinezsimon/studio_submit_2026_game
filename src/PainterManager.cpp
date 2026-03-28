@@ -102,7 +102,6 @@ float PainterManager::GetHeight(SPRITE_ID id)const
 	return _sizes.at(id).second;
 }
 
-
 PainterManager::~PainterManager()
 {
 	delete _painter;
@@ -152,6 +151,11 @@ void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, unsigned int wid
 
 void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, unsigned int width, unsigned int height)
 {
+	AddToPaint(id, x, y, mask, width, height, 0,0);
+}
+
+void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, unsigned int width, unsigned int height, int spriteCoordX, int spriteCoordY)
+{
 	if(_currentIndexToPaint < MAX_PAINTED_OBJECTS)
 	{
 		_toPaint[_currentIndexToPaint].id = id;
@@ -160,52 +164,11 @@ void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, un
 		_toPaint[_currentIndexToPaint].x = x - width/2;
 		_toPaint[_currentIndexToPaint].y = y - height/2;
 		_toPaint[_currentIndexToPaint].mask = GetMaskID(mask);
+		_toPaint[_currentIndexToPaint].spriteCoordX = spriteCoordX;
+		_toPaint[_currentIndexToPaint].spriteCoordY = spriteCoordY;
 		++_currentIndexToPaint;
 	}
 }
-
-/*
-void PainterManager::AddToPaint(SPRITE_ID id, unsigned int width, unsigned int height, int x, int y)
-{
-	if(_currentIndexToPaint < MAX_PAINTED_OBJECTS)
-	{
-		_toPaint[_currentIndexToPaint].id = id;
-		_toPaint[_currentIndexToPaint].width = width;
-		_toPaint[_currentIndexToPaint].height = height;
-		_toPaint[_currentIndexToPaint].x = x;
-		_toPaint[_currentIndexToPaint].y = y;
-		_toPaint[_currentIndexToPaint].mask = GetMaskID(MASK_ID::FULL);
-		++_currentIndexToPaint;
-	}
-}
-
-void PainterManager::AddUIToPaint(SPRITE_ID id, int x, int y)
-{
-	auto width = _sizes[id].first;
-	auto height = _sizes[id].second;
-	AddToPaint(id, width, height, x - width/2, y - height /2);
-}
-
-void PainterManager::AddToPaintWithAlpha(SPRITE_ID id, unsigned int width, unsigned int height, int x, int y, MASK_ID maskID)
-{
-	if(_currentIndexToPaint < MAX_PAINTED_OBJECTS)
-	{
-		_toPaint[_currentIndexToPaint].id = id;
-		_toPaint[_currentIndexToPaint].width = width;
-		_toPaint[_currentIndexToPaint].height = height;
-		_toPaint[_currentIndexToPaint].x = x;
-		_toPaint[_currentIndexToPaint].y = y;
-		_toPaint[_currentIndexToPaint].mask = GetMaskID(maskID);
-		++_currentIndexToPaint;
-	}
-}
-void PainterManager::AddUIToPaintWithAlpha(SPRITE_ID id, int x, int y, MASK_ID maskID)
-{
-	auto width = _sizes[id].first;
-	auto height = _sizes[id].second;
-	AddToPaintWithAlpha(id, width, height, x - width/2, y - height /2, maskID);
-}
-*/
 
 int PainterManager::GetMaskID(MASK_ID maskID)
 {
