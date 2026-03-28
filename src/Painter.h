@@ -46,6 +46,7 @@ public:
 	void PaintBackground();
 	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y);
 	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType);
+	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType, int startX, int startY);
 
 public:
  struct SPPlatform* GetPlatform(){return s_platform;}
@@ -62,6 +63,8 @@ private:
 		int src_h,
 		int dst_x,
 		int dst_y,
+		int startX,
+		int startY,
 		const uint8_t transparent_id,
 		uint8x16_t evenRowMask, uint8x16_t oddRowMask);
 

@@ -70,7 +70,7 @@ void Painter::PaintBackground()
 
 void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y)
 {
-	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, TRANSPARENT_KEY, allMask, allMask);
+	PaintItem(sprite, width, height, x, y, -1);
 }
 
 void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType)
@@ -88,7 +88,25 @@ void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int 
 		oddMask = quarterMaskAlt;
 	}
 
-	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, TRANSPARENT_KEY, evenMask, oddMask);
+	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, 0, 0, TRANSPARENT_KEY, evenMask, oddMask);
+}
+
+void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType, int startX, int startY)
+{
+	uint8x16_t evenMask = allMask;
+	uint8x16_t oddMask = allMask;
+	if (maskType == 1)
+	{
+		evenMask = halfMask;
+		oddMask = halfMaskAlt;
+	}
+	if (maskType == 2)
+	{
+		evenMask = quarterMask;
+		oddMask = quarterMaskAlt;
+	}
+
+	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, startX, startY, TRANSPARENT_KEY, evenMask, oddMask);
 }
 
 void Painter::init_palette(struct EVideoContext *vctx)
@@ -129,6 +147,8 @@ void Painter::masked_blit_8(
 	int src_h,
 	int dst_x,
 	int dst_y,
+	int startX,
+	int startY,
 	const uint8_t transparent_key, 
 	uint8x16_t evenRowMask, uint8x16_t oddRowMask)
 {
@@ -161,18 +181,21 @@ void Painter::masked_blit_8(
 	uint8x16_t keyv0 = vdupq_n_u8(transparent_key);
 #endif
 
-	for (int y = 0; y < h; ++y)
+	int endY = startY + h;
+	for (int y = startY; y < endY; ++y)
 	{
 		uint8_t *d = dst + (uint32_t)(dst_y + y) * dst_stride + dst_x;
 		const uint8_t *s = src + (src_y + y) * src_w + src_x;
 		uint8x16_t extraAlphaMask = ((dst_y + y) & 1) ? oddRowMask : evenRowMask;
-		int x = 0;
+
+		int x = startX;
+		int endX = startX + w;
 
 		// If NEON is available, we can process 16 pixels at a time.
 		// The key is compared against the source pixels, and if it matches,
 		// the destination pixel is kept; otherwise, the source pixel is copied to the destination.
 #if defined(__ARM_NEON) || defined(__ARM_NEON__)
-		for (; x + 15 < w; x += 16)
+		for (; x + 15 < endX; x += 16)
 		{
 			uint8x16_t sv = vld1q_u8(s + x);		 // Load source pixels
 			uint8x16_t dv = vld1q_u8(d + x);		 // Load destination pixels
@@ -189,7 +212,7 @@ void Painter::masked_blit_8(
 		}
 #endif
 		// Process any remaining pixels that don't fit into a 16-byte block
-		for (; x < w; ++x)
+		for (; x < endX; ++x)
 		{
 			uint8_t px = s[x];
 			if (px != TRANSPARENT_KEY)
