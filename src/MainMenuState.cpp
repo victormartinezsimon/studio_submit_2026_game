@@ -7,13 +7,6 @@
 #include "NumberManager.h"
 #include "AlphaManager.h"
 
-constexpr int TITLE_Y = 70;
-constexpr int START_Y = 153;
-constexpr int SELECTOR_Y = 205;
-constexpr float START_GAME_SELECTOR_X = 0.2 * SCREEN_WIDTH;
-constexpr float START_GAME_X = START_GAME_SELECTOR_X;
-constexpr float EXIT_GAME_X = 0.8 * SCREEN_WIDTH;
-
 MainMenuState::MainMenuState(Plane *player, PainterManager *painter, 
         NumberManager* numberManager, AlphaManager* alphaManager,
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager) 
@@ -56,35 +49,35 @@ void MainMenuState::PaintUI()
 	
 	{
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::TITLE,
-									  SCREEN_WIDTH * 0.5f, TITLE_Y);
+									  MAIN_MENU_COORDS::TITLE_X, MAIN_MENU_COORDS::TITLE_Y);
 	}
 
 	{
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SELECTOR,
-									  START_GAME_SELECTOR_X, SELECTOR_Y);
+									  MAIN_MENU_COORDS::SELECTOR_START_X, MAIN_MENU_COORDS::SELECTOR_START_Y);
 	}
 
 	{
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SELECTOR,
-									  EXIT_GAME_X, SELECTOR_Y);
+									   MAIN_MENU_COORDS::SELECTOR_EXIT_X, MAIN_MENU_COORDS::SELECTOR_EXIT_Y);
 	}
 	
 	{
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::START_GAME,
-									  START_GAME_X, START_Y);
+									  MAIN_MENU_COORDS::START_X, MAIN_MENU_COORDS::START_Y);
 	}
 
 	{
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::EXIT_GAME,
-									  EXIT_GAME_X, START_Y);
+									  MAIN_MENU_COORDS::EXIT_GAME_X, MAIN_MENU_COORDS::EXIT_GAME_Y);
 	}
 }
 
 void MainMenuState::OnEnter()
 {
 	_buttonAManager->SelectInPosition(MAIN_MENU_TIME_TO_ENTER, 
-		{START_GAME_X - PLAYER_SELECTOR_WIDTH / 2, START_GAME_X + PLAYER_SELECTOR_WIDTH / 2},
-		{EXIT_GAME_X - PLAYER_SELECTOR_WIDTH / 2, EXIT_GAME_X + PLAYER_SELECTOR_WIDTH / 2},
+		{MAIN_MENU_COORDS::SELECTOR_START_X - PLAYER_SELECTOR_WIDTH / 2, MAIN_MENU_COORDS::SELECTOR_START_X + PLAYER_SELECTOR_WIDTH / 2},
+		{MAIN_MENU_COORDS::SELECTOR_EXIT_X - PLAYER_SELECTOR_WIDTH / 2, MAIN_MENU_COORDS::SELECTOR_EXIT_X + PLAYER_SELECTOR_WIDTH / 2},
 									  [this](int selection)
 									  {
 										if(selection == 0)
@@ -113,7 +106,8 @@ void MainMenuState::StartGame()
 	_alphaManager->FinishAll();
 	_easingManager->KillAll();
 
-	int id = _alphaManager->AddAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * 0.5f, TITLE_Y, PainterManager::SPRITE_ID::TITLE);
+	int id = _alphaManager->AddAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * 0.5f, MAIN_MENU_COORDS::TITLE_Y, 
+		PainterManager::SPRITE_ID::TITLE);
 	_alphaManager->AddCallback(id, [this]() { _nextState = STATES::INITIAL_MOVEMENT; });
 	_startingGame = true;
 }

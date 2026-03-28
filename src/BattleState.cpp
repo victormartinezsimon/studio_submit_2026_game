@@ -54,12 +54,12 @@ void BattleState::PaintUI()
 {
     {
         long long value = *_score;
-        _numberManager->PaintNumber(value, SCORE_POSITION_X, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::RIGHT);
+        _numberManager->PaintNumber(value, SCORE_POSITION_X, SCORE_POSITION_Y, 3, NumberManager::PIVOT::RIGHT);
     }
 
     {
         float value = *_timeLeft;
-        _numberManager->PaintNumber(MAX_SECS_PLAYING - value, TIME_POSITION_X, SCREEN_HEIGHT - NUMBER_0_HEIGHT, 3, NumberManager::PIVOT::LEFT);
+        _numberManager->PaintNumber(MAX_SECS_PLAYING - value, TIME_POSITION_X, SCORE_POSITION_Y, 3, NumberManager::PIVOT::LEFT);
     }
 }
 
