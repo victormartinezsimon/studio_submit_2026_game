@@ -44,8 +44,6 @@ public:
 
 public:
 	void PaintBackground();
-	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y);
-	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType);
 	void PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType, int startX, int startY);
 
 public:

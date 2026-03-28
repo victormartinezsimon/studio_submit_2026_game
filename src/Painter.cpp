@@ -68,29 +68,6 @@ void Painter::PaintBackground()
 	VPUClear(s_platform->vx, 0x10101010);
 }
 
-void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y)
-{
-	PaintItem(sprite, width, height, x, y, -1);
-}
-
-void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType)
-{
-	uint8x16_t evenMask = allMask;
-	uint8x16_t oddMask = allMask;
-	if (maskType == 1)
-	{
-		evenMask = halfMask;
-		oddMask = halfMaskAlt;
-	}
-	if (maskType == 2)
-	{
-		evenMask = quarterMask;
-		oddMask = quarterMaskAlt;
-	}
-
-	masked_blit_8(dst, stride, SCREEN_WIDTH, SCREEN_HEIGHT, sprite, width, height, x, y, 0, 0, TRANSPARENT_KEY, evenMask, oddMask);
-}
-
 void Painter::PaintItem(const uint8_t *sprite, unsigned int width, unsigned int height, int x, int y, int maskType, int startX, int startY)
 {
 	uint8x16_t evenMask = allMask;

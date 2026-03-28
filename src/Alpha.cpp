@@ -52,7 +52,6 @@ void Alpha::EndAlpha()
 
 void Alpha::Paint(PainterManager* _painter)
 {
-    
     float percent = _acumTime / _duration;
 
     PainterManager::MASK_ID maskIndex = PainterManager::MASK_ID::FULL;
@@ -65,7 +64,7 @@ void Alpha::Paint(PainterManager* _painter)
         maskIndex = PainterManager::MASK_ID::QUARTER;
     }
 
-    _painter->AddToPaint(_sprite, _currentX, _currentY, maskIndex, _width, _height);
+    _painter->AddToPaint(_sprite, _currentX, _currentY, maskIndex);
     
 }
 

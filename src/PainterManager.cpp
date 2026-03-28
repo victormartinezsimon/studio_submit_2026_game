@@ -115,14 +115,8 @@ void PainterManager::Paint() const
 
 	for(int index = _currentIndexToPaint-1; index >= 0; --index)
 	{
-		if(_toPaint[index].mask != -1)
-		{
-			_painter->PaintItem(_sprites.at(_toPaint[index].id), _toPaint[index].width, _toPaint[index].height, _toPaint[index].x, _toPaint[index].y, _toPaint[index].mask);
-		}
-		else
-		{
-			_painter->PaintItem(_sprites.at(_toPaint[index].id), _toPaint[index].width, _toPaint[index].height, _toPaint[index].x, _toPaint[index].y);
-		}
+		_painter->PaintItem(_sprites.at(_toPaint[index].id), _toPaint[index].width, _toPaint[index].height, _toPaint[index].x, _toPaint[index].y, 
+		_toPaint[index].mask, _toPaint[index].spriteCoordX, _toPaint[index].spriteCoordY);
 	}
 
 	_painter->EndPaint();
@@ -174,9 +168,9 @@ int PainterManager::GetMaskID(MASK_ID maskID)
 {
 	switch (maskID)
 	{
-		case MASK_ID::FULL: return -1;
+		case MASK_ID::FULL: return 0;
 		case MASK_ID::HALF: return 1;
 		case MASK_ID::QUARTER: return 2;
 	}
-	return -1;
+	return 0;
 }
