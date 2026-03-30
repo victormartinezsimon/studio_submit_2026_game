@@ -27,7 +27,7 @@ class SpriteSheetController
 		PainterManager::SPRITE_ID _sprite;
 		float _timeAcum;
 		int _totalFrames;
-		int _totalDuration;
+		float _totalDuration;
 		unsigned int _spriteWidth;
 		unsigned int _spriteHeight;
 		unsigned int _frameWidth;
