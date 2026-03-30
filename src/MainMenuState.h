@@ -25,4 +25,5 @@ class MainMenuState: public State
     private:
         STATES _nextState;
         bool _startingGame = false;
+        float _alphaMenu = 1.0f;
 };

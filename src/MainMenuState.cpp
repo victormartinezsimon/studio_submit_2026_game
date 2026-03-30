@@ -42,14 +42,14 @@ void MainMenuState::Paint()
 
 void MainMenuState::PaintUI()
 {
+	{
+		_painterManager->AddToPaint(PainterManager::SPRITE_ID::TITLE,
+									  MAIN_MENU_COORDS::TITLE_X, MAIN_MENU_COORDS::TITLE_Y, _alphaMenu);
+	}
+
 	if (_startingGame)
 	{
 		return;
-	}
-	
-	{
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::TITLE,
-									  MAIN_MENU_COORDS::TITLE_X, MAIN_MENU_COORDS::TITLE_Y);
 	}
 
 	{
@@ -108,14 +108,14 @@ void MainMenuState::StartGame()
 {
 	_easingManager->KillAll();
 
-	//TODO: refactor this
-	/*
-	int id = _alphaManager->AddAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * 0.5f, MAIN_MENU_COORDS::TITLE_Y, 
-		PainterManager::SPRITE_ID::TITLE);
-	_alphaManager->AddCallback(id, [this]() { _nextState = STATES::INITIAL_MOVEMENT; });
+	_easingManager->AddEase(ALPHA_TIME_ENTER_GAME, 100.0f, 100.0f, 0.0f, 0.0f, Ease::EASE_TYPES::LINEAL, 
+		[&](bool forced){_nextState =STATES::INITIAL_MOVEMENT; },
+		[&](float x, float y, Ease& ease, float percent){
+			_alphaMenu = 1 - percent;
+		}
+	);
 	_startingGame = true;
-	*/
-	_nextState = STATES::INITIAL_MOVEMENT;
+
 }
 
 void MainMenuState::ExitGame()
