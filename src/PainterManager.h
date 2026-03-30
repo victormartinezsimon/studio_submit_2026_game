@@ -21,8 +21,6 @@ public:
 						FINAL_SCORE, RETURN_MENU, EXIT_GAME,
 						LETTERS
 					};
-	enum class MASK_ID {FULL, HALF, QUARTER};
-
 private:
 	struct data
 	{
@@ -50,13 +48,12 @@ public:
 	void ClearListPaint();
 
 	void AddToPaint(SPRITE_ID id, float x, float y);
-	void AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask);
-	void AddToPaint(SPRITE_ID id, float x, float y, unsigned int width, unsigned int height);
-	void AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, unsigned int width, unsigned int height);
-	void AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, unsigned int width, unsigned int height, int spriteCoordX, int spriteCoordY);
+	void AddToPaint(SPRITE_ID id, float x, float y, float alpha);
+	void AddToPaint(SPRITE_ID id, float x, float y, float alpha, 
+		unsigned int width, unsigned int height, int spriteCoordX, int spriteCoordY);
 
 private:
-	int GetMaskID(MASK_ID maskID);
+	int GetMaskID(float alpha);
 
 private:
 	Painter* _painter;

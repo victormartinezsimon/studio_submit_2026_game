@@ -44,8 +44,8 @@ void ImprovementSelectionState::Paint()
 	{
 		float x = SCREEN_WIDTH - _player->GetX();
 		float y = SCREEN_HEIGHT - _player->GetY();
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::ENEMY, x, y,
-									ENEMY_WIDTH, ENEMY_HEIGHT);
+		
+		_painterManager->AddToPaint(PainterManager::SPRITE_ID::ENEMY, x, y);
 	}
 }
 void ImprovementSelectionState::PaintUI()

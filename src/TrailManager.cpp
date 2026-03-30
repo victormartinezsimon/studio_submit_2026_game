@@ -37,22 +37,6 @@ void TrailManager::UpdateTrail(Trail& trail, const float deltaTime)
 
 void TrailManager::PaintTrail(PainterManager* painter, Trail& trail)
 {
-	painter->AddToPaint(trail.sprite, trail.x, trail.y, GetMaskFromFrame(trail), trail.width, trail.height );
-}
-
-PainterManager::MASK_ID TrailManager::GetMaskFromFrame(Trail& trail) const
-{
 	float percent = trail.currentLive / trail.maxLive;
-
-	if(0.75f <= percent)
-	{
-		return PainterManager::MASK_ID::FULL; 
-	}
-
-	if(0.25f < percent && percent <= 0.75f)
-	{
-		return PainterManager::MASK_ID::HALF;
-	}
-	return PainterManager::MASK_ID::QUARTER;
-
+	painter->AddToPaint(trail.sprite, trail.x, trail.y, percent);
 }

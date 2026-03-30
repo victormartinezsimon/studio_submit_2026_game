@@ -117,13 +117,14 @@ void Plane::Paint(PainterManager* painter, PainterManager::SPRITE_ID spritePlane
 	{
 		float percent = currentTimeInmortal / TIME_INMORTAL;
 
-		PainterManager::MASK_ID mask = PainterManager::MASK_ID::HALF;
+		float alpha = 0.5f;
+
 		if ((percent >= 0.25 && percent <= 0.50) || (percent >= 0.75 && percent <= 1.0))
 		{
-			mask = PainterManager::MASK_ID::QUARTER;
+			alpha = 0.1f;
 		}
 
-		painter->AddToPaint(spritePlane,GetX(), GetY(), mask);
+		painter->AddToPaint(spritePlane, GetX(), GetY(), alpha);
 		//_spriteController.Paint(painter, GetX(),GetY());
 	}
 

@@ -53,7 +53,7 @@ void SpriteSheetController::PaintFrame(PainterManager* painter, float x, float y
 	int coordX, coordY;
 	GetCoordsForFrame(frameId, coordX, coordY);
 
-	painter->AddToPaint(_sprite, x, y, PainterManager::MASK_ID::FULL, _frameWidth, _frameHeight, coordX, coordY);
+	painter->AddToPaint(_sprite, x, y, 1.0f, _frameWidth, _frameHeight, coordX, coordY);
 }
 void SpriteSheetController::GetCoordsForFrame(int frameId, int& coordX, int& coordY) const
 {

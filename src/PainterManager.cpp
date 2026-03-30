@@ -137,25 +137,15 @@ void PainterManager::ClearListPaint()
 void PainterManager::AddToPaint(SPRITE_ID id, float x, float y)
 {
 	auto size = _sizes[id];
-	AddToPaint(id, x, y, MASK_ID::FULL, size.first, size.second);
+	AddToPaint(id, x, y, 1.0, size.first, size.second, 0,0);
 }
-void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask)
+void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, float alpha)
 {
 	auto size = _sizes[id];
-	AddToPaint(id, x, y, mask, size.first, size.second);
+	AddToPaint(id, x, y, alpha, size.first, size.second, 0,0);
 }
 
-void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, unsigned int width, unsigned int height)
-{
-	AddToPaint(id, x, y, MASK_ID::FULL, width, height);
-}
-
-void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, unsigned int width, unsigned int height)
-{
-	AddToPaint(id, x, y, mask, width, height, 0,0);
-}
-
-void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, unsigned int width, unsigned int height, int spriteCoordX, int spriteCoordY)
+void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, float alpha, unsigned int width, unsigned int height, int spriteCoordX, int spriteCoordY)
 {
 	if(_currentIndexToPaint < MAX_PAINTED_OBJECTS)
 	{
@@ -164,20 +154,24 @@ void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, MASK_ID mask, un
 		_toPaint[_currentIndexToPaint].height = height;
 		_toPaint[_currentIndexToPaint].x = x - width/2;
 		_toPaint[_currentIndexToPaint].y = y - height/2;
-		_toPaint[_currentIndexToPaint].mask = GetMaskID(mask);
+		_toPaint[_currentIndexToPaint].mask = GetMaskID(alpha);
 		_toPaint[_currentIndexToPaint].spriteCoordX = spriteCoordX;
 		_toPaint[_currentIndexToPaint].spriteCoordY = spriteCoordY;
 		++_currentIndexToPaint;
 	}
 }
 
-int PainterManager::GetMaskID(MASK_ID maskID)
+int PainterManager::GetMaskID(float alpha)
 {
-	switch (maskID)
+	if(alpha < 0.25)
 	{
-		case MASK_ID::FULL: return 0;
-		case MASK_ID::HALF: return 1;
-		case MASK_ID::QUARTER: return 2;
+		return 2;//quarter
 	}
-	return 0;
+
+	if(alpha < 0.75)
+	{
+		return 1; //half
+	}
+
+	return 0;//full
 }

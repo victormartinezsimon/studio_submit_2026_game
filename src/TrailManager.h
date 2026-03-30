@@ -39,7 +39,6 @@ private:
 	void Configure(Trail& trail, float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite);
 	void UpdateTrail(Trail& trail, const float deltaTime);
 	void PaintTrail(PainterManager* painter, Trail& trail);
-	PainterManager::MASK_ID GetMaskFromFrame(Trail& trail) const;
 	
 private:
 	Pool<Trail, MAX_TRAILS> _poolTrail;

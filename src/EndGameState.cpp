@@ -31,8 +31,7 @@ State::STATES EndGameState::Update(const float deltaTime, float _currentFrameInp
 void EndGameState::Paint()
 {
 	{
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER, _player->GetX(), _player->GetY(),
-									_player->GetWidth(), _player->GetHeight() );
+		_player->Paint(_painterManager);
 	}
 
 	{
