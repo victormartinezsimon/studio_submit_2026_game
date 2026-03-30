@@ -7,31 +7,27 @@ class Explosion : public WorldObject
 {
 public:
 
-	void Update(const float deltaTime)
+
+	void Update(const float deltaTime) override
 	{
-		_duration -= deltaTime;
-		if(_duration <0)
+		bool ended = _spriteController.Update(deltaTime);
+
+		if(ended)
 		{
-			_callbackEnd(this);
+			_callbackEnd(*this);
 		}
 	}
 
-	void SetCallbackEnd(std::function<void(Explosion*)> callbackEnd)
+	void SetCallbackEnd(std::function<void(Explosion&)> callbackEnd)
 	{
 		_callbackEnd = callbackEnd;
 	}
 
-	void SetDuration(float duration)
+	void ConfigureSprite(PainterManager* painter) override
 	{
-		_duration = duration;
-	}
-
-	void Paint(PainterManager* painter) override
-	{
-		painter->AddToPaint(PainterManager::SPRITE_ID::EXPLOSION, GetX(), GetY());
+		_spriteController.Configure(painter, PainterManager::SPRITE_ID::EXPLOSION, 3,3, 0.2);
 	}
 
 private:
-	float _duration = 0;
-	std::function<void(Explosion*)> _callbackEnd;
+	std::function<void(Explosion&)> _callbackEnd;
 };

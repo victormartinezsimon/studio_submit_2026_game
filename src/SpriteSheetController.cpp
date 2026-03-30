@@ -7,7 +7,7 @@ SpriteSheetController::SpriteSheetController():_cols(1), _rows(1),_frameDuration
 	
 }
 
-void SpriteSheetController::Configure(	const PainterManager* painter, unsigned int cols, unsigned int rows, float frameDuration, PainterManager::SPRITE_ID sprite)
+void SpriteSheetController::Configure( const PainterManager* painter, PainterManager::SPRITE_ID sprite, unsigned int cols, unsigned int rows, float frameDuration)
 {
 	_sprite = sprite;
 	_cols = cols;
@@ -21,6 +21,11 @@ void SpriteSheetController::Configure(	const PainterManager* painter, unsigned i
 	painter->GetSpriteSize(_sprite, w,h);
 	_frameWidth = (w / _cols);
 	_frameHeight = (h/ _rows);
+}
+
+void SpriteSheetController::Configure(	const PainterManager* painter,  PainterManager::SPRITE_ID sprite)
+{
+	Configure(painter, sprite, 1, 1, -1);
 }
 
 

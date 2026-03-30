@@ -6,9 +6,10 @@
 class Plane : public WorldObject
 {
 public:
-	void Update(const float deltaTime);
+	void Update(const float deltaTime) override;
 	void Reset(float value);
 	void Paint(PainterManager* painter) override;
+	void ConfigureSprite(PainterManager* painter) override;
 
 public:
 	void SetCallbackFire(std::function<void(int, const Plane&)> fun);
@@ -48,4 +49,5 @@ private:
 	int _bulletsPerShot = 1;
 	float _timeInmortal = 0;
 	int _randomMovementID = -1;
+	SpriteSheetController _spriteControllerShield;
 };

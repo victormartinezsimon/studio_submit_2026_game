@@ -1,12 +1,20 @@
 #pragma once
 #include <utility>
+#include "SpriteSheetController.h"
 
 class PainterManager;
+
 
 class WorldObject
 {
 public:
-	virtual void Paint(PainterManager* painter) = 0;
+	virtual void Paint(PainterManager* painter)
+	{
+		_spriteController.Paint(painter, GetX(), GetY());
+	}
+	
+	virtual void ConfigureSprite(PainterManager* painter) = 0;
+	virtual void Update(const float deltaTime) = 0;
 
 public:
 	float GetX() const
@@ -78,4 +86,5 @@ protected:
 
 	unsigned char _playerTeam = 0;
 	int _id = -1;
+	SpriteSheetController _spriteController;
 };

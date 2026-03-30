@@ -21,6 +21,7 @@ void Bullet::Update(const float deltaTime)
 
 	float newY = deltaTime * _velocityY;
 	_Y += newY;
+
 }
 
 void Bullet::SetHasPenetration(bool value)
@@ -43,7 +44,7 @@ bool Bullet::GetHasExplostion() const
 	return _hasExplosion;
 }
 
-void Bullet::Paint(PainterManager* painter)
+void Bullet::ConfigureSprite(PainterManager* painter)
 {
-	painter->AddToPaint(PainterManager::SPRITE_ID::BULLET, GetX(), GetY());
+	_spriteController.Configure(painter, PainterManager::SPRITE_ID::BULLET );
 }

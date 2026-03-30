@@ -121,6 +121,7 @@ void ImprovementSelectionState::OnEnter()
 
 	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
+	_player->ConfigureSprite(_painterManager);
 	_doingFadeOut = false;
 }
 void ImprovementSelectionState::OnExit()

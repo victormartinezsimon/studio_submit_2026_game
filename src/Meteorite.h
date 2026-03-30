@@ -1,7 +1,8 @@
 #pragma once
 #include <functional>
 #include "WorldObject.h"
-#include "PainterManager.h"
+
+class PainterManager;
 
 class Meteorite : public WorldObject
 {
@@ -31,9 +32,9 @@ public:
 		return _moveLeft;
 	}
 
-	void Paint(PainterManager* painter)override
+	void ConfigureSprite(PainterManager* painter) override
 	{
-		painter->AddToPaint(PainterManager::SPRITE_ID::METEORITE, GetX(), GetY());
+		_spriteController.Configure(painter, PainterManager::SPRITE_ID::METEORITE);
 	}
 
 

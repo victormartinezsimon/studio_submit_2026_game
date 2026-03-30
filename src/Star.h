@@ -1,7 +1,8 @@
 #pragma once
 #include <functional>
 #include "WorldObject.h"
-#include "PainterManager.h"
+
+class PainterManager;
 
 class Star : public WorldObject
 {
@@ -50,9 +51,9 @@ public:
 		return PainterManager::SPRITE_ID::FAR_STAR;
 	}
 
-	void Paint(PainterManager* painter)override
+	void ConfigureSprite(PainterManager* painter) override
 	{
-		painter->AddToPaint(GetSprite(), GetX(), GetY());
+		_spriteController.Configure(painter, GetSprite() );
 	}
 
 private:

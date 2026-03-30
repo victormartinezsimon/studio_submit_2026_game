@@ -97,6 +97,7 @@ void MainMenuState::OnEnter()
 	_player->SetPositionY(POSITION_Y_PLAYER);
 	_player->SetPlayerTeam(TEAM_PLAYER);
 	_player->SetHasShield(false);
+	_player->ConfigureSprite(_painterManager);
 	_startingGame = false;
 }
 void MainMenuState::OnExit()

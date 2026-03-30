@@ -77,6 +77,7 @@ void EndGameState::OnEnter()
 	_nextState = STATES::END_GAME;
 	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
+	_player->ConfigureSprite(_painterManager);
 }
 void EndGameState::OnExit()
 {

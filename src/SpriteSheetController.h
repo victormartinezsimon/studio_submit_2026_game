@@ -14,7 +14,8 @@ class SpriteSheetController
 		void GetCoordsForFrame(int frameId, int& coordX, int& coordY)const;
 		void Reset();
 
-		void Configure(	const PainterManager* painter, unsigned int cols, unsigned int rows, float frameDuration, PainterManager::SPRITE_ID sprite);
+		void Configure(	const PainterManager* painter, PainterManager::SPRITE_ID sprite, unsigned int cols, unsigned int rows, float frameDuration);
+		void Configure(	const PainterManager* painter,  PainterManager::SPRITE_ID sprite);
 		void SetSprite(PainterManager::SPRITE_ID sprite);
 
 	private:

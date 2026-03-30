@@ -296,6 +296,7 @@ void GameManager::ConfigurePlane(Plane &p, const float posX, const float posY,
 	p.SetBulletsPerShot(data.bulletsPerShot);
 	p.SetFireRate(data.fireRate);
 	p.SetHasShield(data.hasShield);
+
 	if(isPlayer)
 	{
 		p.SetPlayerTeam(TEAM_PLAYER);
@@ -305,6 +306,8 @@ void GameManager::ConfigurePlane(Plane &p, const float posX, const float posY,
 		p.SetPlayerTeam(TEAM_ENEMY);
 	}
 	p.Reset(initialDelay);
+	p.ConfigureSprite(_painterManager);
+
 	p.SetCallbackFire([this, isPlayer, data](int sourceIndex, const Plane &p)
 					  { this->SpawnBullet(sourceIndex, p, isPlayer, data); });
 }
@@ -331,6 +334,7 @@ void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, c
 			_bulletsPool.call_for_element(id, [this, sourceIndex, p, forPlayer, data, velocityBulletX](Bullet &bullet)
 										{
 				bullet.SetSize(BULLET_WIDTH, BULLET_HEIGHT);
+				bullet.ConfigureSprite(_painterManager);
 
 				float positionX = p.GetX();
 				if (sourceIndex == 1)
@@ -345,7 +349,7 @@ void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, c
 
 				bullet.SetPosition(positionX, p.GetY());
 				bullet.SetVelocity(velocityBulletX, data.velocityBulletY);
-				bullet.SetSize(BULLET_WIDTH, BULLET_HEIGHT);
+
 				if(forPlayer)
 				{
 					bullet.SetPlayerTeam(TEAM_PLAYER);
@@ -510,10 +514,12 @@ void GameManager::ConfigureStar(Star& star)
 
 	star.SetVelocities(velocity, velocity*0.5);
 	star.SetMoveLeft(false);
+	star.ConfigureSprite(_painterManager);
 }
 void GameManager::ConfigureMeteoriteSpawn(Meteorite& meteorite)
 {
     meteorite.SetSize(METEORITE_WIDTH, METEORITE_HEIGHT);
+	meteorite.ConfigureSprite(_painterManager);
 
     bool goingLeft = _randomManager.GetNextIntValue() % 2;
     float velocity = _randomManager.GetValue(MIN_VELOCITY_METEORITE, MAX_VELOCITY_METEORITE, 100.0f);

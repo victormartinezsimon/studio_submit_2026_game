@@ -344,23 +344,18 @@ void BattleState::ConfigureExplosion(const int id, Explosion &exp, const Bullet 
     {
         y -= EXPLOSION_HEIGHT / 2;
     }
+    
     exp.SetPosition(x, y);
     exp.SetID(id);
-    exp.SetSize(EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
+    exp.SetSize(EXPLOSION_WIDTH/3, EXPLOSION_HEIGHT/3);
+    exp.ConfigureSprite(_painterManager);
     exp.SetPlayerTeam(bullet.GetPlayerTeam());
 
-    auto alphaID = _alphaManager->AddAlpha(EXPLOSION_DURATION,
-                                           x,
-                                           y,
-                                           PainterManager::SPRITE_ID::EXPLOSION,
-                                           EXPLOSION_WIDTH, EXPLOSION_HEIGHT
-                                          );
+    exp.SetCallbackEnd([&](Explosion& exp)
+    {
+        EndExplosion(exp);
+    });
 
-    _alphaManager->AddCallback(alphaID,
-                               [&]()
-                               {
-                                   EndExplosion(exp);
-                               });
 }
 
 void BattleState::ConfigureRandomMovement(Plane &plane)

@@ -7,10 +7,11 @@ public:
 	Bullet();
 
 public:
-	void SetVelocity(float velX, float velY);
-	void Update(const float deltaTime);
-	void Paint(PainterManager* painter)override;
+	void Update(const float deltaTime)override;
+	void ConfigureSprite(PainterManager* painter) override;
 
+public:
+void SetVelocity(float velX, float velY);
 
 public:
 	void SetHasPenetration(bool value);

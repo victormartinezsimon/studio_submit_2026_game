@@ -1,13 +1,14 @@
 #pragma once
 #include "Pool.h"
-#include "PainterManager.h"
+
+class PainterManager;
 
 template <typename T, unsigned int N>
 class Spawner : public WorldObject
 {
 public:
 	Spawner(float delaySpawn, PainterManager* painterManager)
-	: _delaySpawn(delaySpawn), _painterManager(painterManager)
+	: _delaySpawn(delaySpawn)
 	{}
 
 	void SetCallbackConfiguration(std::function<void(T& obj)> configureCallback)
@@ -35,9 +36,8 @@ public:
 	{
 		_objects.for_each_active([&](T& obj)
         {
-			obj.Paint(_painterManager);
+			obj.Paint(painter);
         });
-		
 	}
 
 	void Reset()
@@ -52,6 +52,14 @@ public:
 		{
 			fun(obj);
 		});
+	}
+
+	void ConfigureSprite(PainterManager* painter) override
+	{
+		_objects.for_each_active([&](T& obj)
+        {
+			obj.ConfigureSprite(painter);
+        });
 	}
 
 private:
@@ -86,5 +94,4 @@ private:
 	float _delaySpawn;
 	float _timeSpawn = 0;
 	std::function<void(T& obj)> _configureCallback = nullptr;
-	PainterManager* _painterManager;
 };

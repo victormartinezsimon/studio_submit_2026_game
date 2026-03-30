@@ -1,5 +1,6 @@
 #include "Plane.h"
 #include "GameConfig.h"
+#include "SpriteSheetController.h"
 
 void Plane::SetCallbackFire(std::function<void(int, const Plane&)> fun)
 {
@@ -108,25 +109,41 @@ void Plane::Paint(PainterManager* painter)
 void Plane::Paint(PainterManager* painter, PainterManager::SPRITE_ID spritePlane, PainterManager::SPRITE_ID spriteShield) const
 {
 	float currentTimeInmortal = GetTimeInmortal();
-        if (currentTimeInmortal <= 0)
-        {
-            painter->AddToPaint(spritePlane, GetX(), GetY());
-        }
-        else
-        {
-            float percent = currentTimeInmortal / TIME_INMORTAL;
+	if (currentTimeInmortal <= 0)
+	{
+		painter->AddToPaint(spritePlane, GetX(), GetY());
+	}
+	else
+	{
+		float percent = currentTimeInmortal / TIME_INMORTAL;
 
-            PainterManager::MASK_ID mask = PainterManager::MASK_ID::HALF;
-            if ((percent >= 0.25 && percent <= 0.50) || (percent >= 0.75 && percent <= 1.0))
-            {
-                mask = PainterManager::MASK_ID::QUARTER;
-            }
+		PainterManager::MASK_ID mask = PainterManager::MASK_ID::HALF;
+		if ((percent >= 0.25 && percent <= 0.50) || (percent >= 0.75 && percent <= 1.0))
+		{
+			mask = PainterManager::MASK_ID::QUARTER;
+		}
 
-            painter->AddToPaint(spritePlane,GetX(), GetY(), mask);
-        }
+		painter->AddToPaint(spritePlane,GetX(), GetY(), mask);
+		//_spriteController.Paint(painter, GetX(),GetY());
+	}
 
-        if (GetHasShield())
-        {
-            painter->AddToPaint(spriteShield, GetX(), GetY() );
-        }
+	if (GetHasShield())
+	{
+		_spriteControllerShield.Paint(painter, GetX(), GetY());
+	}
+}
+
+void Plane::ConfigureSprite(PainterManager* painter)
+{
+	if(_playerTeam ==  TEAM_PLAYER)
+	{
+		_spriteController.Configure(painter, PainterManager::SPRITE_ID::PLAYER);
+		_spriteControllerShield.Configure(painter, PainterManager::SPRITE_ID::PLAYER_SHIELD);
+	}
+	
+	if(_playerTeam ==  TEAM_ENEMY)
+	{
+		_spriteController.Configure(painter, PainterManager::SPRITE_ID::ENEMY);
+		_spriteControllerShield.Configure(painter, PainterManager::SPRITE_ID::ENEMY_SHIELD);
+	}
 }
