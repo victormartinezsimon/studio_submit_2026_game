@@ -99,6 +99,7 @@ void MainMenuState::OnEnter()
 	_player->SetHasShield(false);
 	_player->ConfigureSprite(_painterManager);
 	_startingGame = false;
+	_alphaMenu = 1.0f;
 }
 void MainMenuState::OnExit()
 {
