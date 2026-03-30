@@ -36,7 +36,6 @@ void Ease::BuildEase(float duration, float startX, float startY,
                             float endX, float endY, EASE_TYPES type, std::function<void(bool)> endCallback,
                             std::function<void(float currentX, float currentY, Ease& ease)> tickCallback)
 {
-    
     _acumTime = 0;
     _duration = duration;
     _endCallback = endCallback;
@@ -79,7 +78,11 @@ void Ease::GetValues(float &x, float &y) const
         x = pingPong(progress, _startX, _endX);
         y = pingPong(progress, _startY, _endY);
         break;
-    break;
+
+        case EASE_TYPES::LINEAL:
+        x = lineal(progress, _startX, _endX);
+        y = lineal(progress, _startY, _endY);
+        break;
     }
 }
 
@@ -142,4 +145,9 @@ float Ease::pingPong(float progress, float startValue, float endValue) const
     t = t * t * (3.0f - 2.0f * t);
 
     return startValue + t * (endValue - startValue);
+}
+
+float Ease::lineal(float progress, float startValue, float endValue) const
+{
+    return startValue + (endValue - startValue) * progress;
 }
