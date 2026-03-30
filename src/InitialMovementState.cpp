@@ -4,14 +4,12 @@
 #include "GameConfig.h"
 #include "Sprites.h"
 #include "EasingManager.h"
-#include "AlphaManager.h"
-
 
 InitialMovementState::InitialMovementState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
+        NumberManager* numberManager, 
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager,
 		 Pool<Plane, PLANES_POOL_SIZE>* enemiesPool) : 
-State(player, painter, numberManager, alphaManager, 
+State(player, painter, numberManager, 
 			easingManager, randomManager, buttonAManager), _enemiesPool(enemiesPool)
 {
 }

@@ -4,14 +4,13 @@
 #include "GameConfig.h"
 #include "Sprites.h"
 #include "Bullet.h"
-#include "AlphaManager.h"
 #include "EasingManager.h"
 #include "RandomManager.h"
 #include "TrailManager.h"
 
 BattleState::BattleState(
     Plane *player, PainterManager *painter,
-    NumberManager *numberManager, AlphaManager *alphaManager,
+    NumberManager *numberManager,
     EasingManager *easingManager, RandomManager *randomManager, ButtonA *buttonAManager,
     Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
     Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool,
@@ -20,7 +19,7 @@ BattleState::BattleState(
     long long *score, float *time, 
     Spawner<Meteorite, TOTAL_METEORITES> *spawnerMeteorites,
     TrailManager* trailManager)
-    : State(player, painter, numberManager, alphaManager,
+    : State(player, painter, numberManager,
             easingManager, randomManager, buttonAManager),
       _enemiesPool(enemiesPool), _bulletsPool(bulletsPool),
       _damagePlayerCallback(damagePlayerCallback), _damageEnemyCallback(damageEnemy),
@@ -69,7 +68,6 @@ void BattleState::PaintUI()
 void BattleState::OnEnter()
 {
     _easingManager->KillAll();
-    _alphaManager->FinishAll();
     _explosionPool.ReturnAll();
 
     _player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
@@ -313,6 +311,7 @@ void BattleState::ReturnEnemy(Plane &enemy)
 
     _easingManager->KillEase(enemy.GetRandomMovementID());
 
+    /*
     int id = _alphaManager->AddAlpha(ALPHA_TIME_DESTROY_PLANE, enemy.GetX(), enemy.GetY(),PainterManager::SPRITE_ID::ENEMY,
                                      ENEMY_WIDTH, ENEMY_HEIGHT );
     _alphaManager->AddCallback(id, [this]()
@@ -322,6 +321,9 @@ void BattleState::ReturnEnemy(Plane &enemy)
     {
         --_enemiesAlive;
     }
+    */
+   //TODO: add alpha for the enemies
+   --_enemiesAlive;
     _damageEnemyCallback(enemy.GetX(), enemy.GetY());
 }
 

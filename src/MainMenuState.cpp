@@ -5,12 +5,12 @@
 #include "Sprites.h"
 #include "ButtonA.h"
 #include "NumberManager.h"
-#include "AlphaManager.h"
+#include "EasingManager.h"
 
 MainMenuState::MainMenuState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
+        NumberManager* numberManager,
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager) 
-		: State(player, painter, numberManager, alphaManager, 
+		: State(player, painter, numberManager, 
 			easingManager, randomManager, buttonAManager), _startingGame(false)
 {
 }
@@ -106,13 +106,16 @@ void MainMenuState::OnExit()
 
 void MainMenuState::StartGame()
 {
-	_alphaManager->FinishAll();
 	_easingManager->KillAll();
 
+	//TODO: refactor this
+	/*
 	int id = _alphaManager->AddAlpha(ALPHA_TIME_ENTER_GAME, SCREEN_WIDTH * 0.5f, MAIN_MENU_COORDS::TITLE_Y, 
 		PainterManager::SPRITE_ID::TITLE);
 	_alphaManager->AddCallback(id, [this]() { _nextState = STATES::INITIAL_MOVEMENT; });
 	_startingGame = true;
+	*/
+	_nextState = STATES::INITIAL_MOVEMENT;
 }
 
 void MainMenuState::ExitGame()

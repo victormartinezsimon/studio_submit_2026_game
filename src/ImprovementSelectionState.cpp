@@ -5,13 +5,13 @@
 #include "Sprites.h"
 #include "ButtonA.h"
 #include "NumberManager.h"
-#include "AlphaManager.h"
 
 ImprovementSelectionState::ImprovementSelectionState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
+        NumberManager* numberManager,
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager, 
-            std::function<void(const std::string& optionForPlayer,const std::string& optionForEnemy )> callbackSeleccion) : 
-			State(player, painter, numberManager, alphaManager, 
+            std::function<void(const std::string& optionForPlayer,const std::string& optionForEnemy )> callbackSeleccion) 
+			: 
+			State(player, painter, numberManager,
 			easingManager, randomManager, buttonAManager), _callbackSeleccion(callbackSeleccion)
 {
 	InitializeImprovementsUI();
@@ -104,6 +104,8 @@ void ImprovementSelectionState::OnEnter()
 											  _callbackSeleccion(optionForPlayer, optionForEnemy);
 										  }
 
+										//TODO: refactor this
+										  /*
 										  int idLeft = _alphaManager->AddAlpha(ALPHA_TIME_ENTER_GAME,
 											 IMPROVEMENT_SELECTION_COORDS::OPTION_LEFT_X, SCREEN_HEIGHT * 0.5f,
 											_improvementsUI[_leftSelection]);
@@ -115,6 +117,8 @@ void ImprovementSelectionState::OnEnter()
 										  	_alphaManager->AddCallback(idLeft, [this]()
 																	{ _nextState = STATES::INITIAL_MOVEMENT; });
 											_doingFadeOut = true;
+											*/
+										  	_nextState = STATES::INITIAL_MOVEMENT;
 									  });
 
 	_nextState = STATES::IMPROVEMENT_SELECTOR;

@@ -7,13 +7,12 @@
 
 class ButtonA;
 class NumberManager;
-class AlphaManager;
 
 class ImprovementSelectionState: public State
 {
     public:
         ImprovementSelectionState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
+        NumberManager* numberManager, 
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager, 
             std::function<void(const std::string& optionForPlayer,const std::string& optionForEnemy )> callbackSeleccion);
         

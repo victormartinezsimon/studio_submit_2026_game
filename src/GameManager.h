@@ -12,7 +12,6 @@
 #include "PainterManager.h"
 #include "State.h"
 #include "NumberManager.h"
-#include "AlphaManager.h"
 #include "Spawner.h"
 #include "Star.h"
 #include "RandomManager.h"
@@ -96,7 +95,6 @@ private:
 	EasingManager _easingManager;
 	ButtonA _buttonAManager;
 	NumberManager _numberManager;
-	AlphaManager _alphaManager;
 	Spawner<Star, TOTAL_STARS> _spawnerStars;
 	RandomManager _randomManager;
 	TrailManager _trailManager;

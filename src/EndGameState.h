@@ -3,13 +3,12 @@
 
 class ButtonA;
 class NumberManager;
-class AlphaManager;
 
 class EndGameState: public State
 {
     public:
         EndGameState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
+        NumberManager* numberManager, 
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager);
         
     public:    

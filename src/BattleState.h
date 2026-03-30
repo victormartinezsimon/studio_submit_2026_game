@@ -13,7 +13,6 @@
 
 class Plane;
 class Bullet;
-class AlphaManager;
 class EasingManager;
 class RandomManager;
 class TrailManager;
@@ -23,7 +22,7 @@ class BattleState: public State
     public:
         
         BattleState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
+        NumberManager* numberManager, 
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager,
         Pool<Plane, PLANES_POOL_SIZE> *enemiesPool,
         Pool<Bullet, BULLETS_POOL_SIZE> *bulletsPool, 

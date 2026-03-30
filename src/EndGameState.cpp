@@ -5,7 +5,7 @@
 #include "Sprites.h"
 #include "ButtonA.h"
 #include "NumberManager.h"
-#include "AlphaManager.h"
+#include "EasingManager.h"
 
 //TODO: REFACTOR ALL THIS CLASS
 constexpr int FINAL_SCORE_Y = FINAL_SCORE_HEIGHT;
@@ -15,9 +15,9 @@ constexpr int SCORE_Y = 110;
 constexpr int SELECTOR_X = SCREEN_WIDTH/2;
 
 EndGameState::EndGameState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
+        NumberManager* numberManager,
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager) : 
-		State(player, painter, numberManager, alphaManager, 
+		State(player, painter, numberManager,  
 			easingManager, randomManager, buttonAManager)
 {
 }
@@ -64,7 +64,6 @@ void EndGameState::PaintUI()
 }
 void EndGameState::OnEnter()
 {
-	_alphaManager->FinishAll();
 	_easingManager->KillAll();
 
 	_buttonAManager->SelectInPosition(END_GAME_TIME_TO_MAIN_MENU, {SELECTOR_X- PLAYER_SELECTOR_WIDTH / 2, SELECTOR_X + PLAYER_SELECTOR_WIDTH / 2},

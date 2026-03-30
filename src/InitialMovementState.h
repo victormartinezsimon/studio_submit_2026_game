@@ -10,7 +10,7 @@ class InitialMovementState: public State
 {
     public:
         InitialMovementState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, AlphaManager* alphaManager,
+        NumberManager* numberManager,
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager,
          Pool<Plane, PLANES_POOL_SIZE>* enemiesPool);
         

@@ -22,7 +22,7 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	: _inputManager(input),
 	  _painterManager(painterManager), _currentLevel(0), 
 	  _currentStateLogic(State::STATES::MENU),_currentScore(0), _numberManager(_painterManager),
-	  _alphaManager(_painterManager), _spawnerStars(TIME_SPAWN_STAR, painterManager),
+	  _spawnerStars(TIME_SPAWN_STAR, painterManager),
 	  _spawnerMeteorites(TIME_SPAWN_METEORITE, painterManager)
 {
 	InitializeImprovementsFunctions();
@@ -37,23 +37,23 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 }
 void GameManager::InitializeStates()
 {
-	_statesLogic[State::STATES::MENU] = new MainMenuState(&_player, _painterManager, &_numberManager, &_alphaManager, 
+	_statesLogic[State::STATES::MENU] = new MainMenuState(&_player, _painterManager, &_numberManager, 
 		&_easingManager, &_randomManager, &_buttonAManager);
 	
-	_statesLogic[State::STATES::INITIAL_MOVEMENT] = new InitialMovementState(&_player, _painterManager, &_numberManager, &_alphaManager, 
+	_statesLogic[State::STATES::INITIAL_MOVEMENT] = new InitialMovementState(&_player, _painterManager, &_numberManager,
 		&_easingManager, &_randomManager, &_buttonAManager, &_enemiesPool);
 	
-	_statesLogic[State::STATES::IMPROVEMENT_SELECTOR] = new ImprovementSelectionState(&_player, _painterManager, &_numberManager, &_alphaManager, 
-		&_easingManager, &_randomManager, &_buttonAManager,
+	_statesLogic[State::STATES::IMPROVEMENT_SELECTOR] = new ImprovementSelectionState(&_player, _painterManager, 
+		&_numberManager, &_easingManager, &_randomManager, &_buttonAManager,
 	[this](const std::string& player, const std::string& enemy){ApplyImprovements(player, enemy);});
 	
-	_statesLogic[State::STATES::BATTLE] = new BattleState(&_player, _painterManager, &_numberManager, &_alphaManager, 
+	_statesLogic[State::STATES::BATTLE] = new BattleState(&_player, _painterManager, &_numberManager, 
 		&_easingManager, &_randomManager, &_buttonAManager,&_enemiesPool, &_bulletsPool,
 		[this](){DamagePlayer();}, 
 		[this](float x, float y){DamageEnemy(x, y);}, 
 		&_currentScore, &_currentTimePlaying, &_spawnerMeteorites, &_trailManager);
 	
-	_statesLogic[State::STATES::END_GAME] = new EndGameState(&_player, _painterManager, &_numberManager, &_alphaManager, 
+	_statesLogic[State::STATES::END_GAME] = new EndGameState(&_player, _painterManager, &_numberManager,
 		&_easingManager, &_randomManager, &_buttonAManager);
 }
 void GameManager::InitializeConstantValues()
@@ -160,10 +160,6 @@ bool GameManager::Update(const float deltaTime)
 	_easingManager.Update(deltaTime);
 	PROFILE_END(1);
 
-	PROFILE_BEGIN(2, "update alphamanager");
-	_alphaManager.Update(deltaTime);
-	PROFILE_END(2);
-
 	PROFILE_BEGIN(3, "update spawner starts");
 	if(deltaTime < MIN_TIME_TO_NOT_UPDATE_STARS )
 	{
@@ -257,7 +253,6 @@ void GameManager::Paint()
 	
 	_statesLogic[_oldStateLogic]->Paint();
 	_statesLogic[_oldStateLogic]->PaintUI();
-	_alphaManager.Paint();
 	_spawnerMeteorites.Paint(_painterManager);
 	_trailManager.Paint(_painterManager);
 	_spawnerStars.Paint(_painterManager);
@@ -389,6 +384,8 @@ void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID,
 
 	for(auto spriteID : elements)
 	{
+		//TODO: change this to a new easing
+		/*
 		int alphaID = _alphaManager.AddAlpha(DURATION_EASING_SCORE,
 			currentX, currentY, spriteID, NUMBER_0_WIDTH, NUMBER_0_HEIGHT
 			);
@@ -404,6 +401,7 @@ void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID,
 		);
 		_easingManager.SetReferenceIDToEase(easeID, alphaID);
 		currentX -= NUMBER_0_WIDTH;
+		*/
 	}
 }
 void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const
