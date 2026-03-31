@@ -63,11 +63,12 @@ void BattleState::PaintUI()
         float value = *_timeLeft;
         _numberManager->PaintNumber(MAX_SECS_PLAYING - value, TIME_POSITION_X, SCORE_POSITION_Y, 3, NumberManager::PIVOT::LEFT);
     }
+
+    _enemiesDeathAnimation.Paint(_painterManager);
 }
 
 void BattleState::OnEnter()
 {
-    _easingManager->KillAll();
     _explosionPool.ReturnAll();
 
     _player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
@@ -311,17 +312,31 @@ void BattleState::ReturnEnemy(Plane &enemy)
 
     _easingManager->KillEase(enemy.GetRandomMovementID());
 
-    int id = _easingManager->AddEase(ALPHA_TIME_DESTROY_PLANE, 100.0, 100.0, 0, 0.0,Ease::EASE_TYPES::LINEAL,
-    [&](bool forced, int noUsed){--_enemiesAlive; _enemiesPool->Release(enemy);},
-    [&](float x, float y, Ease& ease, float percent){
+    int idAnimDeath = _enemiesDeathAnimation.Get();
+    _enemiesDeathAnimation.call_for_element(idAnimDeath, [&](WorldObject& obj)
+		{
+			SpriteSheetController* sprite = obj.GetSpriteController();
+			sprite->Configure(_painterManager, PainterManager::SPRITE_ID::ENEMY);
+		});
+		
+    int idEase = _easingManager->AddEase(DURATION_EASING_SCORE, enemy.GetX(), enemy.GetY(), enemy.GetX(), enemy.GetY(), Ease::EASE_TYPES::LINEAL, 
+                [&](bool forced, int idNum)
+                {
+                    _enemiesDeathAnimation.Release(idNum);
+                    --_enemiesAlive;
+                },
+                [&](float x, float y, Ease& ease, float percent)
+                {
+                    int numberAnimID = ease.GetReferenceID();
+                    _enemiesDeathAnimation.call_for_element(numberAnimID, [&](WorldObject& obj){
+                        obj.SetAlpha(1- percent);
+                        obj.SetPosition(x, y);
+                    });
+                });
+    _easingManager->SetReferenceIDToEase(idEase, idAnimDeath);
 
-       enemy.SetAlpha(1 - percent);
-    }
-    );
+    _enemiesPool->Release(enemy);
 
-    //TODO: set enemy as dead, so it can't give more points
-
-    _easingManager->SetReferenceIDToEase(id, enemy.GetID());
     _damageEnemyCallback(enemy.GetX(), enemy.GetY());
 }
 

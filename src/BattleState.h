@@ -92,4 +92,6 @@ class BattleState: public State
         int _currentLevel;
         Spawner<Meteorite, TOTAL_METEORITES>* _spawnerMeteorites;
         TrailManager* _trailManager;
+        Pool<WorldObject, PLANES_POOL_SIZE> _enemiesDeathAnimation;
+
 };

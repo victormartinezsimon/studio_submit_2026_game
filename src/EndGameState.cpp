@@ -64,8 +64,6 @@ void EndGameState::PaintUI()
 }
 void EndGameState::OnEnter()
 {
-	_easingManager->KillAll();
-
 	_buttonAManager->SelectInPosition(END_GAME_TIME_TO_MAIN_MENU, {SELECTOR_X- PLAYER_SELECTOR_WIDTH / 2, SELECTOR_X + PLAYER_SELECTOR_WIDTH / 2},
 									  [this](int selection)
 									  {
