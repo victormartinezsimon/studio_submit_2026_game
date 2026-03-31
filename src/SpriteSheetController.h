@@ -10,7 +10,9 @@ class SpriteSheetController
 	public:
 		bool Update(const float deltaTime);
 		void Paint(PainterManager* painter, float x, float y)const;
+		void Paint(PainterManager* painter, float x, float y, float alpha)const;
 		void PaintFrame(PainterManager* painter, float x, float y, int frameId)const;
+		void PaintFrame(PainterManager* painter, float x, float y, int frameId, float alpha)const;
 		void GetCoordsForFrame(int frameId, int& coordX, int& coordY)const;
 		void Reset();
 

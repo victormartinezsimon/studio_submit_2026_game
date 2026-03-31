@@ -42,17 +42,27 @@ bool SpriteSheetController::Update(const float deltaTime)
 	return _timeAcum > _totalDuration;
 
 }
+
 void SpriteSheetController::Paint(PainterManager* painter, float x, float y)const
+{
+	Paint(painter, x, y, 1.0f);
+}
+
+void SpriteSheetController::Paint(PainterManager* painter, float x, float y, float alpha)const
 {
 	int frameID = _timeAcum / _frameDuration;
 	PaintFrame(painter, x, y, frameID);
 }
 void SpriteSheetController::PaintFrame(PainterManager* painter, float x, float y, int frameId) const
 {
+	PaintFrame(painter, x, y, frameId, 1.0f);
+}
+void SpriteSheetController::PaintFrame(PainterManager* painter, float x, float y, int frameId, float alpha) const
+{
 	int coordX, coordY;
 	GetCoordsForFrame(frameId, coordX, coordY);
 
-	painter->AddToPaint(_sprite, x, y, 1.0f, _frameWidth, _frameHeight, coordX, coordY);
+	painter->AddToPaint(_sprite, x, y, alpha, _frameWidth, _frameHeight, coordX, coordY);
 }
 void SpriteSheetController::GetCoordsForFrame(int frameId, int& coordX, int& coordY) const
 {
