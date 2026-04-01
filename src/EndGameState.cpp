@@ -20,16 +20,26 @@ EndGameState::EndGameState(Plane *player, PainterManager *painter,
 		State(player, painter, numberManager,  
 			easingManager, randomManager, buttonAManager)
 {
+
+	_bestscores[0].name = "AAA"; _bestscores[0].points = 1000;
+	_bestscores[1].name = "BBB"; _bestscores[1].points = 900;
+	_bestscores[2].name = "CCC"; _bestscores[2].points = 800;
+	_bestscores[3].name = "DDD"; _bestscores[3].points = 700;
+	_bestscores[4].name = "EEE"; _bestscores[4].points = 600;
+
+
+	_letters.Configure(painter, PainterManager::SPRITE_ID::LETTERS, 13, 2, -1);
 }
 
 State::STATES EndGameState::Update(const float deltaTime, float _currentFrameInputValueNormalized)
 {
-	_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized);
+	//_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized);
 
 	return _nextState;
 }
 void EndGameState::Paint()
 {
+	/*/
 	{
 		_player->Paint(_painterManager);
 	}
@@ -39,10 +49,23 @@ void EndGameState::Paint()
 		float w = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER);
 		_numberManager->PaintNumber(time, _player->GetX() -w/2, _player->GetY(), 1, NumberManager::PIVOT::RIGHT);
 	}
+	*/
 }
 
 void EndGameState::PaintUI()
 {
+
+	int positionX = SCREEN_WIDTH * 0.5f;
+	int positionY = SCREEN_HEIGHT * 0.1f;
+
+	for(int i = 0; i < _bestscores.size(); ++i)
+	{
+		PaintScore(i, positionX, positionY);
+		positionY += (_letters.GetHeight() + 5);
+	}
+
+
+	/*
 	{
 		_numberManager->PaintNumber(_score, SCREEN_WIDTH * 0.5f, SCORE_Y, 3, NumberManager::PIVOT::CENTER);
 	}
@@ -61,9 +84,12 @@ void EndGameState::PaintUI()
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::RETURN_MENU,
 									  SELECTOR_X, RETURN_Y);
 	}
+	*/
 }
 void EndGameState::OnEnter()
 {
+	_nextState = STATES::END_GAME;
+	/*
 	_buttonAManager->SelectInPosition(END_GAME_TIME_TO_MAIN_MENU, {SELECTOR_X- PLAYER_SELECTOR_WIDTH / 2, SELECTOR_X + PLAYER_SELECTOR_WIDTH / 2},
 									  [this](int selection)
 									  {
@@ -74,6 +100,7 @@ void EndGameState::OnEnter()
 	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
 	_player->ConfigureSprite(_painterManager);
+	*/
 }
 void EndGameState::OnExit()
 {
@@ -81,5 +108,21 @@ void EndGameState::OnExit()
 
 void EndGameState::Configure(float score)
 {
-	_score = score;
+	_playerScore = score;
+}
+
+void EndGameState::PaintScore(int index, float x, float y)
+{
+	//paint letters
+	int letterX = x -  _letters.GetWidth();
+	for(int i = 2; i>= 0;--i)
+	{
+		char letter = _bestscores[index].name[i];
+		int frame =  letter - 'A';
+		_letters.PaintFrame(_painterManager, letterX, y, frame);
+		letterX -= (_letters.GetWidth()+5);
+	}
+
+	//paint numbers
+	_numberManager->PaintNumber(_bestscores[index].points, x, y, 4, NumberManager::PIVOT::LEFT);
 }

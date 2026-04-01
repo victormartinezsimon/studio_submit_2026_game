@@ -1,27 +1,44 @@
 #pragma once
 #include "State.h"
+#include "SpriteSheetController.h"
+#include <array>
+#include <string>
 
 class ButtonA;
 class NumberManager;
 
-class EndGameState: public State
+class EndGameState : public State
 {
-    public:
-        EndGameState(Plane *player, PainterManager *painter, 
-        NumberManager* numberManager, 
-        EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager);
-        
-    public:    
-        STATES Update(const float deltaTime, float _currentFrameInputValueNormalized)override;
-        void Paint()override;
-        void PaintUI()override;
-        void OnEnter()override;
-        void OnExit()override;
+private:
+    struct Score
+    {
+        std::string name;
+        int points;
+    };
 
-    public:
-        void Configure(float score);
 
-    private:
-        STATES _nextState;
-        float _score;
+public:
+    EndGameState(Plane *player, PainterManager *painter,
+                 NumberManager *numberManager,
+                 EasingManager *easingManager, RandomManager *randomManager, ButtonA *buttonAManager);
+
+public:
+    STATES Update(const float deltaTime, float _currentFrameInputValueNormalized) override;
+    void Paint() override;
+    void PaintUI() override;
+    void OnEnter() override;
+    void OnExit() override;
+
+public:
+    void Configure(float score);
+
+private:
+    void PaintScore(int index, float x, float y);
+private:
+    STATES _nextState;
+    float _playerScore;
+    SpriteSheetController _letters;
+    NumberManager *_numbers;
+
+    std::array<Score, 5> _bestscores;
 };
