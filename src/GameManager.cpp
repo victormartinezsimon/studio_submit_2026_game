@@ -2,7 +2,7 @@
 #include "InputManager.h"
 #include "Plane.h"
 #include "Bullet.h"
-#include "Sprites.h"
+#include "Sprites.h" //TODO: remove this inclusion
 #include <ctime>
 #include <random>
 #include "MainMenuState.h"

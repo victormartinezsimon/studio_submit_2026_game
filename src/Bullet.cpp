@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include <cmath>
 #include "GameConfig.h"
-#include "Sprites.h"
+#include "Sprites.h" //TODO: remove this inclusion
 #include "PainterManager.h"
 
 Bullet::Bullet() : _velocityX(0), _velocityY(0)

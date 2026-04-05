@@ -1,6 +1,6 @@
 #include "PainterManager.h"
 #include "Painter.h"
-#include "sprites.h"
+#include "Sprites.h"
 
 PainterManager::PainterManager()
 {

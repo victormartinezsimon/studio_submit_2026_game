@@ -2,7 +2,7 @@
 #include "PainterManager.h"
 #include "Plane.h"
 #include "GameConfig.h"
-#include "Sprites.h"
+#include "Sprites.h" //TODO: remove this inclusion
 #include "ButtonA.h"
 #include "NumberManager.h"
 #include "EasingManager.h"

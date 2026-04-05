@@ -2,7 +2,7 @@
 #include "PainterManager.h"
 #include "Plane.h"
 #include "GameConfig.h"
-#include "Sprites.h"
+#include "Sprites.h" //TODO: remove this inclusion
 #include "EasingManager.h"
 
 InitialMovementState::InitialMovementState(Plane *player, PainterManager *painter, 
