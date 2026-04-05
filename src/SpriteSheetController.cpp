@@ -1,6 +1,4 @@
 #include "SpriteSheetController.h"
-#include <cstdio>
-
 
 SpriteSheetController::SpriteSheetController():_cols(1), _rows(1),_frameDuration(-1), _timeAcum(0),
 	 _totalFrames(1), _totalDuration(-1)
@@ -73,19 +71,6 @@ void SpriteSheetController::GetCoordsForFrame(int frameId, int& coordX, int& coo
 
 	coordX = _frameWidth * col;
 	coordY = _frameHeight * row;
-
-	if(frameId >= 20)
-	{
-		FILE* f = fopen("log.txt", "a");
-		if(f)
-		{
-			char buff[256];
-			sprintf(buff, "frameID: %d, row: %d, col:%d, X: %d, Y: %d, frameW: %u, frameH: %d\n", 
-				frameId, row, col, coordX, coordY, _frameWidth, _frameHeight);
-			fputs(buff, f);
-			fclose(f);
-		}
-	}
 }
 
 void SpriteSheetController::SetSprite(PainterManager::SPRITE_ID sprite, float width, float height)
