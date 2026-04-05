@@ -140,8 +140,6 @@ void EndGameState::Configure(float score)
 
 void EndGameState::CalculateIndexPlayerScore()
 {
-	_playerIndexScore = 0;
-	return;
 	for(int i = 0; i < _bestscores.size(); ++i)
 	{
 		if(_bestscores[i].points < _playerScore)

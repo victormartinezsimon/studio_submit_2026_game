@@ -91,17 +91,17 @@ PainterManager::PainterManager()
 
 }
 
-void PainterManager::GetSpriteSize(SPRITE_ID id, float& width, float& height)const
+void PainterManager::GetSpriteSize(SPRITE_ID id, unsigned int& width, unsigned int& height)const
 {
 	width = _sizes.at(id).first;
 	height = _sizes.at(id).second;
 }
 
-float PainterManager::GetWidth(SPRITE_ID id)const
+unsigned int PainterManager::GetWidth(SPRITE_ID id)const
 {
 	return _sizes.at(id).first;
 }
-float PainterManager::GetHeight(SPRITE_ID id)const
+unsigned int PainterManager::GetHeight(SPRITE_ID id)const
 {
 	return _sizes.at(id).second;
 }
@@ -119,7 +119,7 @@ void PainterManager::Paint() const
 
 	for(int index = _currentIndexToPaint-1; index >= 0; --index)
 	{
-		float w, h;
+		unsigned int w, h;
 		GetSpriteSize(_toPaint[index].id, w, h);
 		_painter->PaintItem(_sprites.at(_toPaint[index].id), _toPaint[index].width, _toPaint[index].height, _toPaint[index].x, _toPaint[index].y, 
 		_toPaint[index].mask, _toPaint[index].spriteCoordX, _toPaint[index].spriteCoordY,

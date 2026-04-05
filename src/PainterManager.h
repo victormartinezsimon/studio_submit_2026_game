@@ -40,9 +40,9 @@ public:
 	void Paint() const;
 
 	Painter* GetPainter(){return _painter;}
-	void GetSpriteSize(SPRITE_ID id, float& width, float& height)const;
-	float GetWidth(SPRITE_ID id)const;
-	float GetHeight(SPRITE_ID id)const;
+	void GetSpriteSize(SPRITE_ID id, unsigned int& width, unsigned int& height)const;
+	unsigned int GetWidth(SPRITE_ID id)const;
+	unsigned int GetHeight(SPRITE_ID id)const;
 
 public:
 	void ClearListPaint();
@@ -58,7 +58,7 @@ private:
 private:
 	Painter* _painter;
 	std::map<SPRITE_ID, const uint8_t*> _sprites;
-	std::map<SPRITE_ID, std::pair<int, int>> _sizes;
+	std::map<SPRITE_ID, std::pair<unsigned int, unsigned int>> _sizes;
 	std::array<data, MAX_PAINTED_OBJECTS> _toPaint;
 	int _currentIndexToPaint;
 };
