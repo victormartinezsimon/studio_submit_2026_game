@@ -81,6 +81,11 @@ void EndGameState::PaintUI()
 		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SELECTOR,
 									END_GAME_COORDS::ACCEPT_LETTER_X, 
 									END_GAME_COORDS::SELECTOR_Y);
+		
+		_painterManager->AddToPaint(PainterManager::SPRITE_ID::RETURN_MENU,
+									END_GAME_COORDS::RETURN_MENU_X, 
+									END_GAME_COORDS::RETURN_MENU_Y);
+		
 	}
 	
 }

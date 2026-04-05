@@ -42,4 +42,6 @@ namespace END_GAME_COORDS
     constexpr float SELECTOR_Y = IMPROVEMENT_SELECTION_COORDS::SELECTOR_Y_PLAYER;
     constexpr float SCORE_START_X = SCREEN_WIDTH * 0.5f;
     constexpr float SCORE_START_Y = SCREEN_HEIGHT * 0.1f;
+    constexpr float RETURN_MENU_X = ACCEPT_LETTER_X;
+    constexpr float RETURN_MENU_Y = MAIN_MENU_COORDS::START_Y;
 }
