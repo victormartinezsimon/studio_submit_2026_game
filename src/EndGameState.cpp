@@ -8,6 +8,8 @@
 #include "EasingManager.h"
 
 constexpr float TIME_BLINK_LETTER = 0.5f;
+constexpr float TIME_TO_SELECT_OPTION = 2;
+constexpr float LETTER_SEPARATION = 5;
 
 EndGameState::EndGameState(Plane *player, PainterManager *painter, 
         NumberManager* numberManager,
@@ -19,8 +21,7 @@ EndGameState::EndGameState(Plane *player, PainterManager *painter,
 	_bestscores[0].name = "AAA"; _bestscores[0].points = 1000;
 	_bestscores[1].name = "BBB"; _bestscores[1].points = 900;
 	_bestscores[2].name = "VMS"; _bestscores[2].points = 800;
-	_bestscores[3].name = "DDD"; _bestscores[3].points = 700;
-	_bestscores[4].name = "EEE"; _bestscores[4].points = -1;//always is a best score
+	_bestscores[3].name = "DDD"; _bestscores[3].points = -1;//always is a best score
 
 
 	_letters.Configure(painter, PainterManager::SPRITE_ID::LETTERS, 13, 2, -1);
@@ -28,7 +29,7 @@ EndGameState::EndGameState(Plane *player, PainterManager *painter,
 
 State::STATES EndGameState::Update(const float deltaTime, float _currentFrameInputValueNormalized)
 {
-	//_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized);
+	_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized);
 	_timeAcumBlink += deltaTime;
 	if(_timeAcumBlink > TIME_BLINK_LETTER)
 	{
@@ -38,51 +39,41 @@ State::STATES EndGameState::Update(const float deltaTime, float _currentFrameInp
 }
 void EndGameState::Paint()
 {
-	/*/
 	{
 		_player->Paint(_painterManager);
 	}
 
 	{
-		int time = _buttonAManager->GetLeftTime() + 1;
+		int time = static_cast<int>(_buttonAManager->GetLeftTime());
 		float w = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER);
 		_numberManager->PaintNumber(time, _player->GetX() -w/2, _player->GetY(), 1, NumberManager::PIVOT::RIGHT);
 	}
-	*/
 }
 
 void EndGameState::PaintUI()
 {
-	int positionX = SCREEN_WIDTH * 0.5f;
-	int positionY = SCREEN_HEIGHT * 0.1f;
+	int positionX = END_GAME_COORDS::SCORE_START_X;
+	int positionY = END_GAME_COORDS::SCORE_START_Y;
 
 	for(int i = 0; i < _bestscores.size(); ++i)
 	{
 		PaintSavedScore(i, positionX, positionY, i == _playerIndexScore);
-		positionY += (_letters.GetHeight() + 5);
+		positionY += (_letters.GetHeight() + LETTER_SEPARATION);
 	}
 
+	_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SELECTOR,
+									END_GAME_COORDS::DECREASE_LETTER_X, 
+  									END_GAME_COORDS::SELECTOR_Y);
 
-	/*
-	{
-		_numberManager->PaintNumber(_score, SCREEN_WIDTH * 0.5f, SCORE_Y, 3, NumberManager::PIVOT::CENTER);
-	}
+	_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SELECTOR,
+								END_GAME_COORDS::INCREASE_LETTER_X, 
+								END_GAME_COORDS::SELECTOR_Y);
 
-	{
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SELECTOR,
-									  SELECTOR_X, SELECTOR_Y);
-	}
+	_painterManager->AddToPaint(PainterManager::SPRITE_ID::PLAYER_SELECTOR,
+								END_GAME_COORDS::ACCEPT_LETTER_X, 
+								END_GAME_COORDS::SELECTOR_Y);
+
 	
-	{
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::FINAL_SCORE,
-									  SCREEN_WIDTH * 0.5f, FINAL_SCORE_Y);
-	}
-
-	{
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::RETURN_MENU,
-									  SELECTOR_X, RETURN_Y);
-	}
-	*/
 }
 void EndGameState::OnEnter()
 {
@@ -90,22 +81,13 @@ void EndGameState::OnEnter()
 	_timeAcumBlink = 0;
 	_indexLetterBlink = 0;
 
-	if(_playerIndexScore == -1)
-	{
-		_nextState = STATES::MENU;
-	}
-	/*
-	_buttonAManager->SelectInPosition(END_GAME_TIME_TO_MAIN_MENU, {SELECTOR_X- PLAYER_SELECTOR_WIDTH / 2, SELECTOR_X + PLAYER_SELECTOR_WIDTH / 2},
-									  [this](int selection)
-									  {
-										  _nextState = STATES::MENU;
-									  });
-
-	_nextState = STATES::END_GAME;
 	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
+	_player->ConfigureSprite(_painterManager);_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
+	_player->SetPositionY(POSITION_Y_PLAYER);
+	_player->SetPlayerTeam(TEAM_PLAYER);
+	_player->SetHasShield(false);
 	_player->ConfigureSprite(_painterManager);
-	*/
 }
 void EndGameState::OnExit()
 {
@@ -115,6 +97,25 @@ void EndGameState::Configure(float score)
 {
 	_playerScore = score;
 	CalculateIndexPlayerScore();
+	if(_playerIndexScore == -1)
+	{
+		ConfigureReturnToMenu();
+	}
+	else
+	{
+		
+		float playerSelectorWidth = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER_SELECTOR);
+
+		
+		_buttonAManager->SelectInPosition(TIME_TO_SELECT_OPTION, 
+			{END_GAME_COORDS::DECREASE_LETTER_X - playerSelectorWidth/2, END_GAME_COORDS::DECREASE_LETTER_X + playerSelectorWidth/2 },
+			{END_GAME_COORDS::INCREASE_LETTER_X - playerSelectorWidth/2, END_GAME_COORDS::INCREASE_LETTER_X + playerSelectorWidth/2 },
+			{END_GAME_COORDS::ACCEPT_LETTER_X - playerSelectorWidth/2, END_GAME_COORDS::ACCEPT_LETTER_X + playerSelectorWidth/2 },
+			[&](int option){CallbackButtonA(option);}
+		);
+
+		_buttonAManager->SetAutoRestart(true);
+	}
 }
 
 void EndGameState::CalculateIndexPlayerScore()
@@ -130,7 +131,6 @@ void EndGameState::CalculateIndexPlayerScore()
 	_playerIndexScore = -1;
 }
 
-
 void EndGameState::PaintSavedScore(int index, float x, float y, bool forPlayer)
 {
 	//paint letters
@@ -143,7 +143,7 @@ void EndGameState::PaintSavedScore(int index, float x, float y, bool forPlayer)
 		{
 			_letters.PaintFrame(_painterManager, letterX, y, frame);
 		}
-		letterX -= (_letters.GetWidth()+5);
+		letterX -= (_letters.GetWidth() + LETTER_SEPARATION);
 	}
 
 	//paint numbers
@@ -153,4 +153,40 @@ void EndGameState::PaintSavedScore(int index, float x, float y, bool forPlayer)
 		score = _playerScore;
 	}
 	_numberManager->PaintNumber(score, x, y, 4, NumberManager::PIVOT::LEFT);
+}
+
+void EndGameState::CallbackButtonA(int option)
+{
+	if(option == 2)
+	{
+		++_indexLetterBlink;
+		if(_indexLetterBlink >= 3)
+		{
+			ConfigureReturnToMenu();
+		}
+		return;
+	}
+
+	int increase = 0;
+	if(option == 0)
+	{
+		increase = -1;
+	}
+	else
+	{
+		increase = 1;
+	}
+
+	char currentLetter = _bestscores[_playerIndexScore].name[_indexLetterBlink];
+	currentLetter += increase;
+
+	if(currentLetter < 'A'){currentLetter = 'Z';}
+	if(currentLetter > 'Z'){currentLetter = 'A';}
+
+	_bestscores[_playerIndexScore].name[_indexLetterBlink] = currentLetter;	
+}
+
+void EndGameState::ConfigureReturnToMenu()
+{
+
 }

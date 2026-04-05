@@ -29,6 +29,7 @@ void ButtonA::SelectInPosition(float duration, std::pair<int, int> optionA, std:
 
     _acumTime = 0;
     _currentSelection = selectionNone;
+    _autoRestart = false;
 }
 
 void ButtonA::Update(float deltaTime, const float currentInputValueNormalized)
@@ -70,6 +71,7 @@ void ButtonA::Update(float deltaTime, const float currentInputValueNormalized)
             else
             {
                 _acumTime = 0;
+                _currentSelection = selectionNone;
             }
         }
     }
@@ -77,11 +79,24 @@ void ButtonA::Update(float deltaTime, const float currentInputValueNormalized)
     if (_acumTime >= _duration)
     {
         _callback(_currentSelection);
-        _enabled = false;
+        if(_autoRestart)
+        {
+            _currentSelection = selectionNone;
+            _acumTime = 0;
+        }
+        else
+        {
+            _enabled = false;
+        }
     }
 }
 
 float ButtonA::GetLeftTime() const
 {
     return _duration - _acumTime;
+}
+
+void ButtonA::SetAutoRestart(bool value)
+{
+    _autoRestart = value;
 }

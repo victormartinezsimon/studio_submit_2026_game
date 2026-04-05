@@ -16,6 +16,7 @@ public:
 	void SelectInPosition(float duration, std::pair<int, int> optionA, std::pair<int, int> optionB, std::pair<int, int> optionC, std::function<void(int)> callback);
 	void SelectInPosition(float duration, std::pair<int, int> optionA, std::pair<int, int> optionB, std::function<void(int)> callback);
 	void SelectInPosition(float duration, std::pair<int, int> optionA, std::function<void(int)> callback);
+	void SetAutoRestart(bool value);
 
 private:
 	bool _enabled = false;
@@ -26,4 +27,5 @@ private:
 	std::function<void(int)> _callback;
 	float _acumTime;
 	int _currentSelection = -1;
+	bool _autoRestart = false;
 };

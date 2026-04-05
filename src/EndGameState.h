@@ -35,14 +35,16 @@ public:
 private:
     void PaintSavedScore(int index, float x, float y, bool forPlayer);
     void CalculateIndexPlayerScore();
+    void CallbackButtonA(int option);
+    void ConfigureReturnToMenu();
 private:
     STATES _nextState;
     float _playerScore;
     SpriteSheetController _letters;
     NumberManager *_numbers;
 
-    std::array<Score, 5> _bestscores;
+    std::array<Score, 4> _bestscores;
     int _playerIndexScore;
     float _timeAcumBlink = 0;
-    int _indexLetterBlink =0;
+    int _indexLetterBlink = 0;
 };
