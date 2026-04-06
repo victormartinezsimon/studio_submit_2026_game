@@ -8,7 +8,7 @@
 #include "MainMenuState.h"
 #include "ImprovementSelectionState.h"
 #include "InitialMovementState.h"
-#include "EndGameState.h"
+#include "HighScoreState.h"
 #include "BattleState.h"
 #include "Star.h"
 #include "Profiler.h"
@@ -55,7 +55,7 @@ void GameManager::InitializeStates()
 		[this](float x, float y){DamageEnemy(x, y);}, 
 		&_currentScore, &_currentTimePlaying, &_spawnerMeteorites, &_trailManager);
 	
-	_statesLogic[State::STATES::HIGH_SCORES] = new EndGameState(&_player, _painterManager, &_numberManager,
+	_statesLogic[State::STATES::HIGH_SCORES] = new HighScoreState(&_player, _painterManager, &_numberManager,
 		&_easingManager, &_randomManager, &_buttonAManager);
 }
 void GameManager::InitializeConstantValues()
@@ -132,7 +132,7 @@ void GameManager::InitializeStatesBegin()
 	};
 	_statesBeginFunction[State::STATES::HIGH_SCORES] = [this]()
 	{
-		static_cast<EndGameState*>(_statesLogic[State::STATES::HIGH_SCORES])->Configure(_currentScore);
+		static_cast<HighScoreState*>(_statesLogic[State::STATES::HIGH_SCORES])->Configure(_currentScore);
 	};
 }
 bool GameManager::Update(const float deltaTime)

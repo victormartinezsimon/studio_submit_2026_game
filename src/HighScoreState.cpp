@@ -1,4 +1,4 @@
-#include "EndGameState.h"
+#include "HighScoreState.h"
 #include "PainterManager.h"
 #include "Plane.h"
 #include "GameConfig.h"
@@ -12,7 +12,7 @@ constexpr float TIME_BLINK_LETTER = 0.5f;
 constexpr float TIME_TO_SELECT_OPTION = 2;
 constexpr float LETTER_SEPARATION = 5;
 
-EndGameState::EndGameState(Plane *player, PainterManager *painter, 
+HighScoreState::HighScoreState(Plane *player, PainterManager *painter, 
         NumberManager* numberManager,
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager) : 
 		State(player, painter, numberManager,  
@@ -28,7 +28,7 @@ EndGameState::EndGameState(Plane *player, PainterManager *painter,
 	_letters.Configure(painter, PainterManager::SPRITE_ID::LETTERS, 13, 2, -1);
 }
 
-State::STATES EndGameState::Update(const float deltaTime, float _currentFrameInputValueNormalized)
+State::STATES HighScoreState::Update(const float deltaTime, float _currentFrameInputValueNormalized)
 {
 	_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized);
 	_timeAcumBlink += deltaTime;
@@ -38,7 +38,7 @@ State::STATES EndGameState::Update(const float deltaTime, float _currentFrameInp
 	}
 	return _nextState;
 }
-void EndGameState::Paint()
+void HighScoreState::Paint()
 {
 	{
 		_player->Paint(_painterManager);
@@ -51,7 +51,7 @@ void EndGameState::Paint()
 	}
 }
 
-void EndGameState::PaintUI()
+void HighScoreState::PaintUI()
 {
 	int positionX = END_GAME_COORDS::SCORE_START_X;
 	int positionY = END_GAME_COORDS::SCORE_START_Y;
@@ -89,7 +89,7 @@ void EndGameState::PaintUI()
 	}
 	
 }
-void EndGameState::OnEnter()
+void HighScoreState::OnEnter()
 {
 	_nextState = STATES::HIGH_SCORES;
 	_timeAcumBlink = 0;
@@ -103,11 +103,11 @@ void EndGameState::OnEnter()
 	_player->SetHasShield(false);
 	_player->ConfigureSprite(_painterManager);
 }
-void EndGameState::OnExit()
+void HighScoreState::OnExit()
 {
 }
 
-void EndGameState::Configure(float score)
+void HighScoreState::Configure(float score)
 {
 	_playerScore = score;
 	CalculateIndexPlayerScore();
@@ -138,7 +138,7 @@ void EndGameState::Configure(float score)
 	}
 }
 
-void EndGameState::CalculateIndexPlayerScore()
+void HighScoreState::CalculateIndexPlayerScore()
 {
 	for(int i = 0; i < _bestscores.size(); ++i)
 	{
@@ -151,7 +151,7 @@ void EndGameState::CalculateIndexPlayerScore()
 	_playerIndexScore = -1;
 }
 
-void EndGameState::PaintSavedScore(int index, float x, float y, bool forPlayer)
+void HighScoreState::PaintSavedScore(int index, float x, float y, bool forPlayer)
 {
 	//paint letters
 	int letterX = x -  _letters.GetWidth();
@@ -175,7 +175,7 @@ void EndGameState::PaintSavedScore(int index, float x, float y, bool forPlayer)
 	_numberManager->PaintNumber(score, x, y, 4, NumberManager::PIVOT::LEFT);
 }
 
-void EndGameState::CallbackButtonA(int option)
+void HighScoreState::CallbackButtonA(int option)
 {
 	if(option == 2)
 	{
@@ -208,7 +208,7 @@ void EndGameState::CallbackButtonA(int option)
 	_bestscores[_playerIndexScore].name[_indexLetterBlink] = currentLetter;	
 }
 
-void EndGameState::ConfigureReturnToMenu()
+void HighScoreState::ConfigureReturnToMenu()
 {
 	_playerIndexScore = -1;
 	_indexLetterBlink = -1;

@@ -7,7 +7,7 @@
 class ButtonA;
 class NumberManager;
 
-class EndGameState : public State
+class HighScoreState : public State
 {
 private:
     struct Score
@@ -18,7 +18,7 @@ private:
 
 
 public:
-    EndGameState(Plane *player, PainterManager *painter,
+    HighScoreState(Plane *player, PainterManager *painter,
                  NumberManager *numberManager,
                  EasingManager *easingManager, RandomManager *randomManager, ButtonA *buttonAManager);
 
