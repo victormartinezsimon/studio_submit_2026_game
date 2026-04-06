@@ -4,27 +4,7 @@
 
 NumberManager::NumberManager(PainterManager* painterManager): _painterManager(painterManager)
 {
-	_digitWidth[0] = NUMBER_0_WIDTH;
-	_digitWidth[1] = NUMBER_1_WIDTH;
-	_digitWidth[2] = NUMBER_2_WIDTH;
-	_digitWidth[3] = NUMBER_3_WIDTH;
-	_digitWidth[4] = NUMBER_4_WIDTH;
-	_digitWidth[5] = NUMBER_5_WIDTH;
-	_digitWidth[6] = NUMBER_6_WIDTH;
-	_digitWidth[7] = NUMBER_7_WIDTH;
-	_digitWidth[8] = NUMBER_8_WIDTH;
-	_digitWidth[9] = NUMBER_9_WIDTH;
-
-	_spriteIDs[0] = PainterManager::SPRITE_ID::NUMBER_0;
-	_spriteIDs[1] = PainterManager::SPRITE_ID::NUMBER_1;
-	_spriteIDs[2] = PainterManager::SPRITE_ID::NUMBER_2;
-	_spriteIDs[3] = PainterManager::SPRITE_ID::NUMBER_3;
-	_spriteIDs[4] = PainterManager::SPRITE_ID::NUMBER_4;
-	_spriteIDs[5] = PainterManager::SPRITE_ID::NUMBER_5;
-	_spriteIDs[6] = PainterManager::SPRITE_ID::NUMBER_6;
-	_spriteIDs[7] = PainterManager::SPRITE_ID::NUMBER_7;
-	_spriteIDs[8] = PainterManager::SPRITE_ID::NUMBER_8;
-	_spriteIDs[9] = PainterManager::SPRITE_ID::NUMBER_9;
+	_numbersSprite.Configure(painterManager, PainterManager::SPRITE_ID::NUMBERS, 5, 2, -1);
 }
 
 void NumberManager::PaintNumber(int number, int x, int y, int minDigits, PIVOT pivot)
@@ -48,26 +28,24 @@ void NumberManager::PaintRight(int number, int x, int y, int minDigits)
 {
 	int currentValue = number;
 	int digitsUsed = 0;
-	float w_0 = _painterManager->GetWidth(_spriteIDs[0]);
-	int currentX = x + w_0/2;
+	float w = _numbersSprite.GetWidth();
+	int currentX = x + w/2;
 	while(currentValue != 0)
 	{
 		int digit = currentValue % 10;
 		currentValue = currentValue/ 10;
 		++digitsUsed;
 
-		float w = _painterManager->GetWidth(_spriteIDs[digit]);
 		currentX -= w;
-		_painterManager->AddToPaint(_spriteIDs[digit], currentX, y);
+		_numbersSprite.PaintFrame(_painterManager, currentX, y, digit);
 	}
 
 	while(digitsUsed < minDigits)
 	{
 		int digit = 0;
 		++digitsUsed;
-		float w = _painterManager->GetWidth(_spriteIDs[digit]);
 		currentX -= w;
-		_painterManager->AddToPaint(_spriteIDs[digit], currentX, y);
+		_numbersSprite.PaintFrame(_painterManager, currentX, y, digit);
 	}
 }
 void NumberManager::PaintCenter(int number, int x, int y, int minDigits)
@@ -82,18 +60,32 @@ int NumberManager::GetSizeNumber(int number, int minDigits)
 unsigned int totalSize = 0;
 	int currentValue = number;
 	int digitsUsed = 0;
+	float w = _numbersSprite.GetWidth();
 	while(currentValue != 0)
 	{
 		int digit = currentValue % 10;
 		currentValue = currentValue/ 10;
 		++digitsUsed;
-		totalSize += _digitWidth[digit];
+		totalSize += w;
 	}
 
 	if(digitsUsed < minDigits)
 	{
 		int diff = minDigits - digitsUsed;
-		totalSize += (diff * _digitWidth[0]);
+		totalSize += (diff * w);
 	}
 	return totalSize;
+}
+
+void NumberManager::GetSize(unsigned int& w, unsigned int& h)const
+{
+	_numbersSprite.GetSize(w, h);
+}
+unsigned int NumberManager::GetWidth()const
+{
+	return _numbersSprite.GetWidth();
+}
+unsigned int NumberManager::GetHeight()const
+{
+	return _numbersSprite.GetHeight();
 }

@@ -80,17 +80,17 @@ void SpriteSheetController::SetSprite(PainterManager::SPRITE_ID sprite, float wi
 	_frameHeight = height;
 }
 
-void SpriteSheetController::GetSize(float& w, float& h) const
+void SpriteSheetController::GetSize(unsigned int& w, unsigned int& h) const
 {
 	w = _frameWidth;
 	h = _frameHeight;
 }
 
-float SpriteSheetController::GetWidth() const
+unsigned int SpriteSheetController::GetWidth() const
 {
 	return _frameWidth;
 }
-float SpriteSheetController::GetHeight() const
+unsigned int SpriteSheetController::GetHeight() const
 {
 	return _frameHeight;
 }

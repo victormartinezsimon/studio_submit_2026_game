@@ -27,7 +27,7 @@ public:
 		_spriteController.Configure(painter, PainterManager::SPRITE_ID::EXPLOSION, 3,3, 0.1);
 	}
 
-	void GetSize(float& w, float& h)
+	void GetSize(unsigned int& w, unsigned int& h)
 	{
 		_spriteController.GetSize(w, h);
 	}

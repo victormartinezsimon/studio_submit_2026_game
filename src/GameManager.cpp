@@ -17,9 +17,9 @@
 
 #include <stdio.h>
 
-constexpr std::array<PainterManager::SPRITE_ID, 2> SPRITE_IDS_ANIMATION_HIT = {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_1};
-constexpr std::array<PainterManager::SPRITE_ID, 2> SPRITE_IDS_ANIMATION_KILL = {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_5};
-constexpr std::array<PainterManager::SPRITE_ID, 3> SPRITE_IDS_ANIMATION_LEVEL = {PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_0, PainterManager::SPRITE_ID::NUMBER_1};
+constexpr std::array<int, 2> SPRITE_IDS_ANIMATION_HIT = {0, 1};
+constexpr std::array<int, 2> SPRITE_IDS_ANIMATION_KILL = {0, 5};
+constexpr std::array<int, 3> SPRITE_IDS_ANIMATION_LEVEL = {0,0,1};
 
 GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	: _inputManager(input),
@@ -258,7 +258,8 @@ void GameManager::Paint()
 
 	#ifdef DEBUG
 	int frameRate = 1 / _lastDeltaTime;
-	_numberManager.PaintNumber(frameRate, SCREEN_WIDTH, NUMBER_0_HEIGHT, 2, NumberManager::PIVOT::RIGHT);
+	unsigned int numberHeight = _numberManager.GetHeight();
+	_numberManager.PaintNumber(frameRate, SCREEN_WIDTH, numberHeight, 2, NumberManager::PIVOT::RIGHT);
 	#endif
 	
 	_statesLogic[_oldStateLogic]->Paint();
@@ -384,14 +385,16 @@ void GameManager::EndLevel()
 	AnimateNumberScore(SPRITE_IDS_ANIMATION_LEVEL, true);
 }
 template <unsigned int N>
-void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID, N> elements, bool up)
+void GameManager::AnimateNumberScore(const std::array<int, N> elements, bool up)
 {
-	float currentX = SCORE_POSITION_X - NUMBER_0_WIDTH/2;
+	unsigned int numberWidth, numberHeight;
+	_numberManager.GetSize(numberWidth, numberHeight);
+	float currentX = SCORE_POSITION_X - numberWidth/2;
 	float currentY = SCORE_POSITION_Y;
-	float endY = currentY - NUMBER_0_HEIGHT;
+	float endY = currentY - numberHeight;
 	if(!up)
 	{
-		endY = currentY + NUMBER_0_HEIGHT;
+		endY = currentY + numberHeight;
 	}
 
 	for(auto spriteID : elements)
@@ -400,8 +403,9 @@ void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID,
 
 		_numbersAnimation.call_for_element(idNumber, [&](WorldObject& obj)
 		{
-			SpriteSheetController* sprite = obj.GetSpriteController();
-			sprite->Configure(_painterManager, spriteID);
+			//TODO:: REVIEW THIS
+			//SpriteSheetController* sprite = obj.GetSpriteController();
+			//sprite->Configure(_painterManager, spriteID);
 		});
 		
 		int idEase = _easingManager.AddEase(DURATION_EASING_SCORE, currentX, currentY, currentX, endY, Ease::EASE_TYPES::LINEAL, 
@@ -419,7 +423,7 @@ void GameManager::AnimateNumberScore(const std::array<PainterManager::SPRITE_ID,
 						});
 					});
 		_easingManager.SetReferenceIDToEase(idEase, idNumber);
-		currentX -= NUMBER_0_WIDTH;
+		currentX -= numberWidth;
 	}
 }
 void GameManager::GetMinMaxXPosiblePositionForEnemies(float &minX, float &maxX) const

@@ -80,7 +80,7 @@ private:
 private:
 
 	template <unsigned int N>
-	void AnimateNumberScore(const std::array<PainterManager::SPRITE_ID, N> elements, bool up);
+	void AnimateNumberScore(const std::array<int, N> elements, bool up);
 
 private:
 	modifiable_data playerData;

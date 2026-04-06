@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include "PainterManager.h"
+#include "SpriteSheetController.h"
 
 class NumberManager 
 {
@@ -11,6 +12,10 @@ public:
 
 public:
 	void PaintNumber(int number, int x, int y, int minDigits, PIVOT pivot);
+	void GetSize(unsigned int& w, unsigned int& h)const;
+	unsigned int GetWidth()const;
+	unsigned int GetHeight()const;
+
 	
 private:
 	void PaintLeft(int number, int x, int y, int minDigits);
@@ -19,7 +24,6 @@ private:
 	int GetSizeNumber(int number, int minDigits);
 
 private:
-	std::array<float, 10> _digitWidth;
-	std::array<PainterManager::SPRITE_ID, 10> _spriteIDs;
 	PainterManager *_painterManager;
+	SpriteSheetController _numbersSprite;
 };

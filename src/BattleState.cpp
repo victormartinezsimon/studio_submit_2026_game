@@ -364,7 +364,7 @@ void BattleState::ConfigureExplosion(const int id, Explosion &exp, const Bullet 
     float x = bullet.GetX();
     float y = bullet.GetY();
 
-    float w,h;
+    unsigned int w,h;
     exp.GetSize(w,h);
 
     if (y <= 0)

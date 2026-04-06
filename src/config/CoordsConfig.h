@@ -3,7 +3,7 @@
 
 constexpr float POSITION_Y_PLAYER = 194;
 constexpr int SCORE_POSITION_X = SCREEN_WIDTH;
-constexpr int SCORE_POSITION_Y = SCREEN_HEIGHT - NUMBER_0_HEIGHT;
+constexpr int SCORE_POSITION_Y = SCREEN_HEIGHT - 23;
 constexpr int TIME_POSITION_X = 0;
 
 namespace MAIN_MENU_COORDS
