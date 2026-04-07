@@ -28,6 +28,7 @@ public:
         : _player(player), _painterManager(painter), _numberManager(numberManager),
          _easingManager(easingManager), 
         _randomManager(randomManager), _buttonAManager(buttonAManager) {};
+    virtual ~State() = default;
 
 public:
     virtual STATES Update(const float deltaTime, float _currentFrameInputValueNormalized) {return STATES::MENU;};

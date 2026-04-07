@@ -8,6 +8,7 @@ class PainterManager;
 class WorldObject
 {
 public:
+	virtual ~WorldObject() = default;
 	virtual void Paint(PainterManager* painter)
 	{
 		_spriteController.Paint(painter, GetX(), GetY(), _alpha);
@@ -86,7 +87,7 @@ public:
 	{
 		_alpha = alpha;
 	}
-	int GetAlpha() const
+	float GetAlpha() const
 	{
 		return _alpha;
 	}

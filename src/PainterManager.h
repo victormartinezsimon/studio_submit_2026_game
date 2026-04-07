@@ -59,5 +59,5 @@ private:
 	std::map<SPRITE_ID, const uint8_t*> _sprites;
 	std::map<SPRITE_ID, std::pair<unsigned int, unsigned int>> _sizes;
 	std::array<data, MAX_PAINTED_OBJECTS> _toPaint;
-	int _currentIndexToPaint;
+	int _currentIndexToPaint = 0;
 };

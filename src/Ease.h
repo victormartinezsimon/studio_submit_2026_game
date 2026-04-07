@@ -60,15 +60,15 @@ private:
 	float lineal(float percent, float startValue, float endValue)const;
 
 private:
-	float _acumTime;
-	EASE_TYPES _type;
-	float _duration;
-	float _startX;
-	float _startY;
-	float _endX;
-	float _endY;
+	float _acumTime = 0;
+	EASE_TYPES _type = EASE_TYPES::LINEAL;
+	float _duration = 0;
+	float _startX = 0;
+	float _startY = 0;
+	float _endX = 0;
+	float _endY = 0;
 	std::function<void(bool, int)> _endCallback = nullptr;
 	std::function<void(float currentX, float currentY, Ease& ease, float percent)> _tickCallback = nullptr;
-	int _id;
-	int _referenceID;
+	int _id = 0;
+	int _referenceID = 0;
 };

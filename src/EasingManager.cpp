@@ -40,7 +40,10 @@ int EasingManager::AddEase(float duration, float startX, float startY,
 
     if(easeID == -1)
     {
-        endCallback( false, -1 );//just in case    
+        if(endCallback)
+        {
+            endCallback( false, -1 );//just in case
+        }
     }
     return easeID;
 }

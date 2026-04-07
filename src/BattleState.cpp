@@ -309,9 +309,10 @@ void BattleState::DamagePlayer()
 
 void BattleState::ReturnEnemy(Plane &enemy)
 {
-    _enemiesPool->Release(enemy);
-
     _easingManager->KillEase(enemy.GetRandomMovementID());
+
+    float enemyX = enemy.GetX();
+    float enemyY = enemy.GetY();
 
     int idAnimDeath = _enemiesDeathAnimation.Get();
     _enemiesDeathAnimation.call_for_element(idAnimDeath, [&](WorldObject& obj)
@@ -320,7 +321,7 @@ void BattleState::ReturnEnemy(Plane &enemy)
 			sprite->Configure(_painterManager, PainterManager::SPRITE_ID::ENEMY);
 		});
 		
-    int idEase = _easingManager->AddEase(DURATION_EASING_SCORE, enemy.GetX(), enemy.GetY(), enemy.GetX(), enemy.GetY(), Ease::EASE_TYPES::LINEAL, 
+    int idEase = _easingManager->AddEase(DURATION_EASING_SCORE, enemyX, enemyY, enemyX, enemyY, Ease::EASE_TYPES::LINEAL, 
                 [&](bool forced, int idNum)
                 {
                     _enemiesDeathAnimation.Release(idNum);
@@ -338,7 +339,7 @@ void BattleState::ReturnEnemy(Plane &enemy)
 
     _enemiesPool->Release(enemy);
 
-    _damageEnemyCallback(enemy.GetX(), enemy.GetY());
+    _damageEnemyCallback(enemyX, enemyY);
 }
 
 void BattleState::DoExplosion(const Bullet &bullet)

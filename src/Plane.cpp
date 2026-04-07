@@ -53,7 +53,10 @@ void Plane::Update(const float deltaTime)
 		{
 			for (int i = 0; i < _bulletsTotalSources; ++i)
 			{
-				_callbackFire(i, *this);
+				if(_callbackFire)
+				{
+					_callbackFire(i, *this);
+				}
 			}
 		}
 		else

@@ -92,7 +92,7 @@ void GameManager::InitializeImprovementsFunctions()
 	_improvementFunctions[std::string(IMPROVEMENT_INCREASE_ORIGIN)] = [](modifiable_data &data)
 	{ data.bulletsSource = NEW_EXTRA_SOURCES; };
 	_improvementFunctions[std::string(IMPROVEMENT_INCREASE_FIRE_RATE)] = [](modifiable_data &data)
-	{ data.fireRate *INCREASE_FIRE_RATE; };
+	{ data.fireRate *= INCREASE_FIRE_RATE; };
 	_improvementFunctions[std::string(IMPROVEMENT_GIVE_PENETRATION)] = [](modifiable_data &data)
 	{ data.bulletHasPenetration = true; };
 	_improvementFunctions[std::string(IMPROVEMENT_GIVE_EXPLOSION)] = [](modifiable_data &data)
