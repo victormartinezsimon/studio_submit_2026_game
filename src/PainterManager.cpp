@@ -71,9 +71,6 @@ PainterManager::PainterManager()
 
 	_painter = new Painter();
 
-	//uint8_t extra_small_bullet_sprite[BULLET_WIDTH/4 * BULLET_HEIGHT/4];
-	//uint8_t small_bullet_sprite[BULLET_WIDTH/2 * BULLET_HEIGHT/2];
-	//uint8_t dst[width * height];
 	ScaleDown(sprite_BULLET, BULLET_WIDTH, BULLET_HEIGHT, BULLET_SMALL_WIDTH, BULLET_SMALL_HEIGHT, sprite_bullet_small);
 	ScaleDown(sprite_bullet_small, BULLET_SMALL_WIDTH, BULLET_SMALL_HEIGHT, BULLET_EXTRA_SMALL_WIDTH, BULLET_EXTRA_SMALL_HEIGHT, sprite_bullet_extra_small);
 
@@ -91,6 +88,10 @@ PainterManager::PainterManager()
 	_sprites[SPRITE_ID::BULLET_EXTRA_BIG] = sprite_bullet_extra_big;
 	_sprites[SPRITE_ID::BULLET_SMALL] = sprite_bullet_small;
 	_sprites[SPRITE_ID::BULLET_EXTRA_SMALL] = sprite_bullet_extra_small;
+
+	ScaleUp(sprite_NUMBERS, NUMBERS_WIDTH, NUMBERS_HEIGHT, NUMBERS_BIG_WIDTH, NUMBERS_BIG_HEIGHT, sprite_numbers_big);
+	_sizes[SPRITE_ID::NUMBERS_BIG] = {NUMBERS_BIG_WIDTH, NUMBERS_BIG_HEIGHT};
+	_sprites[SPRITE_ID::NUMBERS_BIG] = sprite_numbers_big;
 }
 
 void PainterManager::GetSpriteSize(SPRITE_ID id, unsigned int& width, unsigned int& height)const
