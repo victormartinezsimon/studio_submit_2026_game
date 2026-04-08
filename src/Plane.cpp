@@ -51,16 +51,14 @@ void Plane::Update(const float deltaTime)
 	{
 		if(_bulletsTotalSources == DEFAULT_BULLETS_ORIGIN)
 		{
-			for (int i = 0; i < _bulletsTotalSources; ++i)
+			if(_callbackFire)
 			{
-				if(_callbackFire)
-				{
-					_callbackFire(i, *this);
-				}
+				_callbackFire(0, *this);
 			}
 		}
 		else
 		{
+			//skip the center bullet
 			for (int i = 1; i < _bulletsTotalSources; ++i)
 			{
 				if(_callbackFire)

@@ -86,7 +86,7 @@ public:
 	void call_for_element(int id, F&& func) 
 	{
 		if(id == -1){return;}
-		if(id > static_cast<int>(_poolElements.size()))
+		if(id >= static_cast<int>(_poolElements.size()))
 		{
 			return;
 		}
