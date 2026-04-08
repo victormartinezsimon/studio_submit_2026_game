@@ -165,17 +165,12 @@ void PainterManager::AddToPaint(SPRITE_ID id, float x, float y, float alpha, uns
 
 int PainterManager::GetMaskID(float alpha)
 {
-	if(alpha < 0.25)
-	{
-		return 2;//quarter
-	}
-
-	if(alpha < 0.75)
-	{
-		return 1; //half
-	}
-
-	return 0;//full
+	//TODO: review this logic
+	int level = (int)(alpha * 10.0f + 0.5f);
+	if (level < 1) level = 1;
+	if (level > 10) level = 10;
+	return level * 10;
+	//TODO: end review
 }
 
 
