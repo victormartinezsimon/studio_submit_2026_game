@@ -52,8 +52,12 @@ void TrailManager::PaintTrail(PainterManager* painter, Trail& trail)
 	float percent = trail.currentLive / trail.maxLive;
 	PainterManager::SPRITE_ID spriteToPaint = trail.sprite;
 
-	if(percent < 0.33){spriteToPaint = trail.extra_small_sprite;}
-	if(percent < 0.80){spriteToPaint = trail.small_sprite;}
+	float alpha = percent * percent;
 
-	painter->AddToPaint(spriteToPaint, trail.x, trail.y, percent);
+	if(percent < 0.5)
+	{
+		spriteToPaint = trail.small_sprite;
+	}
+
+	painter->AddToPaint(spriteToPaint, trail.x, trail.y, alpha);
 }

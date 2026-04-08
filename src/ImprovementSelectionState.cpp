@@ -6,6 +6,7 @@
 #include "ButtonA.h"
 #include "NumberManager.h"
 #include "EasingManager.h"
+#include <cmath>
 
 ImprovementSelectionState::ImprovementSelectionState(Plane *player, PainterManager *painter, 
         NumberManager* numberManager,

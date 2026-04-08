@@ -6,6 +6,8 @@
 #include "ButtonA.h"
 #include "NumberManager.h"
 #include "EasingManager.h"
+#include <cmath>
+
 
 MainMenuState::MainMenuState(Plane *player, PainterManager *painter, 
         NumberManager* numberManager,
