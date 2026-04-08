@@ -10,7 +10,7 @@
 ImprovementSelectionState::ImprovementSelectionState(Plane *player, PainterManager *painter, 
         NumberManager* numberManager,
         EasingManager* easingManager, RandomManager* randomManager, ButtonA* buttonAManager, 
-            std::function<void(const std::string& optionForPlayer,const std::string& optionForEnemy )> callbackSeleccion) 
+            std::function<void(const ImprovementID& optionForPlayer,const ImprovementID& optionForEnemy )> callbackSeleccion) 
 			: 
 			State(player, painter, numberManager,
 			easingManager, randomManager, buttonAManager), _callbackSeleccion(callbackSeleccion)
@@ -128,16 +128,17 @@ void ImprovementSelectionState::OnExit()
 }
 void ImprovementSelectionState::InitializeImprovementsUI()
 {
-	_improvementsUI[std::string(IMPROVEMENT_3_SHOTS)] = PainterManager::SPRITE_ID::SHOT_3_TIMES;
-	_improvementsUI[std::string(IMPROVEMENT_INCREASE_ORIGIN)] = PainterManager::SPRITE_ID::INCREASE_ORIGIN;
-	_improvementsUI[std::string(IMPROVEMENT_INCREASE_FIRE_RATE)] = PainterManager::SPRITE_ID::INCRASE_FIRE_RATE;
-	_improvementsUI[std::string(IMPROVEMENT_GIVE_PENETRATION)] = PainterManager::SPRITE_ID::GIVE_PENETRATION;
-	_improvementsUI[std::string(IMPROVEMENT_GIVE_EXPLOSION)] = PainterManager::SPRITE_ID::GIVE_EXPLOSION;
-	_improvementsUI[std::string(IMPROVEMENT_GIVE_SHIELD)] = PainterManager::SPRITE_ID::GIVE_SHIELD;
-	_improvementsUI[std::string(IMPROVEMENT_FAST_SHOTS)] = PainterManager::SPRITE_ID::FAST_SHOTS;
-	_improvementsUI[std::string(IMPROVEMENT_SLOW_SHOTS)] = PainterManager::SPRITE_ID::SLOW_SHOTS;
+	_improvementsUI[ImprovementID::SHOTS_3] = PainterManager::SPRITE_ID::SHOT_3_TIMES;
+	_improvementsUI[ImprovementID::INCREASE_ORIGIN] = PainterManager::SPRITE_ID::INCREASE_ORIGIN;
+	_improvementsUI[ImprovementID::INCREASE_FIRE_RATE] = PainterManager::SPRITE_ID::INCRASE_FIRE_RATE;
+	_improvementsUI[ImprovementID::GIVE_PENETRATION] = PainterManager::SPRITE_ID::GIVE_PENETRATION;
+	_improvementsUI[ImprovementID::GIVE_EXPLOSION] = PainterManager::SPRITE_ID::GIVE_EXPLOSION;
+	_improvementsUI[ImprovementID::GIVE_SHIELD] = PainterManager::SPRITE_ID::GIVE_SHIELD;
+	_improvementsUI[ImprovementID::FAST_SHOTS] = PainterManager::SPRITE_ID::FAST_SHOTS;
+	_improvementsUI[ImprovementID::SLOW_SHOTS] = PainterManager::SPRITE_ID::SLOW_SHOTS;
 }
-void ImprovementSelectionState::Configure(std::string leftSelection, std::string rightSelection)
+
+void ImprovementSelectionState::Configure(ImprovementID leftSelection, ImprovementID rightSelection)
 {
 	_leftSelection = leftSelection;
 	_rightSelection = rightSelection;

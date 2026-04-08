@@ -57,7 +57,7 @@ void GameManager::InitializeStates()
 	
 	_statesLogic[State::STATES::IMPROVEMENT_SELECTOR] = new ImprovementSelectionState(&_player, _painterManager, 
 		&_numberManager, &_easingManager, &_randomManager, &_buttonAManager,
-	[this](const std::string& player, const std::string& enemy){ApplyImprovements(player, enemy);});
+	[this](const ImprovementID& player, const ImprovementID& enemy){ApplyImprovements(player, enemy);});
 	
 	_statesLogic[State::STATES::BATTLE] = new BattleState(&_player, _painterManager, &_numberManager, 
 		&_easingManager, &_randomManager, &_buttonAManager,&_enemiesPool, &_bulletsPool,
@@ -96,21 +96,21 @@ void GameManager::InitializeConstantValues()
 }
 void GameManager::InitializeImprovementsFunctions()
 {
-	_improvementFunctions[std::string(IMPROVEMENT_3_SHOTS)] = [](modifiable_data &data)
+	_improvementFunctions[ImprovementID::SHOTS_3] = [](modifiable_data &data)
 	{ data.bulletsPerShot = SHOTS_IN_3_SHOTS; };
-	_improvementFunctions[std::string(IMPROVEMENT_INCREASE_ORIGIN)] = [](modifiable_data &data)
+	_improvementFunctions[ImprovementID::INCREASE_ORIGIN] = [](modifiable_data &data)
 	{ data.bulletsSource = NEW_EXTRA_SOURCES; };
-	_improvementFunctions[std::string(IMPROVEMENT_INCREASE_FIRE_RATE)] = [](modifiable_data &data)
+	_improvementFunctions[ImprovementID::INCREASE_FIRE_RATE] = [](modifiable_data &data)
 	{ data.fireRate *= INCREASE_FIRE_RATE; };
-	_improvementFunctions[std::string(IMPROVEMENT_GIVE_PENETRATION)] = [](modifiable_data &data)
+	_improvementFunctions[ImprovementID::GIVE_PENETRATION] = [](modifiable_data &data)
 	{ data.bulletHasPenetration = true; };
-	_improvementFunctions[std::string(IMPROVEMENT_GIVE_EXPLOSION)] = [](modifiable_data &data)
+	_improvementFunctions[ImprovementID::GIVE_EXPLOSION] = [](modifiable_data &data)
 	{ data.bulletHasExplosion = true; };
-	_improvementFunctions[std::string(IMPROVEMENT_GIVE_SHIELD)] = [](modifiable_data &data)
+	_improvementFunctions[ImprovementID::GIVE_SHIELD] = [](modifiable_data &data)
 	{ data.hasShield = true; };
-	_improvementFunctions[std::string(IMPROVEMENT_FAST_SHOTS)] = [](modifiable_data &data)
+	_improvementFunctions[ImprovementID::FAST_SHOTS] = [](modifiable_data &data)
 	{ data.velocityBulletX *= FAST_SHOT_MULTIPLICATION, data.velocityBulletY *= FAST_SHOT_MULTIPLICATION; };
-	_improvementFunctions[std::string(IMPROVEMENT_SLOW_SHOTS)] = [](modifiable_data &data)
+	_improvementFunctions[ImprovementID::SLOW_SHOTS] = [](modifiable_data &data)
 	{ data.velocityBulletX *= SLOW_SHOT_MULTIPLICATION, data.velocityBulletY *= SLOW_SHOT_MULTIPLICATION; };
 }
 void GameManager::InitializeRandomImprovements()
@@ -118,7 +118,7 @@ void GameManager::InitializeRandomImprovements()
 	int index = 0;
 	for(auto kvp: _improvementFunctions)
 	{
-		std::string key = kvp.first;
+		ImprovementID key = kvp.first;
 		_randomImprovements[index] = key;
 		++index;
 	}
@@ -278,7 +278,7 @@ void GameManager::Paint()
 	_trailManager.Paint(_painterManager);
 	_spawnerStars.Paint(_painterManager);
 }	
-void GameManager::ApplyImprovements(const std::string& playerSelection, const std::string& enemySelection)
+void GameManager::ApplyImprovements(const ImprovementID& playerSelection, const ImprovementID& enemySelection)
 {
 	_improvementFunctions[playerSelection](playerData);
 	_improvementFunctions[enemySelection](enemyData);

@@ -73,7 +73,7 @@ private:
 	void EndLevel();
 
 private:
-	void ApplyImprovements(const std::string &playerSelection, const std::string &enemySelection);
+	void ApplyImprovements(const ImprovementID &playerSelection, const ImprovementID &enemySelection);
 
 private:	        
 	void ConfigureMeteoriteSpawn(Meteorite& meteorite);
@@ -113,8 +113,8 @@ private:
 	int _totalImprovementSelected = 0;
 
 private:
-	std::unordered_map<std::string, std::function<void(modifiable_data &)>> _improvementFunctions;
-	std::array<std::string, TOTAL_DEFINED_IMPROVEMENTS> _randomImprovements;
+	std::unordered_map<ImprovementID, std::function<void(modifiable_data &)>> _improvementFunctions;
+	std::array<ImprovementID, TOTAL_DEFINED_IMPROVEMENTS> _randomImprovements;
 
 private:
 	std::unordered_map<State::STATES, State*> _statesLogic;

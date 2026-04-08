@@ -1,15 +1,17 @@
 #pragma once
-#include <string_view>
 #include <array>
 
-constexpr std::string_view IMPROVEMENT_3_SHOTS = "3SHOTS";
-constexpr std::string_view IMPROVEMENT_INCREASE_ORIGIN = "MORE_ORIGIN";
-constexpr std::string_view IMPROVEMENT_INCREASE_FIRE_RATE = "MORE_FIRE_RATE";
-constexpr std::string_view IMPROVEMENT_GIVE_PENETRATION = "PENETRATION";
-constexpr std::string_view IMPROVEMENT_GIVE_EXPLOSION = "EXPLOSION";
-constexpr std::string_view IMPROVEMENT_GIVE_SHIELD = "SHIELD";
-constexpr std::string_view IMPROVEMENT_FAST_SHOTS = "FAST_SHOTS";
-constexpr std::string_view IMPROVEMENT_SLOW_SHOTS = "SLOW_SHOTS";
+enum class ImprovementID
+{
+	SHOTS_3,
+	INCREASE_ORIGIN,
+	INCREASE_FIRE_RATE,
+	GIVE_PENETRATION,
+	GIVE_EXPLOSION,
+	GIVE_SHIELD,
+	FAST_SHOTS,
+	SLOW_SHOTS
+};
 
 constexpr float INCREASE_FIRE_RATE = 0.8f;
 constexpr float FAST_SHOT_MULTIPLICATION = 1.5;
