@@ -72,8 +72,7 @@ public:
 
 	}
 
-	template<typename F>
-	void for_each_active(F&& func)
+	void for_each_active(std::function<void(T&)> func)
 	{
 		for(int i = 0; i <= _lastInUse; ++i)
 		{
@@ -82,16 +81,15 @@ public:
 		}
 	}	
 
-	template<typename F>
-	void call_for_element(int id, F&& func) 
+	void call_for_element(int id, std::function<void(T&)> func) 
 	{
 		if(id == -1){return;}
-		if(id >= static_cast<int>(_poolElements.size()))
+		if(id > _poolElements.size())
 		{
 			return;
 		}
 		func(_poolElements[id]);
-	}	
+	}		
 
 	int TotalInUse() const
 	{
