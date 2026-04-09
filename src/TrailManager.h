@@ -16,7 +16,6 @@ private:
 		int height;
 		PainterManager::SPRITE_ID sprite;
 		PainterManager::SPRITE_ID small_sprite;
-		PainterManager::SPRITE_ID extra_small_sprite;
 		float currentLive;
 		float maxLive;
 		int _id;
@@ -36,12 +35,12 @@ public:
 	void Update(const float deltaTime);
 	void AddTrail(float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite);
 	void AddTrail(float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite,
-	PainterManager::SPRITE_ID small_sprite,PainterManager::SPRITE_ID extra_small_sprite);
+	PainterManager::SPRITE_ID small_sprite);
 	void Paint(PainterManager* painter);
 
 private:
 	void Configure(Trail& trail, float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite,
-	PainterManager::SPRITE_ID small_sprite,PainterManager::SPRITE_ID extra_small_sprite);
+	PainterManager::SPRITE_ID small_sprite);
 	void UpdateTrail(Trail& trail, const float deltaTime);
 	void PaintTrail(PainterManager* painter, Trail& trail);
 	

@@ -7,15 +7,15 @@ void TrailManager::Update(const float deltaTime)
 
 void TrailManager::AddTrail(float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite)
 {
-	AddTrail(x, y, width, height, duration, sprite, sprite, sprite);
+	AddTrail(x, y, width, height, duration, sprite, sprite);
 }
 
 
 void TrailManager::AddTrail(float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite,
-	PainterManager::SPRITE_ID small_sprite,PainterManager::SPRITE_ID extra_small_sprite)
+	PainterManager::SPRITE_ID small_sprite)
 {
 	int id = _poolTrail.Get();
-	_poolTrail.call_for_element(id, [&](Trail& t){Configure(t,x,y, width, height, duration, sprite, small_sprite, extra_small_sprite);});
+	_poolTrail.call_for_element(id, [&](Trail& t){Configure(t,x,y, width, height, duration, sprite, small_sprite);});
 }
 void TrailManager::Paint(PainterManager* painter)
 {
@@ -24,7 +24,7 @@ void TrailManager::Paint(PainterManager* painter)
 
 void TrailManager::Configure(Trail& trail, float x, float y, int width, int height, float duration, 
 	PainterManager::SPRITE_ID sprite,
-	PainterManager::SPRITE_ID small_sprite,PainterManager::SPRITE_ID extra_small_sprite)
+	PainterManager::SPRITE_ID small_sprite)
 {
 	trail.x = x;
 	trail.y = y;
@@ -32,7 +32,6 @@ void TrailManager::Configure(Trail& trail, float x, float y, int width, int heig
 	trail.height = height;
 	trail.sprite = sprite;
 	trail.small_sprite = small_sprite;
-	trail.extra_small_sprite = extra_small_sprite;
 	trail.maxLive = duration;
 	trail.currentLive = duration;
 }
