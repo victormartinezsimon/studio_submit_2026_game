@@ -5,24 +5,24 @@ void TrailManager::Update(const float deltaTime)
 	_poolTrail.for_each_active([&](Trail& t){UpdateTrail(t, deltaTime);});
 }
 
-void TrailManager::AddTrail(float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite)
+int TrailManager::AddTrail(PainterManager* painter, float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite)
 {
-	AddTrail(x, y, width, height, duration, sprite, sprite);
+	return AddTrail(painter, x, y, width, height, duration, sprite, sprite);
 }
 
-
-void TrailManager::AddTrail(float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite,
+int TrailManager::AddTrail(PainterManager* painter, float x, float y, int width, int height, float duration, PainterManager::SPRITE_ID sprite,
 	PainterManager::SPRITE_ID small_sprite)
 {
 	int id = _poolTrail.Get();
-	_poolTrail.call_for_element(id, [&](Trail& t){Configure(t,x,y, width, height, duration, sprite, small_sprite);});
+	_poolTrail.call_for_element(id, [&](Trail& t){Configure(painter, t,x,y, width, height, duration, sprite, small_sprite);});
+	return id;
 }
 void TrailManager::Paint(PainterManager* painter)
 {
 	_poolTrail.for_each_active([&](Trail& t){PaintTrail(painter, t);});
 }
 
-void TrailManager::Configure(Trail& trail, float x, float y, int width, int height, float duration, 
+void TrailManager::Configure(PainterManager* painter, Trail& trail, float x, float y, int width, int height, float duration, 
 	PainterManager::SPRITE_ID sprite,
 	PainterManager::SPRITE_ID small_sprite)
 {
@@ -30,8 +30,8 @@ void TrailManager::Configure(Trail& trail, float x, float y, int width, int heig
 	trail.y = y;
 	trail.width = width;
 	trail.height = height;
-	trail.sprite = sprite;
-	trail.small_sprite = small_sprite;
+	trail.spriteSheetNormal.Configure(painter, sprite);
+	trail.spriteSheetSmall.Configure(painter, small_sprite);
 	trail.maxLive = duration;
 	trail.currentLive = duration;
 }
@@ -49,14 +49,32 @@ void TrailManager::UpdateTrail(Trail& trail, const float deltaTime)
 void TrailManager::PaintTrail(PainterManager* painter, Trail& trail)
 {
 	float percent = trail.currentLive / trail.maxLive;
-	PainterManager::SPRITE_ID spriteToPaint = trail.sprite;
 
 	float alpha = percent * percent;
 
 	if(percent < 0.5)
 	{
-		spriteToPaint = trail.small_sprite;
+		trail.spriteSheetSmall.Paint(painter, trail.x, trail.y, alpha);
 	}
+	else
+	{
+		trail.spriteSheetNormal.Paint(painter, trail.x, trail.y, alpha);
+	}
+}
 
-	painter->AddToPaint(spriteToPaint, trail.x, trail.y, alpha);
+SpriteSheetController* TrailManager::GetSpriteSheetNormal(int id)
+{
+	Trail* t =_poolTrail.GetElement(id);
+	if(t != nullptr)
+	{
+		return &t->spriteSheetNormal;
+	}
+}
+SpriteSheetController* TrailManager::GetSpriteSheetSmall(int id)
+{
+	Trail* t =_poolTrail.GetElement(id);
+	if(t != nullptr)
+	{
+		return &t->spriteSheetSmall;
+	}
 }

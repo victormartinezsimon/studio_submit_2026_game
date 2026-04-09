@@ -105,6 +105,13 @@ public:
 		}
 	}
 
+	T* GetElement(int id)
+	{
+		if(id < 0){return nullptr;}
+		if(!_used[id]){return nullptr;}
+		return &_poolElements[id];
+	}
+
 private:
 	std::array<T,N> _poolElements; 
 	std::array<bool,N> _used; 
