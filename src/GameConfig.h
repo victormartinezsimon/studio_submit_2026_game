@@ -41,6 +41,6 @@ constexpr bool SHOW_FINAL_COUNTDOWN = true;
 
 constexpr bool SHOW_TRAIL_PLAYER = false;
 constexpr bool SHOW_TRAIL_ENEMY = true;
-constexpr float TRAIL_PLANE_LIVE = 0.3;
-constexpr float TRAIL_PLANE_MIN_VELOCITY = 60;
+constexpr float TRAIL_PLANE_LIVE = 0.2;
+constexpr float TRAIL_PLANE_MIN_VELOCITY = 65;
 
