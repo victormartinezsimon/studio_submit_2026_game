@@ -43,7 +43,7 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 		_spawnerMeteorites.SetCallbackUpdate([&](Meteorite& m){CallbackUpdateMeteorite(m);});
 	}
 
-	if(SHOW_TRAIL_PLAYER && false)
+	if(SHOW_TRAIL_PLAYER)
 	{
 		_player.SetTrailManager(&_trailManager);
 	}
