@@ -6,7 +6,7 @@
 - ~~Review assets colors~~
 - Add scale
 - ~~End screen with highscores~~
-- Investigate and think how to make multiple alpha masks
+- ~~Investigate and think how to make multiple alpha masks~~
 - add spritessheets for enemies
 - add image for "accept letter"
 - review images for texts in high score

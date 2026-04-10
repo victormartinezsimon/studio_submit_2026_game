@@ -43,6 +43,11 @@ GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 		_spawnerMeteorites.SetCallbackUpdate([&](Meteorite& m){CallbackUpdateMeteorite(m);});
 	}
 
+	if(SHOW_TRAIL_PLAYER && false)
+	{
+		_player.SetTrailManager(&_trailManager);
+	}
+
 	_statesBeginFunction[_currentStateLogic]();
 	_statesLogic[_currentStateLogic]->OnEnter();
 }
@@ -481,8 +486,14 @@ void GameManager::SpawnRowEnemies(int enemiesToSpawn, float posY)
 		if(id != -1)
 		{
 			float delay =_randomManager.GetValue(MIN_SHOOTING_DELAY, MAX_SHOOTING_DELAY, 100.0f);
-			_enemiesPool.call_for_element(id, [posX, posY, this, delay](Plane &enemy)
-									  { ConfigurePlane(enemy, posX, posY, enemyData, false, delay); });
+			_enemiesPool.call_for_element(id, [&](Plane &enemy)
+									{ 
+										ConfigurePlane(enemy, posX, posY, enemyData, false, delay);
+										if(SHOW_TRAIL_ENEMY)
+										{
+											enemy.SetTrailManager(&_trailManager);
+										}
+									});
 		}
 	}
 }

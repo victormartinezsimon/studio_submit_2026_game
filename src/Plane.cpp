@@ -1,6 +1,8 @@
 #include "Plane.h"
 #include "GameConfig.h"
 #include "SpriteSheetController.h"
+#include "TrailManager.h"
+
 
 void Plane::SetCallbackFire(std::function<void(int, const Plane&)> fun)
 {
@@ -37,10 +39,10 @@ int Plane::GetBulletsPerShot() const
 	return _bulletsPerShot;
 }
 
-
 void Plane::Update(const float deltaTime)
 {
 	_currentAcumTime += deltaTime;
+	_lastDeltaTime = deltaTime;
 
 	if(_timeInmortal > 0)
 	{
@@ -101,11 +103,36 @@ void Plane::Paint(PainterManager* painter)
 		Paint(painter, PainterManager::SPRITE_ID::PLAYER, PainterManager::SPRITE_ID::PLAYER_SHIELD);
 	}
 
-		if(_playerTeam ==  TEAM_ENEMY)
+	if(_playerTeam ==  TEAM_ENEMY)
 	{
 		Paint(painter, PainterManager::SPRITE_ID::ENEMY, PainterManager::SPRITE_ID::ENEMY_SHIELD);
 	}
+
+	TryPaintTrail(painter);
 }
+
+void Plane::TryPaintTrail(PainterManager* painter)
+{
+	if(_trailManager == nullptr){return;}
+	
+	float distance = CalculateDistanceSquared(_X, _Y, _lastX, _lastY);
+	float velocity = distance / _lastDeltaTime;
+
+	if(velocity > TRAIL_PLANE_MIN_VELOCITY)
+	{
+		int id = _trailManager->AddTrail(painter, _lastX, _lastY, 
+			_spriteController.GetWidth(), _spriteController.GetHeight(), TRAIL_PLANE_LIVE, _spriteController.GetSprite());		
+		
+		if(id != -1)
+		{
+			_trailManager->GetSpriteSheetNormal(id)->Configure(painter, &_spriteController);
+		}
+	}
+
+	_lastX = _X;
+	_lastY = _Y;
+}
+
 
 void Plane::Paint(PainterManager* painter, PainterManager::SPRITE_ID spritePlane, PainterManager::SPRITE_ID spriteShield) const
 {
@@ -148,4 +175,16 @@ void Plane::ConfigureSprite(PainterManager* painter)
 		_spriteController.Configure(painter, PainterManager::SPRITE_ID::ENEMY);
 		_spriteControllerShield.Configure(painter, PainterManager::SPRITE_ID::ENEMY_SHIELD);
 	}
+}
+
+void Plane::SetTrailManager(TrailManager* trailManager)
+{
+	_trailManager = trailManager;
+}
+
+float Plane::CalculateDistanceSquared(float x1, float y1, float x2, float y2)const
+{
+	float diffX = x1 - x2;
+	float diffY = y1 - y2;
+	return diffX * diffX + diffY* diffY;
 }

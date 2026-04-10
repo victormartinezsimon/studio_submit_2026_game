@@ -3,6 +3,8 @@
 #include "WorldObject.h"
 #include "PainterManager.h"
 
+class TrailManager;
+
 class Plane : public WorldObject
 {
 public:
@@ -10,9 +12,10 @@ public:
 	void Reset(float value);
 	void Paint(PainterManager* painter) override;
 	void ConfigureSprite(PainterManager* painter) override;
-
+	
 public:
 	void SetCallbackFire(std::function<void(int, const Plane&)> fun);
+	void SetTrailManager(TrailManager* trailManager);
 
 public:
 	void SetFireRate(float fireRate);
@@ -39,6 +42,8 @@ public:
 
 private:
 	void Paint(PainterManager* painter, PainterManager::SPRITE_ID spritePlane, PainterManager::SPRITE_ID spriteShield)const;
+	float CalculateDistanceSquared(float x1, float y1, float x2, float y2)const;
+	void TryPaintTrail(PainterManager* painter);
 
 private:
 	std::function<void(int, const Plane&)> _callbackFire = nullptr;
@@ -49,5 +54,9 @@ private:
 	int _bulletsPerShot = 1;
 	float _timeInmortal = 0;
 	int _randomMovementID = -1;
+	TrailManager* _trailManager = nullptr;
 	SpriteSheetController _spriteControllerShield;
+	float _lastX = 0;
+	float _lastY = 0;
+	float _lastDeltaTime = 0;
 };

@@ -17,8 +17,10 @@ class SpriteSheetController
 		void Reset();
 
 		void Configure(	const PainterManager* painter, PainterManager::SPRITE_ID sprite, unsigned int cols, unsigned int rows, float frameDuration);
-		void Configure(	const PainterManager* painter,  PainterManager::SPRITE_ID sprite);
+		void Configure(	const PainterManager* painter, PainterManager::SPRITE_ID sprite);
+		void Configure( const PainterManager* painter, const SpriteSheetController* other);
 		void SetSprite(PainterManager::SPRITE_ID sprite, float width, float height);
+		PainterManager::SPRITE_ID GetSprite()const;
 
 		void GetSize(unsigned int& w, unsigned int& h)const;
 		unsigned int GetWidth()const;
