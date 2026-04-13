@@ -2,7 +2,6 @@
 #include "PainterManager.h"
 #include "Plane.h"
 #include "GameConfig.h"
-#include "Sprites.h" //TODO: remove this inclusion
 #include "ButtonA.h"
 #include "NumberManager.h"
 #include "EasingManager.h"
@@ -20,6 +19,7 @@ MainMenuState::MainMenuState(Plane *player, PainterManager *painter,
 State::STATES MainMenuState::Update(const float deltaTime, float _currentFrameInputValueNormalized)
 {
 	_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized);
+	_player->Update(deltaTime);
 
 	return _nextState;
 }
@@ -37,7 +37,7 @@ void MainMenuState::Paint()
 	{
 		float posY = _player->GetY();
 		int time = std::round(_buttonAManager->GetLeftTime());
-		float w = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER);
+		float w = _player->GetWidth();
 		_numberManager->PaintNumber(time, _player->GetX() - w/2, _player->GetY(), 1, NumberManager::PIVOT::RIGHT);
 	}
 }
@@ -95,7 +95,6 @@ void MainMenuState::OnEnter()
 									  });
 
 	_nextState = STATES::MENU;
-	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
 	_player->SetPlayerTeam(TEAM_PLAYER);
 	_player->SetHasShield(false);

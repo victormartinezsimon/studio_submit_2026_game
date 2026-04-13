@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include "PainterManager.h"
+#include "SpriteSheetController.h"
 
 class ButtonA;
 class NumberManager;
@@ -37,4 +38,5 @@ class ImprovementSelectionState: public State
         std::unordered_map<ImprovementID, PainterManager::SPRITE_ID> _improvementsUI;
         bool _doingFadeOut = false;
         float _percentEase = 1.0;
+        SpriteSheetController _enemySelector;
 };

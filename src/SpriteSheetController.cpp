@@ -6,7 +6,7 @@ SpriteSheetController::SpriteSheetController():_cols(1), _rows(1),_frameDuration
 {
 }
 
-void SpriteSheetController::Configure( const PainterManager* painter, PainterManager::SPRITE_ID sprite, unsigned int cols, unsigned int rows, float frameDuration)
+void SpriteSheetController::Configure( const PainterManager* painter, PainterManager::SPRITE_ID sprite, unsigned int cols, unsigned int rows, float frameDuration, bool loop)
 {
 	_sprite = sprite;
 	_cols = cols;
@@ -16,6 +16,7 @@ void SpriteSheetController::Configure( const PainterManager* painter, PainterMan
 	_totalFrames = cols * rows;
 	_totalDuration =cols * rows * frameDuration;
 	_fixedFrame = -1;
+	_loop = loop;
 
 	if(painter)
 	{
@@ -31,14 +32,19 @@ void SpriteSheetController::Configure( const PainterManager* painter, PainterMan
 	}
 }
 
+void SpriteSheetController::Configure(	const PainterManager* painter, PainterManager::SPRITE_ID sprite, unsigned int cols, unsigned int rows, float frameDuration)
+{
+	Configure(painter, sprite, cols, rows, frameDuration, false);
+}
+
 void SpriteSheetController::Configure(	const PainterManager* painter,  PainterManager::SPRITE_ID sprite)
 {
-	Configure(painter, sprite, 1, 1, -1);
+	Configure(painter, sprite, 1, 1, -1, false);
 }
 
 void SpriteSheetController::Configure( const PainterManager* painter, const SpriteSheetController* other)
 {
-	Configure(painter,other->_sprite, other->_cols, other->_rows, other->_frameDuration);
+	Configure(painter,other->_sprite, other->_cols, other->_rows, other->_frameDuration, other->_loop);
 }
 
 
@@ -53,8 +59,18 @@ bool SpriteSheetController::Update(const float deltaTime)
 
 	_timeAcum += deltaTime;
 
-	return _timeAcum > _totalDuration;
-
+	if(_timeAcum > _totalDuration)
+	{
+		if(_loop)
+		{
+			Reset();
+		}
+		else
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void SpriteSheetController::Paint(PainterManager* painter, float x, float y)const

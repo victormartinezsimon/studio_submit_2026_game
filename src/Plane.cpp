@@ -43,10 +43,26 @@ void Plane::Update(const float deltaTime)
 {
 	_currentAcumTime += deltaTime;
 	_lastDeltaTime = deltaTime;
+	_spriteController.Update(deltaTime);
 
 	if(_timeInmortal > 0)
 	{
 		_timeInmortal-= deltaTime;
+
+		float currentTimeInmortal = GetTimeInmortal();
+		
+		float percent = currentTimeInmortal / TIME_INMORTAL;
+
+		_alpha = 0.5f;
+
+		if ((percent >= 0.25 && percent <= 0.50) || (percent >= 0.75 && percent <= 1.0))
+		{
+			_alpha = 0.1f;
+		}
+	}
+	else
+	{
+		_alpha= 1.0f;
 	}
 
 	if (_currentAcumTime > _fireRate)
@@ -98,15 +114,11 @@ int Plane::GetRandomMovementID() const
 
 void Plane::Paint(PainterManager* painter)
 {
-	if(_playerTeam ==  TEAM_PLAYER)
+	if (GetHasShield())
 	{
-		Paint(painter, PainterManager::SPRITE_ID::PLAYER, PainterManager::SPRITE_ID::PLAYER_SHIELD);
+		_spriteControllerShield.Paint(painter, GetX(), GetY());
 	}
-
-	if(_playerTeam ==  TEAM_ENEMY)
-	{
-		Paint(painter, PainterManager::SPRITE_ID::ENEMY, PainterManager::SPRITE_ID::ENEMY_SHIELD);
-	}
+	_spriteController.Paint(painter, GetX(),GetY(), _alpha);
 
 	TryPaintTrail(painter);
 }
@@ -133,46 +145,17 @@ void Plane::TryPaintTrail(PainterManager* painter)
 	_lastY = _Y;
 }
 
-
-void Plane::Paint(PainterManager* painter, PainterManager::SPRITE_ID spritePlane, PainterManager::SPRITE_ID spriteShield) const
-{
-	float currentTimeInmortal = GetTimeInmortal();
-	if (currentTimeInmortal <= 0)
-	{
-		painter->AddToPaint(spritePlane, GetX(), GetY(), GetAlpha());
-	}
-	else
-	{
-		float percent = currentTimeInmortal / TIME_INMORTAL;
-
-		float alpha = 0.5f;
-
-		if ((percent >= 0.25 && percent <= 0.50) || (percent >= 0.75 && percent <= 1.0))
-		{
-			alpha = 0.1f;
-		}
-
-		painter->AddToPaint(spritePlane, GetX(), GetY(), alpha);
-		//_spriteController.Paint(painter, GetX(),GetY());
-	}
-
-	if (GetHasShield())
-	{
-		_spriteControllerShield.Paint(painter, GetX(), GetY());
-	}
-}
-
 void Plane::ConfigureSprite(PainterManager* painter)
 {
 	if(_playerTeam ==  TEAM_PLAYER)
 	{
-		_spriteController.Configure(painter, PainterManager::SPRITE_ID::PLAYER);
+		_spriteController.Configure(painter, PainterManager::SPRITE_ID::PLAYER, 2, 2, PLANE_FRAME_RATE, true);
 		_spriteControllerShield.Configure(painter, PainterManager::SPRITE_ID::PLAYER_SHIELD);
 	}
 	
 	if(_playerTeam ==  TEAM_ENEMY)
 	{
-		_spriteController.Configure(painter, PainterManager::SPRITE_ID::ENEMY);
+		_spriteController.Configure(painter, PainterManager::SPRITE_ID::ENEMY, 2, 2, PLANE_FRAME_RATE, true);
 		_spriteControllerShield.Configure(painter, PainterManager::SPRITE_ID::ENEMY_SHIELD);
 	}
 }

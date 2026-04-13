@@ -2,7 +2,6 @@
 #include "PainterManager.h"
 #include "Plane.h"
 #include "GameConfig.h"
-#include "Sprites.h" //TODO: remove this inclusion
 #include "Bullet.h"
 #include "EasingManager.h"
 #include "RandomManager.h"
@@ -77,8 +76,8 @@ void BattleState::OnEnter()
 {
     _explosionPool.ReturnAll();
 
-    _player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
     _player->SetPositionY(POSITION_Y_PLAYER);
+    _player->ConfigureSprite(_painterManager);
 
     _enemiesAlive = _enemiesPool->TotalInUse();
 
@@ -112,7 +111,7 @@ void BattleState::UpdatePlayer(float deltaTime)
     bool someCollision = ManagePlaneCollisions(*_player);
     if (someCollision)
     {
-        DamagePlayer();
+        DamagePlayer(); 
     }
 }
 
@@ -387,7 +386,6 @@ void BattleState::ConfigureExplosion(const int id, Explosion &exp, const Bullet 
     
     exp.SetPosition(x, y);
     exp.SetID(id);
-    exp.SetSize(w, h);
     exp.ConfigureSprite(_painterManager);
     exp.SetPlayerTeam(bullet.GetPlayerTeam());
 

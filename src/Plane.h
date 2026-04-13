@@ -41,7 +41,6 @@ public:
 	int GetRandomMovementID() const;
 
 private:
-	void Paint(PainterManager* painter, PainterManager::SPRITE_ID spritePlane, PainterManager::SPRITE_ID spriteShield)const;
 	float CalculateDistanceSquared(float x1, float y1, float x2, float y2)const;
 	void TryPaintTrail(PainterManager* painter);
 

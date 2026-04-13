@@ -2,7 +2,6 @@
 #include "PainterManager.h"
 #include "Plane.h"
 #include "GameConfig.h"
-#include "Sprites.h" //TODO: remove this inclusion
 #include "ButtonA.h"
 #include "NumberManager.h"
 #include "EasingManager.h"
@@ -35,7 +34,7 @@ void EndGameState::Paint()
 
 	{
 		int time = std::round( TOTAL_TIME_STATE - _timeAcumState );
-		float w = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER);
+		float w =  _player->GetWidth();
 		_numberManager->PaintNumber(time, _player->GetX() -w/2, _player->GetY(), 1, NumberManager::PIVOT::RIGHT);
 	}
 }
@@ -58,11 +57,8 @@ void EndGameState::Configure(float score)
 	_playerScore = score;
 	_timeAcumState = 0;
 
-	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
-	_player->ConfigureSprite(_painterManager);_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
-	_player->SetPositionY(POSITION_Y_PLAYER);
+	_player->ConfigureSprite(_painterManager);
 	_player->SetPlayerTeam(TEAM_PLAYER);
 	_player->SetHasShield(false);
-	_player->ConfigureSprite(_painterManager);
 }

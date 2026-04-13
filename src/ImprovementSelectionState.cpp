@@ -2,7 +2,6 @@
 #include "PainterManager.h"
 #include "Plane.h"
 #include "GameConfig.h"
-#include "Sprites.h" //TODO: remove this inclusion
 #include "ButtonA.h"
 #include "NumberManager.h"
 #include "EasingManager.h"
@@ -36,18 +35,17 @@ void ImprovementSelectionState::Paint()
 	}
 
 	{
-		
 		float posY = _player->GetY();
 		int time = std::round(_buttonAManager->GetLeftTime());
-		float w = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER);
+		float w =  _player->GetWidth();
 		_numberManager->PaintNumber(time, _player->GetX()-w/2, _player->GetY(), 1, NumberManager::PIVOT::RIGHT);
 	}
 
 	{
 		float x = SCREEN_WIDTH - _player->GetX();
 		float y = SCREEN_HEIGHT - _player->GetY();
-		
-		_painterManager->AddToPaint(PainterManager::SPRITE_ID::ENEMY, x, y);
+
+		_enemySelector.Paint(_painterManager, x, y);
 	}
 }
 void ImprovementSelectionState::PaintUI()
@@ -118,11 +116,12 @@ void ImprovementSelectionState::OnEnter()
 
 	_nextState = STATES::IMPROVEMENT_SELECTOR;
 
-	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
 	_player->ConfigureSprite(_painterManager);
 	_doingFadeOut = false;
 	_percentEase = 1.0f;
+
+	_enemySelector.Configure(_painterManager, PainterManager::SPRITE_ID::ENEMY, 2,2, PLANE_FRAME_RATE);
 }
 void ImprovementSelectionState::OnExit()
 {

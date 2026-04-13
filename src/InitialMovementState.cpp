@@ -2,7 +2,6 @@
 #include "PainterManager.h"
 #include "Plane.h"
 #include "GameConfig.h"
-#include "Sprites.h" //TODO: remove this inclusion
 #include "EasingManager.h"
 #include "RandomManager.h"
 
@@ -31,7 +30,6 @@ void InitialMovementState::OnEnter()
 {
 	_nextState = STATES::INITIAL_MOVEMENT;
 
-	_player->SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	_player->SetPositionY(POSITION_Y_PLAYER);
 	_player->SetPlayerTeam(TEAM_PLAYER);
 	_player->ConfigureSprite(_painterManager);
@@ -46,16 +44,17 @@ void InitialMovementState::OnEnter()
 		startY =  SCREEN_HEIGHT / 2;
 	}
 
+	int randomStart = _randomManager->GetNextIntValue();
+
 	_enemiesPool->for_each_active(
 		[&](Plane &p)
 		{
-			p.SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 			p.SetPlayerTeam(TEAM_ENEMY);
 			p.ConfigureSprite(_painterManager);
 
 			if(startX == -1 && startY == -1)
 			{
-				int zone = p.GetID() % 3;
+				int zone = (randomStart + p.GetID()) % 3;
 				switch(zone)
 				{
 					default:

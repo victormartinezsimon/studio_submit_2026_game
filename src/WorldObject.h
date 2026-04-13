@@ -50,17 +50,13 @@ public:
 public:
 	unsigned int GetWidth() const
 	{
-		return _width;
+		return _spriteController.GetWidth();
 	}
 	unsigned int GetHeight() const
 	{
-		return _height;
+		return _spriteController.GetHeight();
 	}
-	void SetSize(unsigned int width, unsigned int height)
-	{
-		_width = width;
-		_height = height;
-	}
+	
 
 public:
 	unsigned char  GetPlayerTeam() const
@@ -102,8 +98,6 @@ protected:
 	float _X = 0;
 	float _Y = 0;
 	float _alpha = 1;
-	unsigned int _width = 0;
-	unsigned int _height = 0;
 
 	unsigned char _playerTeam = 0;
 	int _id = -1;

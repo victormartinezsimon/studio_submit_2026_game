@@ -2,7 +2,6 @@
 #include "InputManager.h"
 #include "Plane.h"
 #include "Bullet.h"
-#include "Sprites.h" //TODO: remove this inclusion
 #include <ctime>
 #include <random>
 #include "MainMenuState.h"
@@ -316,7 +315,6 @@ void GameManager::MovePlayer()
 void GameManager::ConfigurePlane(Plane &p, const float posX, const float posY,
 								 const modifiable_data &data, bool isPlayer, float initialDelay)
 {
-	p.SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	if(posX >=0 && posY >= 0)
 	{
 		p.SetPosition(posX, posY);
@@ -361,9 +359,9 @@ void GameManager::SpawnBullet(int sourceIndex, const Plane &p, bool forPlayer, c
 				velocityBulletX = -data.velocityBulletY * 0.5;
 			}
 
-			_bulletsPool.call_for_element(id, [this, sourceIndex, p, forPlayer, data, velocityBulletX](Bullet &bullet)
+			_bulletsPool.call_for_element(id, [&](Bullet &bullet)
 										{
-				bullet.SetSize(BULLET_WIDTH, BULLET_HEIGHT);
+				
 				bullet.ConfigureSprite(_painterManager);
 
 				float positionX = p.GetX();
@@ -541,19 +539,16 @@ void GameManager::ConfigureStar(Star& star)
 	switch (type)
 	{
 	case 0:
-		star.SetSize(NEAR_STAR_WIDTH, NEAR_STAR_HEIGHT);
 		star.SetPosition(x, y);
 		star.SetTypeStar(Star::Type::NEAR);
 		velocity *= VELOCITY_STAR_NEAR;
 		break;
 	case 1:
-		star.SetSize(MID_STAR_WIDTH, MID_STAR_HEIGHT);
 		star.SetPosition(x, y);
 		star.SetTypeStar(Star::Type::MID);
 		velocity *= VELOCITY_STAR_MID;
 		break;
 	case 2:
-		star.SetSize(FAR_STAR_WIDTH, FAR_STAR_HEIGHT);
 		star.SetPosition(x, y);
 		star.SetTypeStar(Star::Type::FAR);
 		velocity *= VELOCITY_STAR_FAR;
@@ -569,7 +564,6 @@ void GameManager::ConfigureStar(Star& star)
 }
 void GameManager::ConfigureMeteoriteSpawn(Meteorite& meteorite)
 {
-    meteorite.SetSize(METEORITE_WIDTH, METEORITE_HEIGHT);
 	meteorite.ConfigureSprite(_painterManager);
 
     bool goingLeft = _randomManager.GetNextIntValue() % 2;
@@ -578,14 +572,12 @@ void GameManager::ConfigureMeteoriteSpawn(Meteorite& meteorite)
 
     if(goingLeft)
     {
-        meteorite.SetSize(METEORITE_WIDTH, METEORITE_HEIGHT);
         meteorite.SetPosition(SCREEN_WIDTH + METEORITE_WIDTH, SCREEN_HEIGHT*height);
         meteorite.SetVelocities(-DEFAULT_BULLET_VEL_Y * velocity, 0);
         meteorite.SetMoveLeft(true);
     }
     else
     {
-        meteorite.SetSize(METEORITE_WIDTH, METEORITE_HEIGHT);
         meteorite.SetPosition(-static_cast<int>(METEORITE_WIDTH), SCREEN_HEIGHT*height);
         meteorite.SetVelocities(DEFAULT_BULLET_VEL_Y * velocity,0);
         meteorite.SetMoveLeft(false);
