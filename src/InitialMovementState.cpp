@@ -4,6 +4,7 @@
 #include "GameConfig.h"
 #include "Sprites.h" //TODO: remove this inclusion
 #include "EasingManager.h"
+#include "RandomManager.h"
 
 InitialMovementState::InitialMovementState(Plane *player, PainterManager *painter, 
         NumberManager* numberManager, 
@@ -35,10 +36,45 @@ void InitialMovementState::OnEnter()
 	_player->SetPlayerTeam(TEAM_PLAYER);
 	_player->ConfigureSprite(_painterManager);
 
+	int totalEnemies = _enemiesPool->TotalInUse();
+
+	float startX = -1;
+	float startY = -1;
+	if(totalEnemies <= MAX_ENEMIES_PER_ROW )
+	{
+		startX = SCREEN_WIDTH / 2;
+		startY =  SCREEN_HEIGHT / 2;
+	}
+
 	_enemiesPool->for_each_active(
-		[this](Plane &p)
+		[&](Plane &p)
 		{
-			_easingManager->AddEase(INTIAL_ANIMATION_DURATION, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+			p.SetSize(PLAYER_WIDTH, PLAYER_HEIGHT);
+			p.SetPlayerTeam(TEAM_ENEMY);
+			p.ConfigureSprite(_painterManager);
+
+			if(startX == -1 && startY == -1)
+			{
+				int zone = p.GetID() % 3;
+				switch(zone)
+				{
+					default:
+					case 0://top
+						startX = _randomManager->GetValue(0, SCREEN_WIDTH);
+						startY = 0 - static_cast<int>(p.GetHeight());
+						break;
+					case 1://left
+						startY = _randomManager->GetValue(0, SCREEN_HEIGHT/2);
+						startX = 0 - static_cast<int>(p.GetWidth());
+						break;
+					case 2:
+						startY = _randomManager->GetValue(0, SCREEN_HEIGHT/2);
+						startX = SCREEN_WIDTH + static_cast<int>(p.GetWidth());
+						break;
+				}
+			}
+
+			_easingManager->AddEase(INTIAL_ANIMATION_DURATION, startX, startY,
 				p.GetX(), p.GetY(), Ease::EASE_TYPES::INOUTCUBE, 
 				[this] (bool normalEnded, int noUsed)
 				{
