@@ -324,7 +324,7 @@ void BattleState::ReturnEnemy(Plane &enemy)
     _enemiesDeathAnimation.call_for_element(idAnimDeath, [&](WorldObject& obj)
 		{
 			SpriteSheetController* sprite = obj.GetSpriteController();
-			sprite->Configure(_painterManager, PainterManager::SPRITE_ID::ENEMY);
+			sprite->Configure(_painterManager, enemy.GetSpriteController());
 		});
 		
     int idEase = _easingManager->AddEase(DURATION_EASING_SCORE, enemyX, enemyY, enemyX, enemyY, Ease::EASE_TYPES::LINEAL, 
