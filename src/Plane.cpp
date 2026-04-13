@@ -149,13 +149,13 @@ void Plane::ConfigureSprite(PainterManager* painter)
 {
 	if(_playerTeam ==  TEAM_PLAYER)
 	{
-		_spriteController.Configure(painter, PainterManager::SPRITE_ID::PLAYER, 2, 2, PLANE_FRAME_RATE, true);
+		_spriteController.Configure(painter, PainterManager::SPRITE_ID::PLAYER);
 		_spriteControllerShield.Configure(painter, PainterManager::SPRITE_ID::PLAYER_SHIELD);
 	}
 	
 	if(_playerTeam ==  TEAM_ENEMY)
 	{
-		_spriteController.Configure(painter, PainterManager::SPRITE_ID::ENEMY, 2, 2, PLANE_FRAME_RATE, true);
+		_spriteController.Configure(painter, PainterManager::SPRITE_ID::ENEMY);
 		_spriteControllerShield.Configure(painter, PainterManager::SPRITE_ID::ENEMY_SHIELD);
 	}
 }
