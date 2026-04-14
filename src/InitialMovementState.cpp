@@ -48,6 +48,7 @@ void InitialMovementState::OnEnter()
 
 	int randomStart = _randomManager->GetNextIntValue();
 	float delay = 0;
+	int zone = _randomManager->GetValue(0, 2);
 	_enemiesMoving = totalEnemies;
 
 	_enemiesPool->for_each_active(
@@ -87,6 +88,7 @@ void InitialMovementState::OnEnter()
 			);
 			_easingManager->SetDelay(id, delay);
 			delay += INCREASE_DELAY_START;
+			zone = (zone +1) % 3;
 		}
 	);
 }
