@@ -126,6 +126,7 @@ void ImprovementSelectionState::OnEnter()
 }
 void ImprovementSelectionState::OnExit()
 {
+	_easingManager->KillAll();
 }
 void ImprovementSelectionState::InitializeImprovementsUI()
 {

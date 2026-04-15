@@ -10,4 +10,4 @@ constexpr float MAX_DURATION_MOVEMENT_ENEMY = 5;
 
 constexpr int MIN_LEVEL_WITH_MOVEMENT = 2;
 
-constexpr float INCREASE_DELAY_START= 0.3;
+constexpr float INCREASE_DELAY_START = 0.1;

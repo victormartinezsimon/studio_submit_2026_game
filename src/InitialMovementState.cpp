@@ -67,22 +67,22 @@ void InitialMovementState::OnEnter()
 					default:
 					case 0://top
 						startX = _randomManager->GetValue(0, SCREEN_WIDTH);
-						startY = 0 - static_cast<int>(p.GetHeight());
+						startY = 0 - static_cast<int>(p.GetHeight() * 2);
 						break;
 					case 1://left
 						startY = _randomManager->GetValue(0, SCREEN_HEIGHT/2);
-						startX = 0 - static_cast<int>(p.GetWidth());
+						startX = 0 - static_cast<int>(p.GetWidth() * 2);
 						break;
 					case 2:
 						startY = _randomManager->GetValue(0, SCREEN_HEIGHT/2);
-						startX = SCREEN_WIDTH + static_cast<int>(p.GetWidth());
+						startX = SCREEN_WIDTH + static_cast<int>(p.GetWidth() * 2);
 						break;
 				}
 			}
 
 			int id = _easingManager->AddEase(INTIAL_ANIMATION_DURATION, startX, startY,
 				p.GetX(), p.GetY(), Ease::EASE_TYPES::INOUTCUBE, 
-				[this] (bool normalEnded, int noUsed)
+				[this] (bool forced, int noUsed)
 				{
 					--_enemiesMoving;
 				}, 
@@ -91,14 +91,18 @@ void InitialMovementState::OnEnter()
 					p.SetAlpha(percent);
 				}
 			);
-			p.SetPosition(startX, startY);
 			_easingManager->SetDelay(id, delay);
 			delay += INCREASE_DELAY_START;
 			
 			zone = (zone +1 ) % 3;
+			if(id != -1)
+			{
+				p.SetPosition(startX, startY);
+			}
 		}
 	);
 }
 void InitialMovementState::OnExit()
 {
+	_easingManager->KillAll();
 }

@@ -37,7 +37,7 @@ State::STATES BattleState::Update(const float deltaTime, float currentFrameInput
 
     UpdateEnemies(deltaTime);
 
-    if (_enemiesAlive == 0)
+    if ((_enemiesDeathAnimation.TotalInUse() + _enemiesPool->TotalInUse() )== 0 || _enemiesAlive == 0)
     {
         return STATES::IMPROVEMENT_SELECTOR;
     }
@@ -374,16 +374,13 @@ void BattleState::ConfigureExplosion(const int id, Explosion &exp, const Bullet 
     float x = bullet.GetX();
     float y = bullet.GetY();
 
-    unsigned int w,h;
-    exp.GetSize(w,h);
-
     if (y <= 0)
     {
-        y += h / 2;
+        y = 0;
     }
     if (y >= SCREEN_HEIGHT)
     {
-        y -= h / 2;
+        y = SCREEN_HEIGHT;
     }
     
     exp.SetPosition(x, y);
@@ -433,7 +430,7 @@ void BattleState::ConfigureRandomMovement(Plane &plane)
     float duration = _randomManager->GetValue(MIN_DURATION_MOVEMENT_ENEMY, MAX_DURATION_MOVEMENT_ENEMY, 100.0f);
 
     int easeID = _easingManager->AddEase(duration, plane.GetX(), plane.GetY(), nextX, nextY, easeType, 
-            [&](bool normalEnded, int noUsed) { if(normalEnded){ConfigureRandomMovement(plane);} }, 
+            [&](bool forced, int noUsed) { if(!forced){ConfigureRandomMovement(plane);} }, 
             [&plane](float x, float y, Ease &ease, float percent) { plane.SetPosition(x, y); });
     plane.SetRandomMovementID(easeID);
 }

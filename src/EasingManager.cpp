@@ -42,7 +42,7 @@ int EasingManager::AddEase(float duration, float startX, float startY,
     {
         if(endCallback)
         {
-            endCallback( false, -1 );//just in case
+            endCallback( true, -1 );//just in case
         }
     }
     return easeID;
@@ -57,7 +57,11 @@ void EasingManager::KillEase(int id)
 }
 void EasingManager::KillAll()
 {
-    _poolEases.for_each_active([](Ease& ease){ease.KillEase();});
+    _poolEases.for_each_active([](Ease& ease)
+    {
+        ease.CallEndCallback(true);
+        ease.KillEase();
+    });
     _poolEases.ReturnAll();
 }
 
