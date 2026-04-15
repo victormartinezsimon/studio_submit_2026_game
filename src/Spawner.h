@@ -90,7 +90,8 @@ private:
             return true;
         }
 
-        if(x > SCREEN_WIDTH && !obj.GetMoveLeft())
+		
+        if(x - obj.GetWidth() > SCREEN_WIDTH && !obj.GetMoveLeft())
         {   
             return true;
         }
