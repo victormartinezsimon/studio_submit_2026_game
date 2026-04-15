@@ -61,6 +61,7 @@ void Ease::BuildEase(float duration, float startX, float startY,
     _type = type;
     _tickCallback = tickCallback;
     _referenceID = -1;
+    _delayStart = 0;
 }
 
 void Ease::GetValues(float &x, float &y) const
