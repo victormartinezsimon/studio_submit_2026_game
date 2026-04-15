@@ -16,10 +16,6 @@
 
 #include <stdio.h>
 
-constexpr std::array<int, 2> SPRITE_IDS_ANIMATION_HIT = {0, 1};
-constexpr std::array<int, 2> SPRITE_IDS_ANIMATION_KILL = {0, 5};
-constexpr std::array<int, 3> SPRITE_IDS_ANIMATION_LEVEL = {0,0,1};
-
 GameManager::GameManager(InputManager *input, PainterManager *painterManager)
 	: _inputManager(input),
 	  _painterManager(painterManager), _currentLevel(0), 
@@ -402,10 +398,10 @@ void GameManager::EndLevel()
 	++_currentLevel;
 	_currentScore += SCORE_PER_FINISH_LEVEL;
 
-	AnimateNumberScore(SPRITE_IDS_ANIMATION_LEVEL, true);
+	AnimateNumberScore(SCORE_PER_FINISH_LEVEL, true);
 }
-template <unsigned int N>
-void GameManager::AnimateNumberScore(const std::array<int, N> elements, bool up)
+
+void GameManager::AnimateNumberScore(int value, bool up)
 {
 	unsigned int numberWidth, numberHeight;
 	_numberManager.GetSize(numberWidth, numberHeight);
@@ -417,9 +413,12 @@ void GameManager::AnimateNumberScore(const std::array<int, N> elements, bool up)
 		endY = currentY + numberHeight;
 	}
 
-	for(auto spriteID : elements)
+	int currentValue = value;
+	while(currentValue > 0)
 	{
 		int idNumber = _numbersAnimation.Get();
+		int spriteID = currentValue % 10;
+		currentValue = currentValue / 10;
 
 		_numbersAnimation.call_for_element(idNumber, [&](WorldObject& obj)
 		{
@@ -504,13 +503,13 @@ void GameManager::DamagePlayer()
 	}
 	else
 	{
-		AnimateNumberScore(SPRITE_IDS_ANIMATION_HIT, false);
+		AnimateNumberScore(SCORE_PER_PLAYER_HIT, false);
 	}
 }
 void GameManager::DamageEnemy(float x, float y)
 {
 	_currentScore += SCORE_PER_KILL;
-	AnimateNumberScore(SPRITE_IDS_ANIMATION_KILL, true);
+	AnimateNumberScore(SCORE_PER_KILL, true);
 }
 void GameManager::ConfigureStar(Star& star)
 {

@@ -81,9 +81,7 @@ private:
 	void CallbackUpdateMeteorite(Meteorite& meteorite);
 
 private:
-
-	template <unsigned int N>
-	void AnimateNumberScore(const std::array<int, N> elements, bool up);
+	void AnimateNumberScore(int value, bool up);
 
 private:
 	modifiable_data playerData;
