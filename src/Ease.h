@@ -12,7 +12,6 @@ public:
 		INOUTCUBE,
 		INOUTQUINT,
 		INOUTCIRC,
-		PINGPONG,
 		LINEAL
 	};
 
@@ -61,7 +60,6 @@ private:
 	float inOutCube(float percent, float startValue, float endValue)const;
 	float inOutQuint(float percent, float startValue, float endValue)const;
 	float inOutCirc(float percent, float startValue, float endValue)const;
-	float pingPong(float percent, float startValue, float endValue)const;
 	float lineal(float percent, float startValue, float endValue)const;
 
 private:

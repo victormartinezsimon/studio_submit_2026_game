@@ -89,11 +89,6 @@ void Ease::GetValues(float &x, float &y) const
         y = inOutQuint(progress, _startY, _endY);
         break;
 
-        case EASE_TYPES::PINGPONG:
-        x = pingPong(progress, _startX, _endX);
-        y = pingPong(progress, _startY, _endY);
-        break;
-
         case EASE_TYPES::LINEAL:
         x = lineal(progress, _startX, _endX);
         y = lineal(progress, _startY, _endY);
@@ -152,21 +147,6 @@ float Ease::inOutCirc(float progress, float startValue, float endValue) const
     t -= 2.0;
     return change / 2.0 * (sqrt(1.0 - t * t) + 1.0) + startValue;
 }
-
-float Ease::pingPong(float progress, float startValue, float endValue) const
-{
-    // Normalize progress to [0, 1] using ping-pong logic
-    // progress mod 2: [0,1] goes forward, [1,2] goes backward
-    float t = std::fmod(progress, 2.0f);
-    if (t > 1.0f)
-        t = 2.0f - t;
-
-    // Apply a smooth ease-in-out (cubic)
-    t = t * t * (3.0f - 2.0f * t);
-
-    return startValue + t * (endValue - startValue);
-}
-
 float Ease::lineal(float progress, float startValue, float endValue) const
 {
     return startValue + (endValue - startValue) * progress/100.0f;
