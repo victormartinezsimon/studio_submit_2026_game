@@ -148,15 +148,15 @@ void Painter::masked_blit_8(
 	// Clip the source and destination rectangles to ensure we don't read/write out of screen bounds
 	if (screen_x < 0)
 	{
-		src_x = -screen_x;
+		src_x = startX + (-screen_x);// if start is 32 and we want to paint in -5, in reality, start should be 32+5 = 37
+		w = sprite_width + screen_x;//if start is 32 and we wannt to paint in -5, the w should be (32 -5) = 27
 		screen_x = 0;
-		w -= src_x;
 	}
 	if (screen_y < 0)
 	{
-		src_y = -screen_y;
+		src_y = startY + (-screen_y);// if start is 32 and we want to paint in -5, in reality, start should be 32+5 = 37
+		h = sprite_height + screen_y;//if start is 32 and we wannt to paint in -5, the w should be (32 -5) = 27
 		screen_y = 0;
-		h -= src_y;
 	}
 	if (screen_x + w > screen_width)
 		w = screen_width - screen_x;
