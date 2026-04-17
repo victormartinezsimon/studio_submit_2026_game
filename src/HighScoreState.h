@@ -57,4 +57,5 @@ private:
     int _indexLetterBlink = 0;
 
     Spawner<Firework, FIREWORK_TOTAL_AMOUNT> _spawnerFirework;
+    bool _hasFireworks = false;
 };

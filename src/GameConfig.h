@@ -14,6 +14,7 @@
 #include "config/ScreenConfig.h"
 #include "config/BattleStateConfig.h"
 #include "config/LevelConfiguration.h"
+#include "config/FireworkConfig.h"
 
 constexpr int MAX_SECS_PLAYING = 120;
 
@@ -44,14 +45,3 @@ constexpr bool SHOW_TRAIL_ENEMY = true;
 constexpr float TRAIL_PLANE_LIVE = 0.2;
 constexpr float TRAIL_PLANE_MIN_VELOCITY = 65;
 
-constexpr float FIREWORK_TIME_SPAWN = 5;
-constexpr float FIREWORK_ASCEND_VELOCITY = -50;
-constexpr float FIREWORK_DURATION_TRAIL_MOVING = 1;
-constexpr float FIREWORK_DURATION_TRAIL_EXPLOSION = 0.5;
-constexpr float FIREWORK_GRAVITY = 15;
-constexpr float FIREWORK_INITIAL_VELOCITY = 30;
-constexpr int FIREWORK_TOTAL_AMOUNT = 5;
-constexpr float FIREWORK_MIN_HEIGHT = SCREEN_HEIGHT * 0.2;
-constexpr float FIREWORK_MAX_HEIGHT= SCREEN_HEIGHT * 0.2;
-constexpr float FIREWORK_MIN_APPEAR_X = SCREEN_WIDTH * 0.2;
-constexpr float FIREWORK_MAX_APPEAR_X = SCREEN_WIDTH * 0.8;;

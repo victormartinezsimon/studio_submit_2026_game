@@ -33,6 +33,7 @@ class Firework: public WorldObject
 	private:
 		float _minY = 0;
 		bool _inExplosion = false;
+		float _timeSinceExplosion;
 		TrailManager* _trailManager;
 		std::array<MiniFirework, 8> _minFireworks;
 };

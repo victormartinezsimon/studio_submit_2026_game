@@ -24,6 +24,7 @@ void Firework::Update(const float deltaTime)
 	}
 	else
 	{
+		_timeSinceExplosion += deltaTime;
 		for(auto& mini : _minFireworks)
 		{
 			mini._x += mini._velX * deltaTime;
@@ -46,11 +47,17 @@ void Firework::Paint(PainterManager* painter)const
 	{
 		for(auto&& mini : _minFireworks)
 		{
-			painter->AddToPaint(PainterManager::SPRITE_ID::FAR_STAR, mini._x, mini._y);
-			unsigned int w, h;
-			painter->GetSpriteSize(PainterManager::SPRITE_ID::FAR_STAR, w, h);
-			_trailManager->AddTrail(painter,  mini._x, mini._y, w, h, 
-				FIREWORK_DURATION_TRAIL_EXPLOSION, PainterManager::SPRITE_ID::FAR_STAR);
+			float percent =  (_timeSinceExplosion / FIREWORK_TIME_EXPLOSION_LIVE);
+			float alpha = 1 - percent;
+			painter->AddToPaint(PainterManager::SPRITE_ID::FAR_STAR, mini._x, mini._y, alpha);
+
+			if(percent > FIREWORK_MIN_PERCENT_FOR_EXPLOSION_TRAIL)
+			{
+				unsigned int w, h;
+				painter->GetSpriteSize(PainterManager::SPRITE_ID::FAR_STAR, w, h);
+				_trailManager->AddTrail(painter,  mini._x, mini._y, w, h, 
+					FIREWORK_DURATION_TRAIL_EXPLOSION, PainterManager::SPRITE_ID::FAR_STAR);
+			}
 		}
 	}
 }
@@ -58,6 +65,7 @@ void Firework::Paint(PainterManager* painter)const
 void Firework::DoExplosion()
 {
 	_inExplosion = true;
+	_timeSinceExplosion = 0;
 
 	float increaseAngle = 360.0 / _minFireworks.size();
 	const double PI = 3.14159265358979323846;
@@ -81,9 +89,5 @@ bool Firework::OutOfScreen() const
 {
 	if(!_inExplosion){return false;}
 
-	for(auto&& mini : _minFireworks)
-	{
-		if(mini._y >= 0 && mini._y <= SCREEN_HEIGHT){return false;}
-	}
-	return true;
+	return _timeSinceExplosion < FIREWORK_TIME_EXPLOSION_LIVE;
 }

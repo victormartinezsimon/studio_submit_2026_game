@@ -42,7 +42,10 @@ State::STATES HighScoreState::Update(const float deltaTime, float _currentFrameI
 		_timeAcumBlink = 0;
 	}
 
-	_spawnerFirework.Update(deltaTime);
+	if(_hasFireworks)
+	{
+		_spawnerFirework.Update(deltaTime);
+	}
 
 	return _nextState;
 }
@@ -107,7 +110,10 @@ void HighScoreState::PaintUI()
 									HIGH_SCORE_COORDS::RETURN_MENU_Y);
 	}
 
-	_spawnerFirework.Paint(_painterManager);
+	if(_hasFireworks)
+	{
+		_spawnerFirework.Paint(_painterManager);
+	}
 	
 }
 void HighScoreState::OnEnter()
@@ -136,7 +142,8 @@ void HighScoreState::Configure(float score)
 	}
 	else
 	{
-		
+		_hasFireworks = true;
+
 		for(int i = _bestscores.size() -1; i > _playerIndexScore; --i)
 		{
 			_bestscores[i].name = _bestscores[i-1].name;
