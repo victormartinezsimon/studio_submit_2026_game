@@ -9,9 +9,7 @@
 #include "RandomManager.h"
 #include <cmath>
 
-constexpr float TIME_BLINK_LETTER = 0.5f;
-constexpr float TIME_TO_SELECT_OPTION = 2;
-constexpr float LETTER_SEPARATION = 5;
+
 
 HighScoreState::HighScoreState(Plane *player, PainterManager *painter, 
         NumberManager* numberManager,
@@ -37,7 +35,7 @@ State::STATES HighScoreState::Update(const float deltaTime, float _currentFrameI
 {
 	_buttonAManager->Update(deltaTime, _currentFrameInputValueNormalized);
 	_timeAcumBlink += deltaTime;
-	if(_timeAcumBlink > TIME_BLINK_LETTER)
+	if(_timeAcumBlink > HIGH_SCORE_TIME_BLINK_LETTER)
 	{
 		_timeAcumBlink = 0;
 	}
@@ -70,7 +68,7 @@ void HighScoreState::PaintUI()
 	for(int i = 0; i < _bestscores.size(); ++i)
 	{
 		PaintSavedScore(i, positionX, positionY, i == _playerIndexScore);
-		positionY += (_letters.GetHeight() + LETTER_SEPARATION);
+		positionY += (_letters.GetHeight() + HIGH_SCORE_LETTER_SEPARATION);
 	}
 
 	if(_playerIndexScore != -1)
@@ -153,7 +151,7 @@ void HighScoreState::Configure(float score)
 
 		float playerSelectorWidth = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER_SELECTOR);
 	
-		_buttonAManager->SelectInPosition(TIME_TO_SELECT_OPTION, 
+		_buttonAManager->SelectInPosition(HIGH_SCORE_TIME_TO_SELECT_OPTION, 
 			{HIGH_SCORE_COORDS::DECREASE_LETTER_X - playerSelectorWidth/2, HIGH_SCORE_COORDS::DECREASE_LETTER_X + playerSelectorWidth/2 },
 			{HIGH_SCORE_COORDS::INCREASE_LETTER_X - playerSelectorWidth/2, HIGH_SCORE_COORDS::INCREASE_LETTER_X + playerSelectorWidth/2 },
 			{HIGH_SCORE_COORDS::ACCEPT_LETTER_X - playerSelectorWidth/2, HIGH_SCORE_COORDS::ACCEPT_LETTER_X + playerSelectorWidth/2 },
@@ -185,11 +183,11 @@ void HighScoreState::PaintSavedScore(int index, float x, float y, bool forPlayer
 	{
 		char letter = _bestscores[index].name[i];
 		int frame =  letter - 'A';
-		if((i == _indexLetterBlink && _timeAcumBlink < TIME_BLINK_LETTER/2) || !forPlayer || i!= _indexLetterBlink)
+		if((i == _indexLetterBlink && _timeAcumBlink < HIGH_SCORE_TIME_BLINK_LETTER/2) || !forPlayer || i!= _indexLetterBlink)
 		{
 			_letters.PaintFrame(_painterManager, letterX, y, frame);
 		}
-		letterX -= (_letters.GetWidth() + LETTER_SEPARATION);
+		letterX -= (_letters.GetWidth() + HIGH_SCORE_LETTER_SEPARATION);
 	}
 
 	//paint numbers
@@ -241,7 +239,7 @@ void HighScoreState::ConfigureReturnToMenu()
 
 	float playerSelectorWidth = _painterManager->GetWidth(PainterManager::SPRITE_ID::PLAYER_SELECTOR);
 
-	_buttonAManager->SelectInPosition(TIME_TO_SELECT_OPTION, 
+	_buttonAManager->SelectInPosition(HIGH_SCORE_TIME_TO_RETURN_TO_MENU, 
 			{HIGH_SCORE_COORDS::ACCEPT_LETTER_X - playerSelectorWidth/2, HIGH_SCORE_COORDS::ACCEPT_LETTER_X + playerSelectorWidth/2 },
 			[&](int option){
 				
