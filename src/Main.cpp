@@ -18,11 +18,11 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
-	InputManager *inputManager = new InputManager();
-	PainterManager* painterManager = new PainterManager();
-	GameManager *gm = new GameManager(inputManager, painterManager);
+	InputManager inputManager;
+	PainterManager painterManager;
+	GameManager gm (&inputManager, &painterManager);
 
-	struct SPPlatform* platform = painterManager->GetPainter()->GetPlatform();
+	struct SPPlatform* platform = painterManager.GetPainter()->GetPlatform();
 
 	
 	float deltaTime = 0;
@@ -31,9 +31,9 @@ int main(int argc, char **argv)
 	
 	bool ended = false;
 	
-	SoundManager* soundManager = new SoundManager(platform);
+	SoundManager soundManager(platform);
 	#ifndef DEBUG
-	soundManager->start();
+	soundManager.start();
 	#endif
 
 	while (!ended)
@@ -42,16 +42,11 @@ int main(int argc, char **argv)
 		deltaTime = std::chrono::duration<float>(currentTime - lastTime).count(); // seconds
     	lastTime = currentTime;
 
-		ended = gm->Update(deltaTime);
-		gm->Paint();
-		painterManager->Paint();
+		ended = gm.Update(deltaTime);
+		gm.Paint();
+		painterManager.Paint();
 	}
 
 	PROFILE_SAVE();
-	soundManager->stop();
-
-	delete soundManager;
-	delete inputManager;
-	delete painterManager;
-	delete gm;
+	soundManager.stop();
 }
