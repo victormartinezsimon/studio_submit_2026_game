@@ -551,6 +551,16 @@ The output binary is `the_battle_of_rogue` in the project root.
 
 ---
 
+## 🎶 Sound license
+
+The sound is downloaded from this url: https://modarchive.org/index.php?request=view_by_moduleid&query=113899
+
+To add the sound to the compilation, just run this command and update the `SoundManager`class
+```bash
+xxd -i mysound.mod > mysound_data.h
+```
+---
+
 ## 📄 License
 
 This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)** — a strong copyleft license.
