@@ -561,6 +561,23 @@ xxd -i mysound.mod > mysound_data.h
 ```
 ---
 
+## 🖼️ How to add images to the game
+
+All the images are saved on `Sprites.h` file, but there is a semi-automatic way to import the images into the project.
+
+First, all the images are generated using AI tools to generate images using some text description.
+When some image fits my game vision for the assets, I ask the tool to generate a prompt so I can generate more images in the same way with the same style.
+
+For example, all the texts are generated using the prompt saved on the file: **`Images/GeneratedImages/2026-03-18/GeneratorPrompt.txt`**
+
+When all images are generated, they should be saved on the path: **`Images/input_palette/`** so I can run the bat: **`images/pixelart.bat`** to generate a correct palette for all the images.
+
+After the palette is correctly generated, I scale down the images and save the result in the path **`Images/input/`** so we can generate a copy of the images in the path **`Images/output/`** where each image pixel is updated so it can fit to the most accurate pixel in the palette.
+
+Finally, after edit all the output images to fix some errors in the previous steps, we just generate the file: **`Images/output/sprites.txt`**, so I can copy the content of the file into `Sprites.h`.
+
+---
+
 ## 📄 License
 
 This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)** — a strong copyleft license.
